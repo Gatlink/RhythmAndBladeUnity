@@ -22,10 +22,11 @@ public class RailEditor : Editor
     private static bool _addKeyDown;
 
     private Rail _rail;
+    private List<Vector3> _pointsBuffer = new List<Vector3>();
 
     private void OnEnable()
     {
-        _rail = target as Rail;
+        _rail = target as Rail;        
     }
 
     private void OnSceneGUI()
@@ -33,31 +34,65 @@ public class RailEditor : Editor
         DrawHandlesEditable();
     }
 
-    [DrawGizmo(GizmoType.NonSelected)]
+    [ DrawGizmo( GizmoType.NonSelected | GizmoType.Pickable ) ]
     private static void NonSelectedSceneView( Rail rail, GizmoType gizmoType )
     {
-        DrawHandles(rail);
+        DrawHandles( rail );
     }
-    
-    private static void DrawHandles(Rail rail)
+
+    private static void DrawHandles( Rail rail )
     {
         Handles.color = IdleColor;
 
-        DrawLines(rail);
+        DrawLines( rail );
+
+        var mousePressed = false;
+        var mouseRay = new Ray();
+        if ( Event.current.type == EventType.MouseUp && Event.current.button == 0 )
+        {
+            mousePressed = true;
+            mouseRay = HandleUtility.GUIPointToWorldRay( Event.current.mousePosition );
+        }
 
         foreach ( var point in rail.Points )
         {
             var cur = rail.transform.position + point;
+            if ( mousePressed )
+            {
+                var sqrDistanceToRay = Vector3.Cross( mouseRay.direction, cur - mouseRay.origin ).sqrMagnitude;
+                var selectDistance = HandleUtility.GetHandleSize( cur ) * GizmoRadius;
+
+                if ( sqrDistanceToRay <= selectDistance * selectDistance )
+                {
+                    // calling simply Selection.activeGameObject = _desiredSelection; here does not work... TODO fixme
+                    // prevent adding event handler twice
+                    EditorApplication.update -= _setSelected;
+                    EditorApplication.update += _setSelected;
+                    _desiredSelection = rail.gameObject;
+                }
+            }
             DrawJointGizmo( cur );
         }
     }
 
+    private static GameObject _desiredSelection;
+    private static void _setSelected()
+    {
+        if ( _desiredSelection != null )
+        {
+            Selection.activeGameObject = _desiredSelection;
+            _desiredSelection = null;
+            // prevent unecessary null checks
+            EditorApplication.update -= _setSelected;
+        }
+    }
+    
     private void DrawHandlesEditable()
     {
         Handles.color = ActiveColor;
-        DrawLines(_rail);
+        DrawLines( _rail );
 
-        var newList = new List<Vector3>();
+        _pointsBuffer.Clear();
         var newIndex = -1;
         var newPoint = DisplayNewPoint( out newIndex );
 
@@ -65,20 +100,20 @@ public class RailEditor : Editor
         {
             var cur = _rail.transform.position + _rail.Points[ i ];
             if ( DrawPointHandle( ref cur, i ) )
-                newList.Add( cur - _rail.transform.position );
+                _pointsBuffer.Add( cur - _rail.transform.position );
         }
 
         if ( newIndex != -1 )
         {
-            newList.Insert( newIndex, newPoint - _rail.transform.position );
+            _pointsBuffer.Insert( newIndex, newPoint - _rail.transform.position );
             Undo.RecordObject( _rail, "Add new point" );
         }
 
         _rail.Points.Clear();
-        _rail.Points.AddRange( newList );
+        _rail.Points.AddRange( _pointsBuffer );
     }
 
-    private static void DrawLines(Rail rail)
+    private static void DrawLines( Rail rail )
     {
         var oldColor = Handles.color;
         for ( var i = 0; i < rail.Points.Count - 1; ++i )
@@ -154,8 +189,11 @@ public class RailEditor : Editor
                     var oldColor = Handles.color;
                     Handles.color = NewColor;
 
-                    Handles.DrawDottedLine( _rail.Points[ prev ] + _rail.transform.position, position, DottedLinesSpace );
-                    if ( next != -1 ) Handles.DrawDottedLine( _rail.Points[ next ] + _rail.transform.position, position, DottedLinesSpace );
+                    Handles.DrawDottedLine( _rail.Points[ prev ] + _rail.transform.position, position,
+                        DottedLinesSpace );
+                    if ( next != -1 )
+                        Handles.DrawDottedLine( _rail.Points[ next ] + _rail.transform.position, position,
+                            DottedLinesSpace );
                     DrawJointGizmo( position );
 
                     Handles.color = oldColor;
@@ -220,7 +258,7 @@ public class RailEditor : Editor
 
                     position = Camera.current.WorldToScreenPoint( Handles.matrix.MultiplyPoint( _dragWorldStart ) ) +
                                (Vector3) ( _dragMouseCurrent - _dragMouseStart );
-                    position = Handles.matrix.inverse.MultiplyPoint( Camera.current.ScreenToWorldPoint( position ) );
+                    position = Handles.inverseMatrix.MultiplyPoint( Camera.current.ScreenToWorldPoint( position ) );
 
                     if ( index > 0 && ShouldBeAWall( index - 1, position ) )
                         position.x = _rail.Points[ index - 1 ].x + _rail.transform.position.x;
