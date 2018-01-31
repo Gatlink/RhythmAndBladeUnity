@@ -6,6 +6,7 @@ using UnityEngine;
 public class RailEditor : Editor
 {
     private const float GizmoRadius = 0.08f;
+    private const int DottedLinesSpace = 3;
     private static readonly Color IdleColor = new Color( 0.4f, 0.4f, 0.5f );
     private static readonly Color ActiveColor = new Color( 0.4f, 0.5f, 0.7f );
     private static readonly Color SelectedColor = new Color( 0.5f, 0.8f, 1f );
@@ -14,8 +15,7 @@ public class RailEditor : Editor
 
     private const KeyCode AddKey = KeyCode.LeftControl;
     private const KeyCode DelKey = KeyCode.Delete;
-    private const int DottedLinesSpace = 3;
-
+    
     private static Vector3 _dragWorldStart;
     private static Vector2 _dragMouseCurrent;
     private static Vector2 _dragMouseStart;
@@ -165,10 +165,30 @@ public class RailEditor : Editor
                 prev = next = 0;
 
             if ( ShouldBeAWall( prev, position ) )
+            {
                 position.x = _rail.Points[ prev ].x + _rail.transform.position.x;
+            } 
 
             if ( ShouldBeAWall( next, position ) )
+            {
                 position.x = _rail.Points[ next ].x + _rail.transform.position.x;
+            }
+
+            // snap horizontally when shift is holded
+            if ( Event.current.shift )
+            {
+                var distPrev = Mathf.Abs( position.y - _rail.Points[ prev ].y - _rail.transform.position.y );
+                var distNext = Mathf.Abs( position.y - _rail.Points[ next ].y - _rail.transform.position.y );
+
+                if ( distPrev < distNext )
+                {
+                    position.y = _rail.Points[ prev ].y + _rail.transform.position.y;
+                }
+                else
+                {
+                    position.y = _rail.Points[ next ].y + _rail.transform.position.y;
+                }
+            }
         }
 
         switch ( Event.current.type )
@@ -266,6 +286,35 @@ public class RailEditor : Editor
                     if ( index < _rail.Points.Count - 1 && ShouldBeAWall( index + 1, position ) )
                         position.x = _rail.Points[ index + 1 ].x + _rail.transform.position.x;
 
+                    // snap horizontally
+                    if ( Event.current.shift )
+                    {
+                        if ( index == 0 && _rail.Points.Count > 1)
+                        {
+                            position.y = _rail.Points[ 1 ].y + _rail.transform.position.y;
+                        } 
+                        else if ( index == _rail.Points.Count - 1 && _rail.Points.Count > 1 )
+                        {
+                            position.y = _rail.Points[ _rail.Points.Count - 2 ].y + _rail.transform.position.y;
+                        }
+                        else if (_rail.Points.Count >= 3)
+                        {
+                            var prev = index - 1;
+                            var next = index + 1;
+                            var distPrev = Mathf.Abs( position.y - _rail.Points[ prev ].y - _rail.transform.position.y );
+                            var distNext = Mathf.Abs( position.y - _rail.Points[ next ].y - _rail.transform.position.y );
+
+                            if ( distPrev < distNext )
+                            {
+                                position.y = _rail.Points[ prev ].y + _rail.transform.position.y;
+                            }
+                            else
+                            {
+                                position.y = _rail.Points[ next ].y + _rail.transform.position.y;
+                            }
+                        }
+                    }
+                    
                     GUI.changed = true;
                     Event.current.Use();
                     Undo.RecordObject( _rail, "Moved points" );
