@@ -5,20 +5,21 @@ using UnityEngine;
 [ CustomEditor( typeof( Rail ) ) ]
 public class RailEditor : Editor
 {
-    private const float GIZMORADIUS = 0.08f;
-    private static readonly Color IDLECOLOR = new Color( 0.4f, 0.4f, 0.5f );
-    private static readonly Color ACTIVECOLOR = new Color( 0.4f, 0.5f, 0.7f );
-    private static readonly Color SELECTEDCOLOR = new Color( 0.5f, 0.8f, 1f );
-    private static readonly Color WALLCOLOR = new Color( 0.7f, 0.5f, 0.4f );
-    private static readonly Color NEWCOLOR = new Color( 0.5f, 0.8f, 1f, 0.5f );
+    private const float GizmoRadius = 0.08f;
+    private static readonly Color IdleColor = new Color( 0.4f, 0.4f, 0.5f );
+    private static readonly Color ActiveColor = new Color( 0.4f, 0.5f, 0.7f );
+    private static readonly Color SelectedColor = new Color( 0.5f, 0.8f, 1f );
+    private static readonly Color WallColor = new Color( 0.7f, 0.5f, 0.4f );
+    private static readonly Color NewColor = new Color( 0.5f, 0.8f, 1f, 0.5f );
 
-    private const KeyCode ADDKEY = KeyCode.LeftControl;
-    private const KeyCode DELKEY = KeyCode.Delete;
+    private const KeyCode AddKey = KeyCode.LeftControl;
+    private const KeyCode DelKey = KeyCode.Delete;
+    private const int DottedLinesSpace = 3;
 
-    private static Vector3 dragWorldStart;
-    private static Vector2 dragMouseCurrent;
-    private static Vector2 dragMouseStart;
-    private static bool addKeyDown;
+    private static Vector3 _dragWorldStart;
+    private static Vector2 _dragMouseCurrent;
+    private static Vector2 _dragMouseStart;
+    private static bool _addKeyDown;
 
     private Rail _rail;
 
@@ -40,7 +41,7 @@ public class RailEditor : Editor
     
     private static void DrawHandles(Rail rail)
     {
-        Handles.color = IDLECOLOR;
+        Handles.color = IdleColor;
 
         DrawLines(rail);
 
@@ -53,7 +54,7 @@ public class RailEditor : Editor
 
     private void DrawHandlesEditable()
     {
-        Handles.color = ACTIVECOLOR;
+        Handles.color = ActiveColor;
         DrawLines(_rail);
 
         var newList = new List<Vector3>();
@@ -86,7 +87,7 @@ public class RailEditor : Editor
             var next = rail.transform.position + rail.Points[ i + 1 ];
 
             if ( next.x == cur.x )
-                Handles.color = WALLCOLOR;
+                Handles.color = WallColor;
 
             Handles.DrawLine( cur, next );
             Handles.color = oldColor;
@@ -115,7 +116,7 @@ public class RailEditor : Editor
 
         var prev = 0;
         var next = 0;
-        if ( addKeyDown )
+        if ( _addKeyDown )
         {
             _rail.GetPreviousAndNextPoint( position, out prev, out next );
             if ( ( prev == -1 || next == -1 ) && _rail.Points.Count > 1 )
@@ -138,23 +139,23 @@ public class RailEditor : Editor
         switch ( Event.current.type )
         {
             case EventType.KeyDown:
-                if ( Event.current.keyCode == ADDKEY )
-                    addKeyDown = true;
+                if ( Event.current.keyCode == AddKey )
+                    _addKeyDown = true;
                 break;
 
             case EventType.KeyUp:
-                if ( Event.current.keyCode == ADDKEY )
-                    addKeyDown = false;
+                if ( Event.current.keyCode == AddKey )
+                    _addKeyDown = false;
                 break;
 
             case EventType.Repaint:
-                if ( addKeyDown )
+                if ( _addKeyDown )
                 {
                     var oldColor = Handles.color;
-                    Handles.color = NEWCOLOR;
+                    Handles.color = NewColor;
 
-                    Handles.DrawLine( _rail.Points[ prev ] + _rail.transform.position, position );
-                    if ( next != -1 ) Handles.DrawLine( _rail.Points[ next ] + _rail.transform.position, position );
+                    Handles.DrawDottedLine( _rail.Points[ prev ] + _rail.transform.position, position, DottedLinesSpace );
+                    if ( next != -1 ) Handles.DrawDottedLine( _rail.Points[ next ] + _rail.transform.position, position, DottedLinesSpace );
                     DrawJointGizmo( position );
 
                     Handles.color = oldColor;
@@ -163,7 +164,7 @@ public class RailEditor : Editor
                 break;
 
             case EventType.MouseDown:
-                if ( addKeyDown && Event.current.button == 0 )
+                if ( _addKeyDown && Event.current.button == 0 )
                 {
                     newIndex = next == 0 ? 0 : prev + 1;
                     Event.current.Use();
@@ -177,7 +178,7 @@ public class RailEditor : Editor
 
     private static void DrawJointGizmo( Vector3 position )
     {
-        Handles.DrawSolidDisc( position, Vector3.forward, GIZMORADIUS * HandleUtility.GetHandleSize( position ) );
+        Handles.DrawSolidDisc( position, Vector3.forward, GizmoRadius * HandleUtility.GetHandleSize( position ) );
     }
 
     private bool DrawPointHandle( ref Vector3 position, int index )
@@ -194,8 +195,8 @@ public class RailEditor : Editor
                 {
                     GUIUtility.hotControl = id;
 
-                    dragMouseCurrent = dragMouseStart = Event.current.mousePosition;
-                    dragWorldStart = position;
+                    _dragMouseCurrent = _dragMouseStart = Event.current.mousePosition;
+                    _dragWorldStart = position;
 
                     Event.current.Use();
                     EditorGUIUtility.SetWantsMouseJumping( 1 );
@@ -215,10 +216,10 @@ public class RailEditor : Editor
             case EventType.MouseDrag:
                 if ( GUIUtility.hotControl == id )
                 {
-                    dragMouseCurrent += new Vector2( Event.current.delta.x, -Event.current.delta.y );
+                    _dragMouseCurrent += new Vector2( Event.current.delta.x, -Event.current.delta.y );
 
-                    position = Camera.current.WorldToScreenPoint( Handles.matrix.MultiplyPoint( dragWorldStart ) ) +
-                               (Vector3) ( dragMouseCurrent - dragMouseStart );
+                    position = Camera.current.WorldToScreenPoint( Handles.matrix.MultiplyPoint( _dragWorldStart ) ) +
+                               (Vector3) ( _dragMouseCurrent - _dragMouseStart );
                     position = Handles.matrix.inverse.MultiplyPoint( Camera.current.ScreenToWorldPoint( position ) );
 
                     if ( index > 0 && ShouldBeAWall( index - 1, position ) )
@@ -234,7 +235,7 @@ public class RailEditor : Editor
                 break;
 
             case EventType.KeyDown:
-                if ( GUIUtility.hotControl == id && Event.current.keyCode == DELKEY )
+                if ( GUIUtility.hotControl == id && Event.current.keyCode == DelKey )
                 {
                     Event.current.Use();
                     Undo.RecordObject( _rail, "Delete point" );
@@ -245,7 +246,7 @@ public class RailEditor : Editor
             case EventType.Repaint:
                 var currentColour = Handles.color;
                 if ( id == GUIUtility.hotControl )
-                    Handles.color = SELECTEDCOLOR;
+                    Handles.color = SelectedColor;
 
                 Handles.matrix = Matrix4x4.identity;
                 DrawJointGizmo( position );
@@ -255,7 +256,7 @@ public class RailEditor : Editor
 
             case EventType.Layout:
                 Handles.matrix = Matrix4x4.identity;
-                HandleUtility.AddControl( id, HandleUtility.DistanceToCircle( screenPosition, GIZMORADIUS ) );
+                HandleUtility.AddControl( id, HandleUtility.DistanceToCircle( screenPosition, GizmoRadius ) );
                 Handles.matrix = cachedMatrix;
                 break;
         }
