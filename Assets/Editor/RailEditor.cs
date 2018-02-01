@@ -34,7 +34,7 @@ public class RailEditor : Editor
         DrawHandlesEditable();
     }
 
-    [ DrawGizmo( GizmoType.NonSelected | GizmoType.Pickable ) ]
+    [ DrawGizmo( GizmoType.NonSelected | GizmoType.Pickable | GizmoType.Selected ) ]
     private static void NonSelectedSceneView( Rail rail, GizmoType gizmoType )
     {
         DrawHandles( rail );
@@ -64,11 +64,15 @@ public class RailEditor : Editor
 
                 if ( sqrDistanceToRay <= selectDistance * selectDistance )
                 {
+//                    Selection.activeGameObject = rail.gameObject;
                     // calling simply Selection.activeGameObject = _desiredSelection; here does not work... TODO fixme
                     // prevent adding event handler twice
+
                     EditorApplication.update -= _setSelected;
                     EditorApplication.update += _setSelected;
                     _desiredSelection = rail.gameObject;
+                    
+                    Event.current.Use();                    
                 }
             }
             DrawJointGizmo( cur );
