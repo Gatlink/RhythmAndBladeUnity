@@ -124,12 +124,12 @@ public class Actor : MonoBehaviour
 		CheckGround(hasProj, railProj);
 		CheckCollisions();
 
-		var scale = transform.localScale;
-		if (currentVelocity.x > 0)
-			scale.x = 1;
-		else if (currentVelocity.x < 0)
-			scale.x = -1;
-		transform.localScale = scale;
+//		var scale = transform.localScale;
+//		if (currentVelocity.x > 0)
+//			scale.x = 1;
+//		else if (currentVelocity.x < 0)
+//			scale.x = -1;
+//		transform.localScale = scale;
 
 		if (animator != null)
 		{
@@ -245,6 +245,7 @@ public class StateJump : ActorState
 		actor.ignoreGravity = true;
 		startTime = Time.time;
 		actor.horizontalMovement.factor *= actor.jumpParameters.horizontalSpeedFactor;
+		actor.currentVelocity.y = actor.jumpParameters.verticalSpeed;
 
 		if (!actor.IsGrounded)
 			actor.TransitionTo<StateNormal>();
@@ -254,7 +255,7 @@ public class StateJump : ActorState
 
 	public override void Update()
 	{
-		actor.currentVelocity.y = actor.jumpParameters.verticalSpeed;
+		actor.currentVelocity.y = Mathf.Lerp(actor.currentVelocity.y, 0, 0.2f);
 
 		if (Time.time >= startTime + actor.jumpParameters.duration)
 			actor.TransitionTo<StateNormal>();

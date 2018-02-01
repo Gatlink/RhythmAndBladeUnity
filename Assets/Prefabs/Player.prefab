@@ -41,7 +41,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1328367251888304
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,7 +58,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1336954960344560
 GameObject:
   m_ObjectHideFlags: 1
@@ -197,12 +197,12 @@ MonoBehaviour:
   ignoreGravity: 0
   railConnector: {fileID: 4743026794452008}
   falling:
-    acceleration: 0.1
+    acceleration: 0.2
     maxSpeed: -15
     factor: 1
   jumpParameters:
     duration: 0.5
-    verticalSpeed: 10
+    verticalSpeed: 50
     horizontalSpeedFactor: 0.5
   wallSlideParameters:
     gravityFactor: 0.1
