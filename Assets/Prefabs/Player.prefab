@@ -225,7 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxVelocity: 15
   MaxSpeedStretch: 0.5
-  CompensateY: 1
+  CompensatePosition: 1
   MinVelocity: 0
 --- !u!212 &212633249368202736
 SpriteRenderer:

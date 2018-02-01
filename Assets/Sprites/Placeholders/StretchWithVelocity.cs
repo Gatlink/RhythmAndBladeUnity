@@ -4,7 +4,7 @@ public class StretchWithVelocity : MonoBehaviour
 {
     public float MaxVelocity = 10;
     public float MaxSpeedStretch = 0.5f;
-    public bool CompensateY = true;
+    public bool CompensatePosition = true;
     public float MinVelocity = 0.1f;
 
     private Vector2 _lastPosition;
@@ -64,12 +64,13 @@ public class StretchWithVelocity : MonoBehaviour
         transform.localRotation = rotation;
         _childTransform.localRotation = Quaternion.Inverse( rotation );
 
-        if ( CompensateY )
+        if ( CompensatePosition )
         {
-            var offset = (Mathf.Lerp( stretch, 1 / stretch, Mathf.Abs( Mathf.Sin( angle * Mathf.Deg2Rad ) ) ) * _childBounds.size.y -
-                         _childBounds.size.y) * 0.5f; 
+            var offsetX = Mathf.Abs( Mathf.Cos( angle * Mathf.Deg2Rad ) ) * (1 - 1 / stretch) * _childBounds.size.y * 0.5f;
+            var offsetY = Mathf.Sin( angle * Mathf.Deg2Rad ) * (stretch - 1) * _childBounds.size.y * 0.5f;
             var pos = transform.position;
-            pos.y -= offset;
+            pos.y -= offsetX;
+            pos.y -= offsetY;
             _childTransform.position = pos;
         }
     }
