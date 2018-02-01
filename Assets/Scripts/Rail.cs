@@ -181,4 +181,23 @@ public class Rail : MonoBehaviour
 
         return result;
     }
+
+    public IEnumerable<Segment> EnumerateSegments()
+    {
+        var points = Points;
+        var position = transform.position;
+
+        for ( int i = 1; i < points.Count; i++ )
+        {
+            var from = points[ i - 1 ] + position;
+            var to = points[ i ] + position;
+            yield return new Segment() { From = from, To = to };
+        }
+    }
+
+    public struct Segment
+    {
+        public Vector3 From;
+        public Vector3 To;
+    }
 }

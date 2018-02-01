@@ -19,7 +19,6 @@ public class StretchWithVelocity : MonoBehaviour
     private void Start()
     {
         _childBounds = _childTransform.GetComponent<Renderer>().bounds;
-        Debug.Log( _childBounds.size );
     }
 
     private void OnEnable()
