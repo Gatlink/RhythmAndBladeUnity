@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 public class Rail : MonoBehaviour
 {
@@ -52,6 +53,7 @@ public class Rail : MonoBehaviour
 // METHODS
 
     [ HideInInspector, SerializeField ]
+    [ FormerlySerializedAs( "points" ) ]
     public List<Vector3> Points;
 
     private void Reset()
