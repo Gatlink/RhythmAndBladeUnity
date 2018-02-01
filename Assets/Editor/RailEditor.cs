@@ -15,7 +15,7 @@ public class RailEditor : Editor
 
     private const KeyCode AddKey = KeyCode.LeftControl;
     private const KeyCode DelKey = KeyCode.Delete;
-    
+
     private static Vector3 _dragWorldStart;
     private static Vector2 _dragMouseCurrent;
     private static Vector2 _dragMouseStart;
@@ -26,7 +26,7 @@ public class RailEditor : Editor
 
     private void OnEnable()
     {
-        _rail = target as Rail;        
+        _rail = target as Rail;
     }
 
     private void OnSceneGUI()
@@ -71,15 +71,17 @@ public class RailEditor : Editor
                     EditorApplication.update -= _setSelected;
                     EditorApplication.update += _setSelected;
                     _desiredSelection = rail.gameObject;
-                    
-                    Event.current.Use();                    
+
+                    Event.current.Use();
                 }
             }
+
             DrawJointGizmo( cur );
         }
     }
 
     private static GameObject _desiredSelection;
+
     private static void _setSelected()
     {
         if ( _desiredSelection != null )
@@ -90,7 +92,7 @@ public class RailEditor : Editor
             EditorApplication.update -= _setSelected;
         }
     }
-    
+
     private void DrawHandlesEditable()
     {
         Handles.color = ActiveColor;
@@ -171,7 +173,7 @@ public class RailEditor : Editor
             if ( ShouldBeAWall( prev, position ) )
             {
                 position.x = _rail.Points[ prev ].x + _rail.transform.position.x;
-            } 
+            }
 
             if ( ShouldBeAWall( next, position ) )
             {
@@ -223,6 +225,7 @@ public class RailEditor : Editor
                     Handles.color = oldColor;
                     HandleUtility.Repaint();
                 }
+
                 break;
 
             case EventType.MouseDown:
@@ -232,6 +235,7 @@ public class RailEditor : Editor
                     Event.current.Use();
                     return position;
                 }
+
                 break;
         }
 
@@ -263,6 +267,7 @@ public class RailEditor : Editor
                     Event.current.Use();
                     EditorGUIUtility.SetWantsMouseJumping( 1 );
                 }
+
                 break;
 
             case EventType.MouseUp:
@@ -273,6 +278,7 @@ public class RailEditor : Editor
                     Event.current.Use();
                     EditorGUIUtility.SetWantsMouseJumping( 0 );
                 }
+
                 break;
 
             case EventType.MouseDrag:
@@ -293,20 +299,22 @@ public class RailEditor : Editor
                     // snap horizontally
                     if ( Event.current.shift )
                     {
-                        if ( index == 0 && _rail.Points.Count > 1)
+                        if ( index == 0 && _rail.Points.Count > 1 )
                         {
                             position.y = _rail.Points[ 1 ].y + _rail.transform.position.y;
-                        } 
+                        }
                         else if ( index == _rail.Points.Count - 1 && _rail.Points.Count > 1 )
                         {
                             position.y = _rail.Points[ _rail.Points.Count - 2 ].y + _rail.transform.position.y;
                         }
-                        else if (_rail.Points.Count >= 3)
+                        else if ( _rail.Points.Count >= 3 )
                         {
                             var prev = index - 1;
                             var next = index + 1;
-                            var distPrev = Mathf.Abs( position.y - _rail.Points[ prev ].y - _rail.transform.position.y );
-                            var distNext = Mathf.Abs( position.y - _rail.Points[ next ].y - _rail.transform.position.y );
+                            var distPrev =
+                                Mathf.Abs( position.y - _rail.Points[ prev ].y - _rail.transform.position.y );
+                            var distNext =
+                                Mathf.Abs( position.y - _rail.Points[ next ].y - _rail.transform.position.y );
 
                             if ( distPrev < distNext )
                             {
@@ -318,11 +326,12 @@ public class RailEditor : Editor
                             }
                         }
                     }
-                    
+
                     GUI.changed = true;
                     Event.current.Use();
                     Undo.RecordObject( _rail, "Moved points" );
                 }
+
                 break;
 
             case EventType.KeyDown:
@@ -332,6 +341,7 @@ public class RailEditor : Editor
                     Undo.RecordObject( _rail, "Delete point" );
                     return false;
                 }
+
                 break;
 
             case EventType.Repaint:
