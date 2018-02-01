@@ -4,13 +4,22 @@ public class StretchWithVelocity : MonoBehaviour
 {
     public float MaxVelocity = 10;
     public float MaxSpeedStretch = 0.5f;
+    public bool CompensateY = true;
+    public float MinVelocity = 0.1f;
 
     private Vector2 _lastPosition;
     private Transform _childTransform;
+    private Bounds _childBounds;
 
     private void Awake()
     {
-        _childTransform = transform.GetChild( 0 );
+        _childTransform = transform.GetChild( 0 );        
+    }
+
+    private void Start()
+    {
+        _childBounds = _childTransform.GetComponent<Renderer>().bounds;
+        Debug.Log( _childBounds.size );
     }
 
     private void OnEnable()
@@ -32,7 +41,10 @@ public class StretchWithVelocity : MonoBehaviour
 
         _lastPosition = position;
 
-        ApplyStretch( velocity, 1 + Mathf.Lerp( 0, MaxSpeedStretch, velocity.magnitude / MaxVelocity ) );
+        if ( velocity.sqrMagnitude >= MinVelocity )
+        {
+            ApplyStretch( velocity, 1 + Mathf.Lerp( 0, MaxSpeedStretch, velocity.magnitude / MaxVelocity ) );
+        }
     }
 
     private void ResetStretch()
@@ -51,5 +63,14 @@ public class StretchWithVelocity : MonoBehaviour
         transform.localScale = scale;
         transform.localRotation = rotation;
         _childTransform.localRotation = Quaternion.Inverse( rotation );
+
+        if ( CompensateY )
+        {
+            var offset = (Mathf.Lerp( stretch, 1 / stretch, Mathf.Abs( Mathf.Sin( angle * Mathf.Deg2Rad ) ) ) * _childBounds.size.y -
+                         _childBounds.size.y) * 0.5f; 
+            var pos = transform.position;
+            pos.y -= offset;
+            _childTransform.position = pos;
+        }
     }
 }

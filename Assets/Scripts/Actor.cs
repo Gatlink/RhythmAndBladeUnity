@@ -20,8 +20,10 @@ public class Actor : MonoBehaviour
 		public float UpdateVelocity(float oldSpeed, float desiredSpeed)
 		{
 			var current = acceleration * desiredSpeed * factor + (1 - acceleration) * oldSpeed;
-			if (current == 0f && Mathf.Abs(current) < MIN_SPEED)
+			if ( Mathf.Abs( current ) < MIN_SPEED )
+			{
 				current = 0f;
+			}
 
 			return current;
 		}

@@ -211,7 +211,7 @@ MonoBehaviour:
   desiredVelocity: {x: 0, y: 0}
   currentVelocity: {x: -3.2723028e-34, y: 0}
   animator: {fileID: 0}
-  showTrajectory: 0
+  showTrajectory: 1
 --- !u!114 &114043666623912518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -225,6 +225,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxVelocity: 15
   MaxSpeedStretch: 0.5
+  CompensateY: 1
+  MinVelocity: 0
 --- !u!212 &212633249368202736
 SpriteRenderer:
   m_ObjectHideFlags: 1
