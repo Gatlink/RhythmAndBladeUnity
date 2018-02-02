@@ -71,6 +71,19 @@ public class Rail : MonoBehaviour
         All.Add( this );
     }
 
+    private void Start()
+    {
+        CreateCollider();
+    }
+
+    private void CreateCollider()
+    {
+        var edgeCollider = new GameObject("Collider", typeof(EdgeCollider2D)).GetComponent<EdgeCollider2D>();
+        edgeCollider.transform.SetParent( transform, false );
+        edgeCollider.points = Points.Select( v => (Vector2) v ).ToArray();
+        edgeCollider.gameObject.layer = gameObject.layer;
+    }
+
     public bool GetProjection( int idx, Vector3 pos, out Vector3 proj )
     {
         proj = Vector3.negativeInfinity;

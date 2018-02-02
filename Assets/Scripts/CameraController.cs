@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour
 {
-	public static CameraController instance;
-
 	[HideInInspector]
 	public Actor target;
 	public Vector2 offset = new Vector2(5f, 5f);
@@ -16,8 +14,8 @@ public class CameraController : MonoBehaviour
 
 	public void Awake()
 	{
-		instance = this;
 		startingZ = transform.position.z;
+		target = GameObject.FindGameObjectWithTag( "Player" ).GetComponent<Actor>();
 	}
 	
 	public void LateUpdate()

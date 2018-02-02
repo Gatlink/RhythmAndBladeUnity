@@ -122,11 +122,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4855078756398926, guid: 47367d681c234da46a7d9eb18be52df1, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -4.04
+      value: 5.19
       objectReference: {fileID: 0}
     - target: {fileID: 4855078756398926, guid: 47367d681c234da46a7d9eb18be52df1, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.07
+      value: 21.79
       objectReference: {fileID: 0}
     - target: {fileID: 4855078756398926, guid: 47367d681c234da46a7d9eb18be52df1, type: 2}
       propertyPath: m_LocalPosition.z
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 2055659820}
   - component: {fileID: 2055659819}
   - component: {fileID: 2055659821}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Rail
   m_TagString: Untagged
   m_Icon: {fileID: 0}

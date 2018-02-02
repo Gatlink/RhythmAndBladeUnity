@@ -83,10 +83,11 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4855078756398926}
-  - component: {fileID: 114029782390187966}
+  - component: {fileID: 114143317058885136}
+  - component: {fileID: 114136602439705628}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138,7 +139,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1963247483546628}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.04, y: 1.07, z: 0}
+  m_LocalPosition: {x: 5.19, y: 21.79, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4743026794452008}
@@ -177,41 +178,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114029782390187966
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1963247483546628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71be7d340da27804ea4e204f62e1d566, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ignoreCollisions: 0
-  collisionRadius: 1
-  horizontalMovement:
-    acceleration: 0.3
-    maxSpeed: 8
-    factor: 1
-  ignoreGravity: 0
-  railConnector: {fileID: 4743026794452008}
-  falling:
-    acceleration: 0.2
-    maxSpeed: -15
-    factor: 1
-  jumpParameters:
-    duration: 0.5
-    verticalSpeed: 50
-    horizontalSpeedFactor: 0.5
-  wallSlideParameters:
-    gravityFactor: 0.1
-  dashParameters:
-    speed: 50
-  desiredVelocity: {x: 0, y: 0}
-  currentVelocity: {x: -3.2723028e-34, y: 0}
-  animator: {fileID: 0}
-  showTrajectory: 1
 --- !u!114 &114043666623912518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -227,6 +193,42 @@ MonoBehaviour:
   MaxSpeedStretch: 0.5
   CompensatePosition: 1
   MinVelocity: 0
+--- !u!114 &114136602439705628
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1963247483546628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02e2de36d06a3aa4fbfbeb18da15128c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114143317058885136
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1963247483546628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2679822ca8c434a9081a8eeca3deb53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  DesiredMovement: 0
+  DesiredJump: 0
+  DesiredAttack: 0
+  DesiredDash: 0
+  StateName: 
+  Direction: 0
+  DashCount: 0
+  AttackCooldown: 0
+  _currentVelocity: {x: 0, y: 0, z: 0}
+  Controller: {fileID: 114136602439705628}
+  TrackPositions:
+    useValue: 1
+    value: 200
 --- !u!212 &212633249368202736
 SpriteRenderer:
   m_ObjectHideFlags: 1
