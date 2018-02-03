@@ -18,7 +18,7 @@ public class StretchWithVelocity : MonoBehaviour
     private float _targetStretch;
     private float _currentStretch;
 
-    private Vector2 _currentDirection; 
+    private Vector2 _currentDirection;
 
     [ SerializeField, ReadOnly ]
     private Vector2 _percievedVelocity;
@@ -31,11 +31,13 @@ public class StretchWithVelocity : MonoBehaviour
     private void Start()
     {
         _childBounds = _childTransform.GetComponent<Renderer>().bounds;
+        _currentDirection = Vector2.right;
     }
 
     private void OnEnable()
     {
         _lastPosition = transform.position;
+        _currentStretch = 1;
     }
 
     private void OnDisable()
@@ -58,10 +60,11 @@ public class StretchWithVelocity : MonoBehaviour
         {
             _currentDirection = Vector2.right;
         }
+
         _percievedVelocity = velocity;
         _lastPosition = position;
 
-        _targetStretch = 1 + Mathf.Lerp( 0, MaxSpeedStretch, velocity.magnitude / MaxVelocity );
+        _targetStretch = 1 + Mathf.Lerp( 0, MaxSpeedStretch, Mathf.Clamp01( velocity.magnitude / MaxVelocity ) );
         _currentStretch = Mathf.SmoothDamp( _currentStretch, _targetStretch, ref _currentStretchVelocity, Smoothing );
 
         ApplyStretch( _currentDirection, _currentStretch );
@@ -72,6 +75,7 @@ public class StretchWithVelocity : MonoBehaviour
         transform.localScale = Vector3.one;
         transform.localRotation = Quaternion.identity;
         _childTransform.localRotation = Quaternion.identity;
+        _currentStretch = 1;
     }
 
     private void ApplyStretch( Vector2 direction, float stretch )

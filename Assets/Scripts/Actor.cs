@@ -49,9 +49,6 @@ public class Actor : GLMonoBehaviour
     // minimum movement to change direction
     private const float MovementEpsilon = 0.01f;
 
-    // wall angle threshold from 90deg
-    private readonly float WallAngleThresholdCosine = Mathf.Cos( 45 * Mathf.Deg2Rad );
-
     private IActorState _currentState;
 
     private PlayerSettings _playerSettings;
@@ -141,7 +138,8 @@ public class Actor : GLMonoBehaviour
         transform.Translate( direction * length );
     }
 
-    public bool CheckWalls()
+    private readonly Collider2D[] _wallColliders = new Collider2D[ 1 ];        
+    public bool CheckWallCollisions()
     {
 //        var hit = Physics2D.Raycast( transform.position, Vector2.right * Direction, _playerSettings.BodyRadius,
 //            1 << LayerMask.NameToLayer( "Wall" ) );
@@ -157,14 +155,13 @@ public class Actor : GLMonoBehaviour
 //
         var thisCollider = GetComponent<Collider2D>();
         var filter = new ContactFilter2D() { layerMask = 1 << LayerMask.NameToLayer( "Wall" ), useLayerMask = true };
-        var colliders = new Collider2D[ 1 ];
-        if ( thisCollider.OverlapCollider( filter, colliders ) > 0 )
+        if ( thisCollider.OverlapCollider( filter, _wallColliders ) > 0 )
         {
-            var distance2D = thisCollider.Distance( colliders[ 0 ] );
+            var distance2D = thisCollider.Distance( _wallColliders[ 0 ] );
             if ( distance2D.distance > 0 )
             {
-                Debug.LogError( "Should not be > 0" );
-                Debug.Log( string.Format( "{0} - {1}", distance2D.normal, distance2D.distance ) );
+//                Debug.LogError( "Should not be > 0" );
+//                Debug.Log( string.Format( "{0} - {1}", distance2D.normal, distance2D.distance ) );
             }
             else
             {
@@ -191,7 +188,7 @@ public class Actor : GLMonoBehaviour
     private void Start()
     {
         _playerSettings = PlayerSettings.Instance;
-        _currentState = new GroundedState( this );
+        _currentState = new FallState( this );
         _currentState.OnEnter();
         StateName = _currentState.Name;
     }
@@ -217,7 +214,7 @@ public class Actor : GLMonoBehaviour
             var nextState = _currentState.Update();
             if ( nextState != null )
             {
-                Debug.Log( string.Format( "Going from state {0} to state {1}", _currentState.Name, nextState.Name ) );
+                Debug.Log( string.Format( "Going from {0} to {1}", _currentState.Name, nextState.Name ) );
                 _currentState.OnExit();
                 nextState.OnEnter();
                 _currentState = nextState;

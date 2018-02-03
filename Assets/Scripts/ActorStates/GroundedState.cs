@@ -31,7 +31,7 @@ namespace ActorStates
             // default move            
             Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
 
-            Actor.CheckWalls();
+            Actor.CheckWallCollisions();
             
             if ( !Actor.CheckGround() )
             {

@@ -37,7 +37,7 @@ namespace ActorStates
             // default move
             Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
 
-            Actor.CheckWalls();
+            Actor.CheckWallCollisions();
             
             if ( Actor.CheckDash() )
             {
@@ -49,12 +49,12 @@ namespace ActorStates
                 return new AttackState( Actor );
             }
 
+            _jumpTimeRemaining -= Time.deltaTime;
             if ( _jumpTimeRemaining <= 0 )
             {
                 return new FallState( Actor );
             }
-            _jumpTimeRemaining -= Time.deltaTime;
-            
+
             return null;
         }
     }
