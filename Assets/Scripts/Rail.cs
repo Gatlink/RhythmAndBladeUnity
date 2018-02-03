@@ -1,9 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using Gamelogic.Extensions;
-using Gamelogic.Extensions.Algorithms;
 using UnityEngine.Serialization;
 
 public class Rail : MonoBehaviour
@@ -69,6 +67,14 @@ public class Rail : MonoBehaviour
         Points.Clear();
         Points.Add( new Vector2( -1, 0 ) );
         Points.Add( new Vector2( 1, 0 ) );
+    }
+
+    private void OnValidate()
+    {
+        if ( Points.Count < 2 )
+        {
+            Reset();
+        }
     }
 
     private void Awake()
