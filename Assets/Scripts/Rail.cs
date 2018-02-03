@@ -55,6 +55,8 @@ public class Rail : MonoBehaviour
 
 // METHODS
 
+    public bool Closed;
+
     [ HideInInspector, SerializeField ]
     [ FormerlySerializedAs( "points" ) ]
     public List<Vector3> Points;
@@ -232,6 +234,15 @@ public class Rail : MonoBehaviour
             var from = points[ i - 1 ] + position;
             var to = points[ i ] + position;
             yield return new Segment() { From = from, To = to };
+        }
+
+        if ( Closed && points.Count >= 3 )
+        {
+            yield return new Segment()
+            {
+                From = points[ points.Count - 1 ],
+                To = points[ 0 ]
+            };
         }
     }
 
