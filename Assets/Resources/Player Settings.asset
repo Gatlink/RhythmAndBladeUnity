@@ -12,24 +12,24 @@ MonoBehaviour:
   m_Name: Player Settings
   m_EditorClassIdentifier: 
   _bodyRadius: 1
-  _railStickiness: 0.1
+  _railStickiness: 0.2
   _groundedMovementSpeed: 15
-  _groundedMoveInertia: 0.1
+  _groundedMoveInertia: 0.05
   _fallMovementSpeed: 10
-  _fallMoveInertia: 0.2
-  _gravity: 30
+  _fallMoveInertia: 0.1
+  _gravity: 40
   _maxFallVelocity: 60
-  _jumpDuration: 0.5
+  _jumpDuration: 0.3
   _jumpMovementSpeed: 10
-  _jumpMoveInertia: 0.2
+  _jumpMoveInertia: 0.1
   _jumpHeightCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
+      inSlope: 2.8392856
+      outSlope: 2.8392856
       tangentMode: 0
     - serializedVersion: 2
       time: 1

@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using Gamelogic.Extensions.Algorithms;
 using UnityEngine.Serialization;
 
 public class Rail : MonoBehaviour
@@ -73,15 +75,38 @@ public class Rail : MonoBehaviour
 
     private void Start()
     {
-        CreateCollider();
+        CreateColliders();
     }
 
-    private void CreateCollider()
+    private EdgeCollider2D NewCollider( Segment first )
     {
-        var edgeCollider = new GameObject("Collider", typeof(EdgeCollider2D)).GetComponent<EdgeCollider2D>();
-        edgeCollider.transform.SetParent( transform, false );
-        edgeCollider.points = Points.Select( v => (Vector2) v ).ToArray();
-        edgeCollider.gameObject.layer = gameObject.layer;
+        var edgeCollider = new GameObject( first.IsWall() ? "Wall" : "Rail Part", typeof( EdgeCollider2D ) ).GetComponent<EdgeCollider2D>();
+        edgeCollider.transform.SetParent( transform, true );
+        edgeCollider.gameObject.layer = LayerMask.NameToLayer( first.IsWall() ? "Wall" : "Rail" );
+        edgeCollider.points = new Vector2[] { first.From, first.To };
+        return edgeCollider;
+    }
+
+    private void CreateColliders()
+    {
+        var first = EnumerateSegments().First();
+        var currentCollider = NewCollider( first );
+        var currentColliderIsWall = first.IsWall();
+
+        foreach ( var segment in EnumerateSegments().Skip( 1 ) )
+        {
+            if ( segment.IsWall() == currentColliderIsWall )
+            {
+                // add point to current collider
+                currentCollider.points = currentCollider.points.Concat( Enumerable.Repeat( (Vector2) segment.To, 1 ) )
+                    .ToArray();
+            }
+            else
+            {
+                currentCollider = NewCollider( segment);
+                currentColliderIsWall = segment.IsWall();
+            }
+        }
     }
 
     public bool GetProjection( int idx, Vector3 pos, out Vector3 proj )
@@ -212,5 +237,10 @@ public class Rail : MonoBehaviour
     {
         public Vector3 From;
         public Vector3 To;
+
+        public bool IsWall()
+        {
+            return Mathf.Abs( From.x - To.x ) <= Mathf.Epsilon;
+        }
     }
 }

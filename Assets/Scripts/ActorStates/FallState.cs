@@ -9,7 +9,7 @@ namespace ActorStates
         }
 
         public override IActorState Update()
-        {            
+        {
             var desiredVelocity = Actor.DesiredMovement * PlayerSettings.FallMovementSpeed;
 
             Actor.UpdateDirection( desiredVelocity );
@@ -23,7 +23,14 @@ namespace ActorStates
             Actor.CurrentVelocity.y = Mathf.Max( -PlayerSettings.MaxFallVelocity, Actor.CurrentVelocity.y );
 
             // default move
-            Actor.Move();
+            Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
+
+            Actor.CheckWalls();
+
+            if ( Actor.CheckGround() )
+            {
+                return new GroundedState( Actor );
+            }
 
             if ( Actor.CheckDash() )
             {
@@ -33,11 +40,6 @@ namespace ActorStates
             if ( Actor.CheckAttack() )
             {
                 return new AttackState( Actor );
-            }
-
-            if ( Actor.CheckGround() )
-            {
-                return new GroundedState( Actor );
             }
 
             return null;

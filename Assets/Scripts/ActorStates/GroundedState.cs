@@ -11,9 +11,10 @@ namespace ActorStates
 
         public override IActorState Update()
         {
-            RaycastHit2D hit;
-            if ( !Actor.CheckGround( out hit ) )
+            Vector2 normal;
+            if ( !Actor.CheckGround( out normal ) )
             {
+                Debug.LogWarning( "Should not happen except during the very first frame" );
                 return new FallState( Actor );
             }
 
@@ -21,15 +22,22 @@ namespace ActorStates
             Actor.UpdateDirection( desiredVelocity );
 
             // move along rail
-            Vector3 tangent = hit.normal.Rotate270();
+            Vector3 tangent = normal.Rotate270();
 
             // update current velocity accounting inertia
             Actor.CurrentVelocity = Vector3.SmoothDamp( Actor.CurrentVelocity, tangent * desiredVelocity,
                 ref Actor.CurrentAcceleration, PlayerSettings.GroundedMoveInertia );
 
             // default move            
-            Actor.Move();
+            Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
 
+            Actor.CheckWalls();
+            
+            if ( !Actor.CheckGround() )
+            {
+                return new FallState( Actor );
+            }
+            
             if ( Actor.CheckJump() )
             {
                 return new JumpState( Actor );
@@ -43,11 +51,6 @@ namespace ActorStates
             if ( Actor.CheckAttack() )
             {
                 return new AttackState( Actor );
-            }
-
-            if ( !Actor.CheckGround() )
-            {
-                return new FallState( Actor );
             }
 
             return null;

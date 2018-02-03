@@ -35,8 +35,10 @@ namespace ActorStates
             Actor.CurrentVelocity.y = (targetPositionY - Actor.transform.position.y) / Time.deltaTime;
 
             // default move
-            Actor.Move( snapGround: false );
+            Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
 
+            Actor.CheckWalls();
+            
             if ( Actor.CheckDash() )
             {
                 return new DashState( Actor );

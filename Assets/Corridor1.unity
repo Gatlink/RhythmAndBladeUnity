@@ -113,7 +113,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &118977195
+--- !u!1001 &233097539
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -122,11 +122,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4855078756398926, guid: 47367d681c234da46a7d9eb18be52df1, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 5.19
+      value: -2.87
       objectReference: {fileID: 0}
     - target: {fileID: 4855078756398926, guid: 47367d681c234da46a7d9eb18be52df1, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 21.79
+      value: 1.6
       objectReference: {fileID: 0}
     - target: {fileID: 4855078756398926, guid: 47367d681c234da46a7d9eb18be52df1, type: 2}
       propertyPath: m_LocalPosition.z
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 2055659820}
   - component: {fileID: 2055659819}
   - component: {fileID: 2055659821}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Rail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312,7 +312,7 @@ MonoBehaviour:
   - {x: -6.9630823, y: 11.100772, z: 0}
   - {x: -6.9630823, y: 0.09442747, z: 0}
   - {x: 15.594894, y: 0.827942, z: 0}
-  - {x: 15.594894, y: 2.5341463, z: 0}
+  - {x: 15.594894, y: 2.5971236, z: 0}
   - {x: 26.85205, y: 2.5341463, z: 0}
   - {x: 31.54765, y: 0.24654746, z: 0}
   - {x: 45.714706, y: -0.2350645, z: 0}
@@ -324,7 +324,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2055659818}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.96, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1053806219}

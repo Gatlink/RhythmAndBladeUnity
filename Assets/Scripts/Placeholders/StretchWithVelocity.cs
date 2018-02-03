@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Gamelogic.Extensions;
+using UnityEngine;
 
 public class StretchWithVelocity : MonoBehaviour
 {
@@ -7,13 +8,24 @@ public class StretchWithVelocity : MonoBehaviour
     public bool CompensatePosition = true;
     public float MinVelocity = 0.1f;
 
+    public float Smoothing = 0.1f;
+
     private Vector2 _lastPosition;
     private Transform _childTransform;
     private Bounds _childBounds;
 
+    private float _currentStretchVelocity;
+    private float _targetStretch;
+    private float _currentStretch;
+
+    private Vector2 _currentDirection; 
+
+    [ SerializeField, ReadOnly ]
+    private Vector2 _percievedVelocity;
+
     private void Awake()
     {
-        _childTransform = transform.GetChild( 0 );        
+        _childTransform = transform.GetChild( 0 );
     }
 
     private void Start()
@@ -38,12 +50,21 @@ public class StretchWithVelocity : MonoBehaviour
         var position = (Vector2) transform.position;
         var velocity = ( position - _lastPosition ) / Time.deltaTime;
 
+        if ( velocity.sqrMagnitude >= MinVelocity * MinVelocity )
+        {
+            _currentDirection = velocity;
+        }
+        else
+        {
+            _currentDirection = Vector2.right;
+        }
+        _percievedVelocity = velocity;
         _lastPosition = position;
 
-        if ( velocity.sqrMagnitude >= MinVelocity )
-        {
-            ApplyStretch( velocity, 1 + Mathf.Lerp( 0, MaxSpeedStretch, velocity.magnitude / MaxVelocity ) );
-        }
+        _targetStretch = 1 + Mathf.Lerp( 0, MaxSpeedStretch, velocity.magnitude / MaxVelocity );
+        _currentStretch = Mathf.SmoothDamp( _currentStretch, _targetStretch, ref _currentStretchVelocity, Smoothing );
+
+        ApplyStretch( _currentDirection, _currentStretch );
     }
 
     private void ResetStretch()
@@ -65,8 +86,9 @@ public class StretchWithVelocity : MonoBehaviour
 
         if ( CompensatePosition )
         {
-            var offsetX = Mathf.Abs( Mathf.Cos( angle * Mathf.Deg2Rad ) ) * (1 - 1 / stretch) * _childBounds.size.y * 0.5f;
-            var offsetY = Mathf.Sin( angle * Mathf.Deg2Rad ) * (stretch - 1) * _childBounds.size.y * 0.5f;
+            var offsetX = Mathf.Abs( Mathf.Cos( angle * Mathf.Deg2Rad ) ) * ( 1 - 1 / stretch ) * _childBounds.size.y *
+                          0.5f;
+            var offsetY = Mathf.Sin( angle * Mathf.Deg2Rad ) * ( stretch - 1 ) * _childBounds.size.y * 0.5f;
             var pos = transform.position;
             pos.y -= offsetX;
             pos.y -= offsetY;
