@@ -7,38 +7,67 @@ namespace ActorStates
         private float _jumpTimeRemaining;
         private float _jumpStartPositionY;
 
+        protected virtual float JumpDuration
+        {
+            get { return PlayerSettings.JumpDuration; }
+        }
+
+        protected virtual float JumpMovementSpeed
+        {
+            get { return PlayerSettings.JumpMovementSpeed; }
+        }
+
+        protected virtual float JumpMoveInertia
+        {
+            get { return PlayerSettings.JumpMoveInertia; }
+        }
+
+        protected virtual AnimationCurve JumpHeightCurve
+        {
+            get { return PlayerSettings.JumpHeightCurve; }
+        }
+
+        protected virtual float JumpHeight
+        {
+            get { return PlayerSettings.JumpHeight; }
+        }
+
         public JumpState( Actor actor ) : base( actor )
         {
         }
 
         public override void OnEnter()
         {
-            _jumpTimeRemaining = PlayerSettings.JumpDuration;
+            _jumpTimeRemaining = JumpDuration;
             _jumpStartPositionY = Actor.transform.position.y;
         }
 
         public override IActorState Update()
         {
-            var desiredVelocity = Actor.DesiredMovement * PlayerSettings.JumpMovementSpeed;
+            var desiredVelocity = Actor.DesiredMovement * JumpMovementSpeed;
 
             Actor.UpdateDirection( desiredVelocity );
 
             // update current horizontal velocity accounting inertia
             Actor.CurrentVelocity.x = Mathf.SmoothDamp( Actor.CurrentVelocity.x, desiredVelocity,
-                ref Actor.CurrentAcceleration.x, PlayerSettings.JumpMoveInertia );
+                ref Actor.CurrentAcceleration.x, JumpMoveInertia );
 
             // apply jump vertical velocity curve
             var targetPositionY = _jumpStartPositionY +
-                                  PlayerSettings.JumpHeightCurve.Evaluate(
-                                      1 - _jumpTimeRemaining / PlayerSettings.JumpDuration ) *
-                                  PlayerSettings.JumpHeight;
-            Actor.CurrentVelocity.y = (targetPositionY - Actor.transform.position.y) / Time.deltaTime;
+                                  JumpHeightCurve.Evaluate( 1 - _jumpTimeRemaining / JumpDuration ) * JumpHeight;
+            Actor.CurrentVelocity.y = ( targetPositionY - Actor.transform.position.y ) / Time.deltaTime;
 
             // default move
             Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
 
             Actor.CheckWallCollisions();
-            
+
+//            Vector2 normal;
+//            if ( Actor.CheckWallProximity( Actor.Direction, out normal ) )
+//            {
+//                return new WallSlideState( Actor, normal );
+//            }
+
             if ( Actor.CheckDash() )
             {
                 return new DashState( Actor );

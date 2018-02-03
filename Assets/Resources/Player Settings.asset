@@ -41,3 +41,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   _jumpHeight: 5
+  _wallStickiness: 0.1
+  _wallSlideGravity: 100
+  _maxWallSlideVelocity: 3

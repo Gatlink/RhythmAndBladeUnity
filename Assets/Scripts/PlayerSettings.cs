@@ -63,6 +63,16 @@ public class PlayerSettings : ScriptableObject
     [ SerializeField ]
     private float _jumpHeight;
 
+    [Header("Wall Slide")]
+    [SerializeField]
+    private float _wallStickiness;
+
+    [SerializeField]
+    private float _wallSlideGravity;
+
+    [SerializeField]
+    private float _maxWallSlideVelocity;
+
     #region ACCESSORS
 
     public float GroundedMovementSpeed
@@ -128,6 +138,21 @@ public class PlayerSettings : ScriptableObject
     public float JumpHeight
     {
         get { return _jumpHeight; }
+    }
+
+    public float WallStickiness
+    {
+        get { return _wallStickiness; }
+    }
+
+    public float WallSlideGravity
+    {
+        get { return _wallSlideGravity; }
+    }
+
+    public float MaxWallSlideVelocity
+    {
+        get { return _maxWallSlideVelocity; }
     }
 
     #endregion

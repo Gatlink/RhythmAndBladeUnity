@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Gamelogic.Extensions;
+using UnityEngine;
 
 namespace ActorStates
 {
@@ -26,6 +27,12 @@ namespace ActorStates
             Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
 
             Actor.CheckWallCollisions();
+
+            Vector2 normal;
+            if ( Actor.CheckWallProximity( Actor.Direction, out normal ) )
+            {
+                return new WallSlideState( Actor, normal );
+            }
 
             if ( Actor.CheckGround() )
             {

@@ -138,21 +138,34 @@ public class Actor : GLMonoBehaviour
         transform.Translate( direction * length );
     }
 
-    private readonly Collider2D[] _wallColliders = new Collider2D[ 1 ];        
+    public bool CheckWallProximity( float direction )
+    {
+        Vector2 normal;
+        return CheckWallProximity( direction, out normal );
+    }
+    
+    public bool CheckWallProximity( float direction, out Vector2 normal )
+    {
+        var hit = Physics2D.Raycast( transform.position, Vector2.right * direction,
+            _playerSettings.BodyRadius + _playerSettings.WallStickiness, 1 << LayerMask.NameToLayer( "Wall" ) );
+        if ( hit.collider != null )
+        {
+            // snap to wall
+            transform.position = hit.point + hit.normal * _playerSettings.BodyRadius;
+            CurrentVelocity.x = 0;
+            CurrentAcceleration.x = 0;
+            normal = hit.normal;
+            return true;
+        }
+
+        normal = Vector2.zero;
+        return false;
+    }
+
+    private readonly Collider2D[] _wallColliders = new Collider2D[ 1 ];
+
     public bool CheckWallCollisions()
     {
-//        var hit = Physics2D.Raycast( transform.position, Vector2.right * Direction, _playerSettings.BodyRadius,
-//            1 << LayerMask.NameToLayer( "Wall" ) );
-//        if ( hit.collider != null && Vector2.Dot( hit.normal, Vector2.up ) <= WallAngleThresholdCosine )
-//        {
-//            transform.Translate( hit.normal * ( _playerSettings.BodyRadius - hit.distance ) );
-//            CurrentVelocity.x = 0;
-//            CurrentAcceleration.x = 0;
-//            return true;
-//        }
-//
-//        return false;
-//
         var thisCollider = GetComponent<Collider2D>();
         var filter = new ContactFilter2D() { layerMask = 1 << LayerMask.NameToLayer( "Wall" ), useLayerMask = true };
         if ( thisCollider.OverlapCollider( filter, _wallColliders ) > 0 )
