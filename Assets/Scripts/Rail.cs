@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using Gamelogic.Extensions;
 using Gamelogic.Extensions.Algorithms;
 using UnityEngine.Serialization;
 
@@ -80,7 +81,8 @@ public class Rail : MonoBehaviour
 
     private EdgeCollider2D NewCollider( Segment first )
     {
-        var edgeCollider = new GameObject( first.IsWall() ? "Wall" : "Rail Part", typeof( EdgeCollider2D ) ).GetComponent<EdgeCollider2D>();
+        var edgeCollider = new GameObject( first.IsWall() ? "Wall" : "Rail Part", typeof( EdgeCollider2D ) )
+            .GetComponent<EdgeCollider2D>();
         edgeCollider.transform.SetParent( transform, true );
         edgeCollider.gameObject.layer = LayerMask.NameToLayer( first.IsWall() ? "Wall" : "Rail" );
         edgeCollider.points = new Vector2[] { first.From, first.To };
@@ -98,12 +100,12 @@ public class Rail : MonoBehaviour
             if ( segment.IsWall() == currentColliderIsWall )
             {
                 // add point to current collider
-                currentCollider.points = currentCollider.points.Concat( Enumerable.Repeat( (Vector2) segment.To, 1 ) )
+                currentCollider.points = currentCollider.points.Concat( Enumerable.Repeat( segment.To, 1 ) )
                     .ToArray();
             }
             else
             {
-                currentCollider = NewCollider( segment);
+                currentCollider = NewCollider( segment );
                 currentColliderIsWall = segment.IsWall();
             }
         }
@@ -235,12 +237,32 @@ public class Rail : MonoBehaviour
 
     public struct Segment
     {
-        public Vector3 From;
-        public Vector3 To;
+        public Vector2 From;
+        public Vector2 To;
 
         public bool IsWall()
         {
             return Mathf.Abs( From.x - To.x ) <= Mathf.Epsilon;
+        }
+
+        public Vector2 Center
+        {
+            get { return 0.5f * ( From + To ); }
+        }
+
+        public Vector2 Normal
+        {
+            get { return ( To - From ).Rotate90().normalized; }
+        }
+
+        public float Length
+        {
+            get { return Vector2.Distance( From, To ); }
+        }
+
+        public float Slope
+        {
+            get { return Vector2.SignedAngle( Vector2.right, To - From ); }
         }
     }
 }

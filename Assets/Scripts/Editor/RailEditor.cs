@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Gamelogic.Extensions;
 using UnityEditor;
 using UnityEngine;
 
@@ -37,7 +38,10 @@ public class RailEditor : Editor
     [ DrawGizmo( GizmoType.NonSelected | GizmoType.Pickable | GizmoType.Selected ) ]
     private static void NonSelectedSceneView( Rail rail, GizmoType gizmoType )
     {
-        DrawHandles( rail );
+        if ( rail.gameObject != Selection.activeGameObject )
+        {
+            DrawHandles( rail );
+        }
     }
 
     private static void DrawHandles( Rail rail )
@@ -121,17 +125,26 @@ public class RailEditor : Editor
 
     private static void DrawLines( Rail rail )
     {
-        var oldColor = Handles.color;
-        for ( var i = 0; i < rail.Points.Count - 1; ++i )
+        var style = new GUIStyle( GUI.skin.label );
+        style.alignment = TextAnchor.UpperLeft;
+
+        foreach ( var segment in rail.EnumerateSegments() )
         {
-            var cur = rail.transform.position + rail.Points[ i ];
-            var next = rail.transform.position + rail.Points[ i + 1 ];
+            Handles.color = segment.IsWall() ? WallColor : SelectedColor;
+            style.normal.textColor = Handles.color;
+            
+            Handles.DrawLine( segment.From, segment.To );
 
-            if ( next.x == cur.x )
-                Handles.color = WallColor;
-
-            Handles.DrawLine( cur, next );
-            Handles.color = oldColor;
+            var label = segment.Length.ToString( "F1" );
+            if ( !segment.IsWall() )
+            {
+                label += " " + segment.Slope.ToString( "F0" ) + "°";
+            }
+            var labelPos = segment.Center + segment.Normal * -0.6f;
+            var labelSize = GUI.skin.label.CalcSize( new GUIContent(label));
+            var adjustedPos = HandleUtility
+                .GUIPointToWorldRay( HandleUtility.WorldToGUIPoint( labelPos ) - 0.5f * labelSize ).origin;
+            Handles.Label( adjustedPos, label, style );
         }
     }
 
