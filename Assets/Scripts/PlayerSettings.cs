@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Remoting.Messaging;
+using ActorStates;
 using UnityEngine;
 
 [ CreateAssetMenu ]
@@ -63,23 +64,51 @@ public class PlayerSettings : ScriptableObject
     [ SerializeField ]
     private float _jumpHeight;
 
-    [Header("Wall Slide")]
-    [SerializeField]
+    [ Header( "Wall Slide" ) ]
+    [ SerializeField ]
     private float _wallStickiness;
 
-    [SerializeField]
+    [ SerializeField ]
     private float _wallSlideGravity;
 
-    [SerializeField]
+    [ SerializeField ]
     private float _maxWallSlideVelocity;
 
-    [SerializeField]
+    [ SerializeField ]
     private float _timeToUnstickFromWall;
 
-    [Header("Wall Jump")]
+    [ Header( "Wall Jump" ) ]
+    [ SerializeField ]
+    [ Range( 0, 1 ) ]
+    private float _wallJumpAirControlTiming;
+
+    [ Header( "Dash" ) ]
+    [ SerializeField ]
+    private float _dashDuration;
+
+    [ SerializeField ]
+    private AnimationCurve _dashPositionCurve;
+
+    [ SerializeField ]
+    private float _dashLength;
+
+    [ SerializeField ]
+    [ Range( 0, 1 ) ]
+    private float _dashJumpTiming;
+
+    [ Header( "Dash Jump" ) ]
+    [ SerializeField ]
+    [ Range( 0, 1 ) ]
+    private float _dashJumpAirControlTiming;
+
+    [ SerializeField ]
+    private float _dashJumpDuration;
+
+    [ SerializeField ]
+    private float _dashJumpHeight;
+
     [SerializeField]
-    [Range(0, 1)]
-    private float _jumpAirControlTiming;
+    private float _dashJumpInitialMovementSpeed;
 
     #region ACCESSORS
 
@@ -168,9 +197,49 @@ public class PlayerSettings : ScriptableObject
         get { return _timeToUnstickFromWall; }
     }
 
-    public float JumpAirControlTiming
+    public float WallJumpAirControlTiming
     {
-        get { return _jumpAirControlTiming; }
+        get { return _wallJumpAirControlTiming; }
+    }
+
+    public float DashDuration
+    {
+        get { return _dashDuration; }
+    }
+
+    public AnimationCurve DashPositionCurve
+    {
+        get { return _dashPositionCurve; }
+    }
+
+    public float DashLength
+    {
+        get { return _dashLength; }
+    }
+
+    public float DashJumpTiming
+    {
+        get { return _dashJumpTiming; }
+    }
+
+    public float DashJumpAirControlTiming
+    {
+        get { return _dashJumpAirControlTiming; }
+    }
+
+    public float DashJumpDuration
+    {
+        get { return _dashJumpDuration; }
+    }
+
+    public float DashJumpHeight
+    {
+        get { return _dashJumpHeight; }
+    }
+
+    public float DashJumpInitialMovementSpeed
+    {
+        get { return _dashJumpInitialMovementSpeed; }
     }
 
     #endregion

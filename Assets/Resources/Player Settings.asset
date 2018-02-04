@@ -45,4 +45,29 @@ MonoBehaviour:
   _wallSlideGravity: 100
   _maxWallSlideVelocity: 3
   _timeToUnstickFromWall: 0.15
-  _jumpAirControlTiming: 0.33
+  _wallJumpAirControlTiming: 0.33
+  _dashDuration: 0.2
+  _dashPositionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 2.1562495
+      outSlope: 2.1562495
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0.37500045
+      outSlope: 0.37500045
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  _dashLength: 4
+  _dashJumpTiming: 0.33
+  _dashJumpAirControlTiming: 0.66
+  _dashJumpDuration: 0.6
+  _dashJumpHeight: 3
+  _dashJumpInitialMovementSpeed: 25

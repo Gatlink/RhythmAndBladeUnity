@@ -248,7 +248,7 @@ MonoBehaviour:
   DesiredDash: 0
   StateName: 
   Direction: 1
-  DashCount: 0
+  DashCount: 1
   AttackCooldown: 0
   CurrentVelocity: {x: 0, y: 0, z: 0}
   CurrentAcceleration: {x: 0, y: 0, z: 0}

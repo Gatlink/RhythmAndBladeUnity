@@ -49,7 +49,7 @@ namespace ActorStates
         public override void OnEnter()
         {
             _jumpTimeRemaining = JumpDuration;
-            _jumpStartPositionY = Actor.transform.position.y;
+            _jumpStartPositionY = Actor.transform.position.y;            
         }
 
         public override IActorState Update()

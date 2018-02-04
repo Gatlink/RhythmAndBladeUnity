@@ -8,7 +8,12 @@ namespace ActorStates
         public GroundedState( Actor actor ) : base( actor )
         {
         }
-        
+
+        public override void OnEnter()
+        {
+            Actor.DashCount = 1;
+        }
+
         public override IActorState Update()
         {
             Vector2 normal;

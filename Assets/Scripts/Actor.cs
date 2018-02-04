@@ -32,7 +32,7 @@ public class Actor : GLMonoBehaviour
     public float Direction = 1;
 
     [ ReadOnly ]
-    public int DashCount;
+    public int DashCount = 1;
 
     [ ReadOnly ]
     public float AttackCooldown;

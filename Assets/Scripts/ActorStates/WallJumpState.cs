@@ -4,9 +4,13 @@
     {
         private float _jumpDirection;
 
-        protected float AirControlTiming
+        private float AirControlTiming
         {
-            get { return PlayerSettings.JumpAirControlTiming; }
+            get { return PlayerSettings.WallJumpAirControlTiming; }
+        }
+
+        public WallJumpState( Actor actor ) : base( actor )
+        {
         }
 
         protected override float GetVelocity()
@@ -23,10 +27,6 @@
             base.OnEnter();
             _jumpDirection = Actor.Direction;
             Actor.CurrentVelocity.x = GetVelocity();
-        }
-
-        public WallJumpState( Actor actor ) : base( actor )
-        {
         }
     }
 }
