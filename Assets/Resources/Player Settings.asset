@@ -44,3 +44,5 @@ MonoBehaviour:
   _wallStickiness: 0.1
   _wallSlideGravity: 100
   _maxWallSlideVelocity: 3
+  _timeToUnstickFromWall: 0.15
+  _jumpAirControlTiming: 0.33

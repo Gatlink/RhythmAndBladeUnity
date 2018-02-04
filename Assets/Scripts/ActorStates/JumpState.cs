@@ -32,8 +32,18 @@ namespace ActorStates
             get { return PlayerSettings.JumpHeight; }
         }
 
+        protected float NormalizedTime
+        {
+            get { return 1 - _jumpTimeRemaining / JumpDuration; }
+        }
+
         public JumpState( Actor actor ) : base( actor )
         {
+        }
+
+        protected virtual float GetVelocity()
+        {
+            return Actor.DesiredMovement * JumpMovementSpeed;
         }
 
         public override void OnEnter()
@@ -44,7 +54,7 @@ namespace ActorStates
 
         public override IActorState Update()
         {
-            var desiredVelocity = Actor.DesiredMovement * JumpMovementSpeed;
+            var desiredVelocity = GetVelocity();
 
             Actor.UpdateDirection( desiredVelocity );
 
@@ -54,7 +64,7 @@ namespace ActorStates
 
             // apply jump vertical velocity curve
             var targetPositionY = _jumpStartPositionY +
-                                  JumpHeightCurve.Evaluate( 1 - _jumpTimeRemaining / JumpDuration ) * JumpHeight;
+                                  JumpHeightCurve.Evaluate( NormalizedTime ) * JumpHeight;
             Actor.CurrentVelocity.y = ( targetPositionY - Actor.transform.position.y ) / Time.deltaTime;
 
             // default move

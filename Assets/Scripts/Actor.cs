@@ -99,19 +99,6 @@ public class Actor : GLMonoBehaviour
 
         normal = selectedHit.normal;
         return grounded;
-//        var hit = Physics2D.Raycast( transform.position, Vector2.down,
-//            _playerSettings.BodyRadius + _playerSettings.RailStickiness, 1 << LayerMask.NameToLayer( "Rail" ) );
-//
-//        var grounded = hit.collider != null;
-//        if ( snap && grounded )
-//        {
-//            transform.position = transform.position.WithY( hit.point.y + _playerSettings.BodyRadius );
-//            CurrentVelocity.y = 0;
-//            CurrentAcceleration.y = 0;
-//        }
-//
-//        normal = hit.normal;
-//        return grounded;
     }
 
     public void UpdateDirection( float desiredVelocity )

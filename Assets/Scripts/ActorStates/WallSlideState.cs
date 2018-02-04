@@ -6,6 +6,7 @@ namespace ActorStates
     public class WallSlideState : ActorStateBase
     {
         private readonly Vector2 _wallDirection;
+        private float _unstickInhibition;
 
         public WallSlideState( Actor actor, Vector2 wallNormal ) : base( actor )
         {
@@ -15,6 +16,7 @@ namespace ActorStates
         public override void OnEnter()
         {
             Actor.CurrentVelocity = Vector3.zero;
+            _unstickInhibition = PlayerSettings.TimeToUnstickFromWall;
         }
 
         public override IActorState Update()
@@ -33,6 +35,20 @@ namespace ActorStates
 
             Actor.CheckWallCollisions();
 
+            // check if player wants to unstick from wall
+            if ( Actor.DesiredMovement * Actor.Direction > 0 )
+            {
+                _unstickInhibition -= Time.deltaTime;
+                if ( _unstickInhibition <= 0 )
+                {
+                    return new FallState( Actor );
+                }
+            }
+            else
+            {
+                _unstickInhibition = PlayerSettings.TimeToUnstickFromWall;
+            }
+            
             if ( !Actor.CheckWallProximity( -Actor.Direction ) )
             {
                 return new FallState( Actor );

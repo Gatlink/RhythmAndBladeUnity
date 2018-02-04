@@ -73,6 +73,14 @@ public class PlayerSettings : ScriptableObject
     [SerializeField]
     private float _maxWallSlideVelocity;
 
+    [SerializeField]
+    private float _timeToUnstickFromWall;
+
+    [Header("Wall Jump")]
+    [SerializeField]
+    [Range(0, 1)]
+    private float _jumpAirControlTiming;
+
     #region ACCESSORS
 
     public float GroundedMovementSpeed
@@ -153,6 +161,16 @@ public class PlayerSettings : ScriptableObject
     public float MaxWallSlideVelocity
     {
         get { return _maxWallSlideVelocity; }
+    }
+
+    public float TimeToUnstickFromWall
+    {
+        get { return _timeToUnstickFromWall; }
+    }
+
+    public float JumpAirControlTiming
+    {
+        get { return _jumpAirControlTiming; }
     }
 
     #endregion

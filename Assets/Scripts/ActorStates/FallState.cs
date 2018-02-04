@@ -1,5 +1,4 @@
-﻿using Gamelogic.Extensions;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ActorStates
 {

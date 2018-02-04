@@ -8,7 +8,7 @@ namespace ActorStates
         public GroundedState( Actor actor ) : base( actor )
         {
         }
-
+        
         public override IActorState Update()
         {
             Vector2 normal;
