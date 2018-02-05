@@ -6,8 +6,7 @@ namespace ActorStates
     {
         private float _jumpTimeRemaining;
         private float _jumpStartPositionY;
-        private float _jumpDirection;
-            
+        private float _jumpDirection;            
 
         protected virtual float JumpDuration
         {
@@ -44,7 +43,7 @@ namespace ActorStates
             get { return PlayerSettings.JumpInitialMovementSpeed; }
         }
 
-        protected float NormalizedTime
+        private float NormalizedTime
         {
             get { return 1 - _jumpTimeRemaining / JumpDuration; }
         }
