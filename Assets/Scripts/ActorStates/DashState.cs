@@ -8,6 +8,7 @@ namespace ActorStates
         private float _dashTimeRemaining;
         private float _dashDirection;
         private float _dashStartPositionX;
+        private bool _groundedDash;
 
         public DashState( Actor actor ) : base( actor )
         {
@@ -19,6 +20,7 @@ namespace ActorStates
             _dashTimeRemaining = PlayerSettings.DashDuration;
             _dashDirection = Actor.Direction;
             _dashStartPositionX = Actor.transform.position.x;
+            _groundedDash = Actor.CheckGround( snap: false );
         }
 
         public override IActorState Update()
@@ -44,8 +46,9 @@ namespace ActorStates
                 return new WallSlideState( Actor, normal );
             }
 
-            if ( NormalizedTime >= PlayerSettings.DashJumpTiming && Actor.CheckJump() &&
-                 Actor.CheckGround( snap: false ) )
+            if ( NormalizedTime >= PlayerSettings.DashJumpTiming
+                 && Actor.CheckJump()
+                 && _groundedDash )
             {
                 Actor.DashCount = 1;
                 return new DashJumpState( Actor );
