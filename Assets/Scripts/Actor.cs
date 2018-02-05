@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ActorStates;
 using Gamelogic.Extensions;
@@ -130,7 +131,7 @@ public class Actor : GLMonoBehaviour
         Vector2 normal;
         return CheckWallProximity( direction, out normal );
     }
-    
+
     public bool CheckWallProximity( float direction, out Vector2 normal )
     {
         var hit = Physics2D.Raycast( transform.position, Vector2.right * direction,
@@ -183,6 +184,14 @@ public class Actor : GLMonoBehaviour
         DesiredDash = false;
     }
 
+    public event Action<IActorState, IActorState> StateChangeEvent;
+
+    private void OnStateChangeEvent( IActorState previousState, IActorState nextState )
+    {
+        var handler = StateChangeEvent;
+        if ( handler != null ) handler( previousState, nextState );
+    }
+
     #region UNITY MESSAGES
 
     private void Start()
@@ -216,6 +225,7 @@ public class Actor : GLMonoBehaviour
             {
                 Debug.Log( string.Format( "Going from {0} to {1}", _currentState.Name, nextState.Name ) );
                 _currentState.OnExit();
+                OnStateChangeEvent( _currentState, nextState );
                 nextState.OnEnter();
                 _currentState = nextState;
                 StateName = _currentState.Name;
@@ -231,6 +241,7 @@ public class Actor : GLMonoBehaviour
     public OptionalInt TrackPositions = new OptionalInt();
 
     private readonly Queue<Vector3> _previousPositions = new Queue<Vector3>( 100 );
+
 
     private void LateUpdate()
     {

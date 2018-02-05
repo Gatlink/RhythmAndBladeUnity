@@ -16,12 +16,12 @@ MonoBehaviour:
   _groundedMovementSpeed: 15
   _groundedMoveInertia: 0.05
   _fallMovementSpeed: 10
-  _fallMoveInertia: 0.1
+  _fallMoveInertia: 0.2
   _gravity: 40
   _maxFallVelocity: 60
   _jumpDuration: 0.3
   _jumpMovementSpeed: 10
-  _jumpMoveInertia: 0.1
+  _jumpMoveInertia: 0.2
   _jumpHeightCurve:
     serializedVersion: 2
     m_Curve:
@@ -45,7 +45,7 @@ MonoBehaviour:
   _wallSlideGravity: 100
   _maxWallSlideVelocity: 3
   _timeToUnstickFromWall: 0.06
-  _wallJumpAirControlTiming: 0.33
+  _wallJumpAirControlTiming: 0.66
   _dashDuration: 0.2
   _dashPositionCurve:
     serializedVersion: 2
