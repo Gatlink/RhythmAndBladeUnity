@@ -1,32 +1,45 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System;
+using Gamelogic.Extensions;
+using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-	[HideInInspector]
-	public Actor target;
-	public Vector2 offset = new Vector2(5f, 5f);
-	[Range(0f, 1f)]
-	public float directionChangeFactor = 0.1f;
+    private Actor _target;
 
-	private float startingZ;
-	private Vector3 currentOffset;
+    public OptionalVector2 Offset = new OptionalVector2();
 
-	public void Awake()
-	{
-		startingZ = transform.position.z;
-		target = GameObject.FindGameObjectWithTag( "Player" ).GetComponent<Actor>();
-	}
-	
-	public void LateUpdate()
-	{
-		var desiredOffset = (Vector3) offset;
-		desiredOffset.x *= target.Direction;
+    public Vector2 TrackingInertia = Vector2.zero;
+    public float OffsetInertia;
 
-		currentOffset = directionChangeFactor * desiredOffset + (1f - directionChangeFactor) * currentOffset;
+    private Vector2 _currentVelocity;
 
-		var newPos = target.transform.position + currentOffset;
-		newPos.z = startingZ;
-		transform.position = newPos;
-	}
+    private Vector2 _currentOffset;
+    private Vector2 _currentOffsetVelocity;
+
+    public void Start()
+    {
+        _target = GameObject.FindGameObjectWithTag( "Player" ).GetComponent<Actor>();
+        if ( !Offset.UseValue )
+        {
+            Offset.UseValue = true;
+            Offset.Value = transform.position - _target.transform.position;
+        }
+    }
+
+    public void LateUpdate()
+    {
+        var targetOffset = Offset.Value;
+        targetOffset.x *= _target.Direction;
+
+        _currentOffset = Vector2.SmoothDamp( _currentOffset, targetOffset, ref _currentOffsetVelocity, OffsetInertia,
+            Single.MaxValue, Time.deltaTime );
+
+        var desiredPosition = (Vector2) _target.transform.position + _currentOffset;
+
+        var pos = transform.position;
+        pos.x = Mathf.SmoothDamp( pos.x, desiredPosition.x, ref _currentVelocity.x, TrackingInertia.x );
+        pos.y = Mathf.SmoothDamp( pos.y, desiredPosition.y, ref _currentVelocity.y, TrackingInertia.y );
+
+        transform.position = pos;
+    }
 }
