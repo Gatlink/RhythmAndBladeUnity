@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using UnityEngine.AI;
+﻿using Gamelogic.Extensions;
+using UnityEngine;
 
 namespace ActorStates
 {
@@ -7,8 +7,9 @@ namespace ActorStates
     {
         private float _dashTimeRemaining;
         private float _dashDirection;
-        private float _dashStartPositionX;
         private bool _groundedDash;
+        private float _lastNormalizedTime;
+        private Vector2 _lastTangent;
 
         public DashState( Actor actor ) : base( actor )
         {
@@ -19,28 +20,37 @@ namespace ActorStates
             Actor.DashCount--;
             _dashTimeRemaining = PlayerSettings.DashDuration;
             _dashDirection = Actor.Direction;
-            _dashStartPositionX = Actor.transform.position.x;
-            _groundedDash = Actor.CheckGround( snap: false );
+            _groundedDash = Actor.CheckGround();
+            _lastNormalizedTime = 0;
         }
 
         public override IActorState Update()
         {
-            // apply dash horizontal velocity curve
-            var targetPositionX = _dashStartPositionX + _dashDirection *
-                                  PlayerSettings.DashPositionCurve.Evaluate( NormalizedTime ) *
-                                  PlayerSettings.DashLength;
+            // apply dash tangencial velocity curve
+            var deltaU = _dashDirection * PlayerSettings.DashLength *
+                         ( PlayerSettings.DashPositionCurve.Evaluate( NormalizedTime ) -
+                           PlayerSettings.DashPositionCurve.Evaluate( _lastNormalizedTime ) );
 
-            // compute a velocity that realizes desired position curve
-            Actor.CurrentVelocity.x = ( targetPositionX - Actor.transform.position.x ) / Time.deltaTime;
+            _lastNormalizedTime = NormalizedTime;
 
-            Actor.CurrentVelocity.y = 0;
+            Vector2 tangent;
+            Vector2 normal;
+            if ( _groundedDash && Actor.CheckGround( out normal ) )
+            {
+                tangent = normal.Rotate270();
+            }
+            else
+            {
+                tangent = Vector2.right;
+            }
 
+            Actor.CurrentVelocity = tangent * deltaU / Time.deltaTime;
+            
             // default move
             Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
 
             Actor.CheckWallCollisions();
 
-            Vector2 normal;
             if ( Actor.CheckWallProximity( Actor.Direction, out normal ) )
             {
                 return new WallSlideState( Actor, normal );
