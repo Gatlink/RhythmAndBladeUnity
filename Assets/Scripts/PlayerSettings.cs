@@ -1,6 +1,5 @@
-﻿using System.Runtime.Remoting.Messaging;
-using ActorStates;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 [ CreateAssetMenu ]
 public class PlayerSettings : ScriptableObject
@@ -21,226 +20,117 @@ public class PlayerSettings : ScriptableObject
     }
 
     [ Header( "General" ) ]
-    [ SerializeField ]
-    private float _bodyRadius;
+    [ FormerlySerializedAs( "_bodyRadius" ) ]
+    public float BodyRadius = 1;
 
-    [ SerializeField ]
-    private float _railStickiness;
+    [ FormerlySerializedAs( "_railStickiness" ) ]
+    public float RailStickiness = 0.2f;
 
     [ Header( "Grounded" ) ]
-    [ SerializeField ]
-    private float _groundedMovementSpeed;
+    [ FormerlySerializedAs( "_groundedMovementSpeed" ) ]
+    public float GroundedMovementSpeed = 15;
 
-    [ SerializeField ]
-    private float _groundedMoveInertia;
+    [ FormerlySerializedAs( "_groundedMoveInertia" ) ]
+    public float GroundedMoveInertia = 0.05f;
 
     [ Header( "Fall" ) ]
-    [ SerializeField ]
-    private float _fallMovementSpeed;
+    [ FormerlySerializedAs( "_fallMovementSpeed" ) ]
+    public float FallMovementSpeed = 10;
 
-    [ SerializeField ]
-    private float _fallMoveInertia;
+    [ FormerlySerializedAs( "_fallMoveInertia" ) ]
+    public float FallMoveInertia = 0.1f;
 
-    [ SerializeField ]
-    private float _gravity;
+    [ FormerlySerializedAs( "_gravity" ) ]
+    public float Gravity = 40;
 
-    [ SerializeField ]
-    private float _maxFallVelocity;
-
-    [ Header( "Jump" ) ]
-    [ SerializeField ]
-    private float _jumpDuration;
-
-    [ SerializeField ]
-    private float _jumpMovementSpeed;
-
-    [ SerializeField ]
-    private float _jumpMoveInertia;
-
-    [ SerializeField ]
-    [ ClampedCurve ]
-    private AnimationCurve _jumpHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
-
-    [ SerializeField ]
-    private float _jumpHeight;
+    [ FormerlySerializedAs( "_maxFallVelocity" ) ]
+    public float MaxFallVelocity = 60;
 
     [ Header( "Wall Slide" ) ]
-    [ SerializeField ]
-    private float _wallStickiness;
+    [ FormerlySerializedAs( "_wallStickiness" ) ]
+    public float WallStickiness = 0.1f;
 
-    [ SerializeField ]
-    private float _wallSlideGravity;
+    [ FormerlySerializedAs( "_wallSlideGravity" ) ]
+    public float WallSlideGravity = 100;
 
-    [ SerializeField ]
-    private float _maxWallSlideVelocity;
+    [ FormerlySerializedAs( "_maxWallSlideVelocity" ) ]
+    public float MaxWallSlideVelocity = 3;
 
-    [ SerializeField ]
-    private float _timeToUnstickFromWall;
-
-    [ Header( "Wall Jump" ) ]
-    [ SerializeField ]
-    [ Range( 0, 1 ) ]
-    private float _wallJumpAirControlTiming;
+    [ FormerlySerializedAs( "_timeToUnstickFromWall" ) ]
+    public float TimeToUnstickFromWall = 0.06f;
 
     [ Header( "Dash" ) ]
-    [ SerializeField ]
-    private float _dashDuration;
+    [ FormerlySerializedAs( "_dashDuration" ) ]
+    public float DashDuration = 0.2f;
 
-    [ SerializeField ]
-    private AnimationCurve _dashPositionCurve;
+    [ FormerlySerializedAs( "_dashPositionCurve" ) ]
+    public AnimationCurve DashPositionCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
 
-    [ SerializeField ]
-    private float _dashLength;
+    [ FormerlySerializedAs( "_dashLength" ) ]
+    public float DashLength = 4;
 
-    [ SerializeField ]
     [ Range( 0, 1 ) ]
-    private float _dashJumpTiming;
+    [ FormerlySerializedAs( "_dashJumpTiming" ) ]
+    public float DashJumpTiming = 0.33f;
 
+    [ Header( "Jump" ) ]    
+    [ Range( 0, 1 ) ]
+    public float JumpAirControlTiming = 0.66f;
+    
+    [ FormerlySerializedAs( "_jumpDuration" ) ]
+    public float JumpDuration = 0.3f;
+
+    [ FormerlySerializedAs( "_jumpMovementSpeed" ) ]
+    public float JumpMovementSpeed = 10;
+
+    [ FormerlySerializedAs( "_jumpMoveInertia" ) ]
+    public float JumpMoveInertia = 0.2f;
+
+    [ ClampedCurve ]
+    [ FormerlySerializedAs( "_jumpHeightCurve" ) ]
+    public AnimationCurve JumpHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+
+    [ FormerlySerializedAs( "_jumpHeight" ) ]
+    public float JumpHeight = 5;
+
+    public float JumpInitialMovementSpeed = 10;   
+    
+    [ Header( "Wall Jump" ) ]
+    [ Range( 0, 1 ) ]
+    [ FormerlySerializedAs( "_wallJumpAirControlTiming" ) ]
+    public float WallJumpAirControlTiming = 0.66f;
+
+    public float WallJumpDuration = 0.3f;
+    
+    public float WallJumpMovementSpeed = 10;
+    
+    public float WallJumpMoveInertia = 0.2f;
+
+    [ ClampedCurve ]
+    public AnimationCurve WallJumpHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+
+    public float WallJumpHeight = 5;
+    
+    public float WallJumpInitialMovementSpeed = 10;
+        
     [ Header( "Dash Jump" ) ]
-    [ SerializeField ]
     [ Range( 0, 1 ) ]
-    private float _dashJumpAirControlTiming;
+    [ FormerlySerializedAs( "_dashJumpAirControlTiming" ) ]
+    public float DashJumpAirControlTiming = 0.66f;
 
-    [ SerializeField ]
-    private float _dashJumpDuration;
+    [ FormerlySerializedAs( "_dashJumpDuration" ) ]
+    public float DashJumpDuration = 0.6f;
 
-    [ SerializeField ]
-    private float _dashJumpHeight;
+    public float DashJumpMovementSpeed = 10;
+    
+    public float DashJumpMoveInertia = 0.2f;
 
-    [SerializeField]
-    private float _dashJumpInitialMovementSpeed;
+    [ ClampedCurve ]
+    public AnimationCurve DashJumpHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
 
-    #region ACCESSORS
+    [ FormerlySerializedAs( "_dashJumpHeight" ) ]
+    public float DashJumpHeight = 3;
 
-    public float GroundedMovementSpeed
-    {
-        get { return _groundedMovementSpeed; }
-    }
-
-    public float RailStickiness
-    {
-        get { return _railStickiness; }
-    }
-
-    public float GroundedMoveInertia
-    {
-        get { return _groundedMoveInertia; }
-    }
-
-    public float FallMovementSpeed
-    {
-        get { return _fallMovementSpeed; }
-    }
-
-    public float FallMoveInertia
-    {
-        get { return _fallMoveInertia; }
-    }
-
-    public float BodyRadius
-    {
-        get { return _bodyRadius; }
-    }
-
-    public float Gravity
-    {
-        get { return _gravity; }
-    }
-
-    public float MaxFallVelocity
-    {
-        get { return _maxFallVelocity; }
-    }
-
-    public float JumpDuration
-    {
-        get { return _jumpDuration; }
-    }
-
-    public float JumpMovementSpeed
-    {
-        get { return _jumpMovementSpeed; }
-    }
-
-    public float JumpMoveInertia
-    {
-        get { return _jumpMoveInertia; }
-    }
-
-    public AnimationCurve JumpHeightCurve
-    {
-        get { return _jumpHeightCurve; }
-    }
-
-    public float JumpHeight
-    {
-        get { return _jumpHeight; }
-    }
-
-    public float WallStickiness
-    {
-        get { return _wallStickiness; }
-    }
-
-    public float WallSlideGravity
-    {
-        get { return _wallSlideGravity; }
-    }
-
-    public float MaxWallSlideVelocity
-    {
-        get { return _maxWallSlideVelocity; }
-    }
-
-    public float TimeToUnstickFromWall
-    {
-        get { return _timeToUnstickFromWall; }
-    }
-
-    public float WallJumpAirControlTiming
-    {
-        get { return _wallJumpAirControlTiming; }
-    }
-
-    public float DashDuration
-    {
-        get { return _dashDuration; }
-    }
-
-    public AnimationCurve DashPositionCurve
-    {
-        get { return _dashPositionCurve; }
-    }
-
-    public float DashLength
-    {
-        get { return _dashLength; }
-    }
-
-    public float DashJumpTiming
-    {
-        get { return _dashJumpTiming; }
-    }
-
-    public float DashJumpAirControlTiming
-    {
-        get { return _dashJumpAirControlTiming; }
-    }
-
-    public float DashJumpDuration
-    {
-        get { return _dashJumpDuration; }
-    }
-
-    public float DashJumpHeight
-    {
-        get { return _dashJumpHeight; }
-    }
-
-    public float DashJumpInitialMovementSpeed
-    {
-        get { return _dashJumpInitialMovementSpeed; }
-    }
-
-    #endregion
+    [ FormerlySerializedAs( "_dashJumpInitialMovementSpeed" ) ]
+    public float DashJumpInitialMovementSpeed = 25;    
 }

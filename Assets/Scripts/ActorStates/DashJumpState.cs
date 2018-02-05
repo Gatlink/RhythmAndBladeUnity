@@ -4,7 +4,20 @@ namespace ActorStates
 {
     public class DashJumpState : JumpState
     {
-        private float _jumpDirection;
+        protected override float JumpMovementSpeed
+        {
+            get { return PlayerSettings.DashJumpMovementSpeed; }
+        }
+
+        protected override float JumpMoveInertia
+        {
+            get { return PlayerSettings.DashJumpMoveInertia; }
+        }
+
+        protected override AnimationCurve JumpHeightCurve
+        {
+            get { return PlayerSettings.DashJumpHeightCurve; }
+        }
 
         protected override float JumpDuration
         {
@@ -16,29 +29,18 @@ namespace ActorStates
             get { return PlayerSettings.DashJumpHeight; }
         }
 
-        private float AirControlTiming
+        protected override float AirControlTiming
         {
             get { return PlayerSettings.DashJumpAirControlTiming; }
         }
 
+        protected override float InitialMovementSpeed
+        {
+            get { return PlayerSettings.DashJumpInitialMovementSpeed; }
+        }
+
         public DashJumpState( Actor actor ) : base( actor )
         {
-        }
-
-        protected override float GetVelocity()
-        {
-            if ( NormalizedTime < AirControlTiming )
-            {
-                return PlayerSettings.DashJumpInitialMovementSpeed * _jumpDirection;
-            }
-            return base.GetVelocity();
-        }
-
-        public override void OnEnter()
-        {
-            base.OnEnter();
-            _jumpDirection = Actor.Direction;
-            Actor.CurrentVelocity.x = GetVelocity();
         }
     }
 }

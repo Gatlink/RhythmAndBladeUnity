@@ -6,6 +6,8 @@ namespace ActorStates
     {
         private float _jumpTimeRemaining;
         private float _jumpStartPositionY;
+        private float _jumpDirection;
+            
 
         protected virtual float JumpDuration
         {
@@ -32,6 +34,16 @@ namespace ActorStates
             get { return PlayerSettings.JumpHeight; }
         }
 
+        protected virtual float AirControlTiming
+        {
+            get { return PlayerSettings.JumpAirControlTiming; }
+        }
+
+        protected virtual float InitialMovementSpeed
+        {
+            get { return PlayerSettings.JumpInitialMovementSpeed; }
+        }
+
         protected float NormalizedTime
         {
             get { return 1 - _jumpTimeRemaining / JumpDuration; }
@@ -41,8 +53,12 @@ namespace ActorStates
         {
         }
 
-        protected virtual float GetVelocity()
+        private float GetHorizontalVelocity()
         {
+            if ( NormalizedTime < AirControlTiming )
+            {
+                return InitialMovementSpeed * _jumpDirection;
+            }
             return Actor.DesiredMovement * JumpMovementSpeed;
         }
 
@@ -50,11 +66,13 @@ namespace ActorStates
         {
             _jumpTimeRemaining = JumpDuration;
             _jumpStartPositionY = Actor.transform.position.y;            
+            _jumpDirection = Actor.Direction;
+            Actor.CurrentVelocity.x = GetHorizontalVelocity();
         }
 
         public override IActorState Update()
         {
-            var desiredVelocity = GetVelocity();
+            var desiredVelocity = GetHorizontalVelocity();
 
             Actor.UpdateDirection( desiredVelocity );
 
@@ -71,12 +89,6 @@ namespace ActorStates
             Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
 
             Actor.CheckWallCollisions();
-
-//            Vector2 normal;
-//            if ( Actor.CheckWallProximity( Actor.Direction, out normal ) )
-//            {
-//                return new WallSlideState( Actor, normal );
-//            }
 
             if ( Actor.CheckDash() )
             {

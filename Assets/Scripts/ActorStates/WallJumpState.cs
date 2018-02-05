@@ -1,32 +1,46 @@
-﻿namespace ActorStates
+﻿using UnityEngine;
+
+namespace ActorStates
 {
     public class WallJumpState : JumpState
     {
-        private float _jumpDirection;
+        protected override float JumpDuration
+        {
+            get { return PlayerSettings.WallJumpDuration; }
+        }
 
-        private float AirControlTiming
+        protected override float JumpMovementSpeed
+        {
+            get { return PlayerSettings.WallJumpMovementSpeed; }
+        }
+
+        protected override float JumpMoveInertia
+        {
+            get { return PlayerSettings.WallJumpMoveInertia; }
+        }
+
+        protected override AnimationCurve JumpHeightCurve
+        {
+            get { return PlayerSettings.WallJumpHeightCurve; }
+        }
+
+        protected override float JumpHeight
+        {
+            get { return PlayerSettings.WallJumpHeight; }
+        }
+
+        protected override float AirControlTiming
         {
             get { return PlayerSettings.WallJumpAirControlTiming; }
         }
 
+        protected override float InitialMovementSpeed
+        {
+            get { return PlayerSettings.WallJumpInitialMovementSpeed; }
+        }
+
         public WallJumpState( Actor actor ) : base( actor )
         {
-        }
-
-        protected override float GetVelocity()
-        {
-            if ( NormalizedTime < AirControlTiming )
-            {
-                return JumpMovementSpeed * _jumpDirection;
-            }
-            return base.GetVelocity();
-        }
-
-        public override void OnEnter()
-        {
-            base.OnEnter();
-            _jumpDirection = Actor.Direction;
-            Actor.CurrentVelocity.x = GetVelocity();
         }
     }
 }

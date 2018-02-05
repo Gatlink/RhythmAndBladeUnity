@@ -11,43 +11,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7ec06ea86b74f879e2e91413754382e, type: 3}
   m_Name: Player Settings
   m_EditorClassIdentifier: 
-  _bodyRadius: 1
-  _railStickiness: 0.2
-  _groundedMovementSpeed: 15
-  _groundedMoveInertia: 0.05
-  _fallMovementSpeed: 10
-  _fallMoveInertia: 0.2
-  _gravity: 40
-  _maxFallVelocity: 60
-  _jumpDuration: 0.3
-  _jumpMovementSpeed: 10
-  _jumpMoveInertia: 0.2
-  _jumpHeightCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 2.8392856
-      outSlope: 2.8392856
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  _jumpHeight: 5
-  _wallStickiness: 0.1
-  _wallSlideGravity: 100
-  _maxWallSlideVelocity: 3
-  _timeToUnstickFromWall: 0.06
-  _wallJumpAirControlTiming: 0.66
-  _dashDuration: 0.2
-  _dashPositionCurve:
+  BodyRadius: 1
+  RailStickiness: 0.2
+  GroundedMovementSpeed: 15
+  GroundedMoveInertia: 0.05
+  FallMovementSpeed: 10
+  FallMoveInertia: 0.2
+  Gravity: 40
+  MaxFallVelocity: 60
+  WallStickiness: 0.1
+  WallSlideGravity: 100
+  MaxWallSlideVelocity: 3
+  TimeToUnstickFromWall: 0.06
+  DashDuration: 0.2
+  DashPositionCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
@@ -65,9 +42,77 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  _dashLength: 4
-  _dashJumpTiming: 0.33
-  _dashJumpAirControlTiming: 0.66
-  _dashJumpDuration: 0.6
-  _dashJumpHeight: 3
-  _dashJumpInitialMovementSpeed: 25
+  DashLength: 4
+  DashJumpTiming: 0.33
+  JumpAirControlTiming: 0
+  JumpDuration: 0.3
+  JumpMovementSpeed: 10
+  JumpMoveInertia: 0.2
+  JumpHeightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 2.8392856
+      outSlope: 2.8392856
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  JumpHeight: 5
+  JumpInitialMovementSpeed: 10
+  WallJumpAirControlTiming: 0.66
+  WallJumpDuration: 0.3
+  WallJumpMovementSpeed: 10
+  WallJumpMoveInertia: 0.2
+  WallJumpHeightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 2.8392856
+      outSlope: 2.8392856
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  WallJumpHeight: 5
+  WallJumpInitialMovementSpeed: 10
+  DashJumpAirControlTiming: 0.66
+  DashJumpDuration: 0.6
+  DashJumpMovementSpeed: 10
+  DashJumpMoveInertia: 0.2
+  DashJumpHeightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 2.8392856
+      outSlope: 2.8392856
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  DashJumpHeight: 3
+  DashJumpInitialMovementSpeed: 25
