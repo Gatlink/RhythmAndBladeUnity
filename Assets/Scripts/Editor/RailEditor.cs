@@ -132,13 +132,13 @@ public class RailEditor : Editor
         {
             Handles.color = segment.IsWall() ? WallColor : SelectedColor;
             style.normal.textColor = Handles.color;
-            
+
             Handles.DrawLine( segment.From, segment.To );
 
             var label = segment.Length.ToString( "F1" );
             if ( !segment.IsWall() )
             {
-                label += " " + segment.Slope.ToString( "F0" ) + "°";
+                label += " | " + segment.Slope.ToString( "F0" ) + "°";
             }
             var labelPos = segment.Center + segment.Normal * -0.6f;
             var labelSize = GUI.skin.label.CalcSize( new GUIContent(label));
