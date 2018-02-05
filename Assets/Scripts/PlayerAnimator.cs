@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
+    public float HorizontalSpeedThreshold = 0.1f;
+
     private Actor _actor;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
-
 
     private void Start()
     {
@@ -18,7 +19,8 @@ public class PlayerAnimator : MonoBehaviour
 
     private void LateUpdate()
     {
-        _animator.SetFloat( "HorizontalSpeed", Mathf.Abs( _actor.CurrentVelocity.x ) );
+        var horizontalSpeed = Mathf.Max( 0, Mathf.Abs( _actor.CurrentVelocity.x ) - HorizontalSpeedThreshold );
+        _animator.SetFloat( "HorizontalSpeed", horizontalSpeed );
         _animator.SetBool( "Grounded", _actor.CheckGround( snap: false ) );
         _spriteRenderer.flipX = _actor.Direction < 0;
     }

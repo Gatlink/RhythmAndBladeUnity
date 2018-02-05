@@ -50,7 +50,7 @@ public class Actor : GLMonoBehaviour
     // minimum movement to change direction
     private const float MovementEpsilon = 0.01f;
 
-    private IActorState _currentState;
+    public IActorState CurrentState { get; private set; }
 
     private PlayerSettings _playerSettings;
 
@@ -197,9 +197,9 @@ public class Actor : GLMonoBehaviour
     private void Start()
     {
         _playerSettings = PlayerSettings.Instance;
-        _currentState = new FallState( this );
-        _currentState.OnEnter();
-        StateName = _currentState.Name;
+        CurrentState = new FallState( this );
+        CurrentState.OnEnter();
+        StateName = CurrentState.Name;
     }
 
     private void Update()
@@ -214,21 +214,21 @@ public class Actor : GLMonoBehaviour
             Controller.UpdateActorIntent( this );
         }
 
-        if ( _currentState == null )
+        if ( CurrentState == null )
         {
             Debug.LogError( "Actor has no current state", this );
         }
         else
         {
-            var nextState = _currentState.Update();
+            var nextState = CurrentState.Update();
             if ( nextState != null )
             {
-                Debug.Log( string.Format( "Going from {0} to {1}", _currentState.Name, nextState.Name ) );
-                _currentState.OnExit();
-                OnStateChangeEvent( _currentState, nextState );
+                Debug.Log( string.Format( "Going from {0} to {1}", CurrentState.Name, nextState.Name ) );
+                CurrentState.OnExit();
+                OnStateChangeEvent( CurrentState, nextState );
                 nextState.OnEnter();
-                _currentState = nextState;
-                StateName = _currentState.Name;
+                CurrentState = nextState;
+                StateName = CurrentState.Name;
             }
         }
 
