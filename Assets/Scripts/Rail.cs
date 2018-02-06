@@ -103,7 +103,7 @@ public class Rail : MonoBehaviour
 
         if ( Closed && points.Count >= 3 )
         {
-            yield return new Segment( points[ points.Count - 1 ], points[ 0 ], points.Count - 1 );
+            yield return new Segment( points[ points.Count - 1 ] + position, points[ 0 ] + position, points.Count - 1 );
         }
     }
 
