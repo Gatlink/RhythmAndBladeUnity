@@ -1,29 +1,35 @@
-﻿using System.Collections.Generic;
-using Gamelogic.Extensions;
+﻿using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-[ CustomEditor( typeof( Rail ) ) ]
+[ CustomEditor( typeof( Rail ) ), CanEditMultipleObjects ]
 public class RailEditor : Editor
 {
-    private const float GizmoRadius = 0.08f;
+    private const float GizmoRadius = 0.15f;
     private const int DottedLinesSpace = 3;
-    private static readonly Color IdleColor = new Color( 0.4f, 0.4f, 0.5f );
-    private static readonly Color ActiveColor = new Color( 0.4f, 0.5f, 0.7f );
-    private static readonly Color SelectedColor = new Color( 0.5f, 0.8f, 1f );
+
+    private static readonly Color HandleColor = new Color( 0.4f, 0.5f, 0.7f );
+    private static readonly Color GroundColor = new Color( 0.5f, 0.8f, 1f );
     private static readonly Color WallColor = new Color( 0.7f, 0.5f, 0.4f );
-    private static readonly Color NewColor = new Color( 0.5f, 0.8f, 1f, 0.5f );
 
-    private const KeyCode AddKey = KeyCode.LeftControl;
-    private const KeyCode DelKey = KeyCode.Delete;
+    private static GUIStyle _style;
 
-    private static Vector3 _dragWorldStart;
-    private static Vector2 _dragMouseCurrent;
-    private static Vector2 _dragMouseStart;
-    private static bool _addKeyDown;
 
     private Rail _rail;
-    private List<Vector3> _pointsBuffer = new List<Vector3>();
+
+    private static GUIStyle Style
+    {
+        get
+        {
+            if ( _style == null )
+            {
+                _style = new GUIStyle( GUI.skin.label );
+                _style.alignment = TextAnchor.UpperLeft;
+            }
+
+            return _style;
+        }
+    }
 
     private void OnEnable()
     {
@@ -32,7 +38,7 @@ public class RailEditor : Editor
 
     private void OnSceneGUI()
     {
-        DrawHandlesEditable();
+        DrawRailEditable();
     }
 
     [ DrawGizmo( GizmoType.NonSelected | GizmoType.Pickable | GizmoType.Selected ) ]
@@ -40,47 +46,194 @@ public class RailEditor : Editor
     {
         if ( rail.gameObject != Selection.activeGameObject )
         {
-            DrawHandles( rail );
+            DrawRail( rail );
         }
     }
 
-    private static void DrawHandles( Rail rail )
+    private void DrawRailEditable()
     {
-        Handles.color = IdleColor;
-
-        DrawLines( rail );
-
-        var mousePressed = false;
-        var mouseRay = new Ray();
-        if ( Event.current.type == EventType.MouseUp && Event.current.button == 0 )
+        var currentEvent = Event.current;
+        var root = _rail.transform.position;
+        var points = _rail.Points;
+        using ( new Handles.DrawingScope( HandleColor ) )
         {
-            mousePressed = true;
-            mouseRay = HandleUtility.GUIPointToWorldRay( Event.current.mousePosition );
-        }
-
-        foreach ( var point in rail.Points )
-        {
-            var cur = rail.transform.position + point;
-            if ( mousePressed )
+            for ( var index = 0; index < points.Count; index++ )
             {
-                var sqrDistanceToRay = Vector3.Cross( mouseRay.direction, cur - mouseRay.origin ).sqrMagnitude;
-                var selectDistance = HandleUtility.GetHandleSize( cur ) * GizmoRadius;
-
-                if ( sqrDistanceToRay <= selectDistance * selectDistance )
+                var point = points[ index ];
+                var worldPosition = root + point;
+                EditorGUI.BeginChangeCheck();
+                worldPosition = Handles.FreeMoveHandle( worldPosition, Quaternion.identity,
+                    GizmoRadius * HandleUtility.GetHandleSize( worldPosition ), Vector3.zero,
+                    Handles.CylinderHandleCap );
+                if ( EditorGUI.EndChangeCheck() )
                 {
-//                    Selection.activeGameObject = rail.gameObject;
-                    // calling simply Selection.activeGameObject = _desiredSelection; here does not work... TODO fixme
-                    // prevent adding event handler twice
+                    Undo.RecordObject( _rail, "Move point " + index );
+                    // snap horizontally
+                    if ( currentEvent.shift )
+                    {
+                        int prev;
+                        int next;
+                        GetNeighbours( _rail, index, out prev, out next );
 
-                    EditorApplication.update -= _setSelected;
-                    EditorApplication.update += _setSelected;
-                    _desiredSelection = rail.gameObject;
+                        worldPosition = SnapHorizontally( _rail, index, worldPosition );
+                    }
 
-                    Event.current.Use();
+                    // snap vertically
+                    if ( currentEvent.alt )
+                    {
+                        worldPosition = SnapVertically( _rail, index, worldPosition );
+                    }
+
+                    _rail.Points[ index ] = worldPosition - root;
                 }
             }
+        }
 
-            DrawJointGizmo( cur );
+        DrawLines( _rail );
+
+        // add new point
+        if ( currentEvent.control )
+        {
+            var cid = GUIUtility.GetControlID( FocusType.Passive );
+            if ( Event.current.type == EventType.Layout )
+                HandleUtility.AddDefaultControl( cid );
+
+            var mouseRay = HandleUtility.GUIPointToWorldRay( currentEvent.mousePosition );
+            Vector2 newPosition = mouseRay.origin;
+
+            var nearestSegment = _rail.EnumerateSegments()
+                .OrderBy( segment =>
+                    HandleUtility.DistancePointToLineSegment( newPosition, segment.From, segment.To ) )
+                .First();
+
+            // snap horizontally
+            if ( currentEvent.shift )
+            {
+                newPosition = SnapHorizontally( newPosition, nearestSegment.From, nearestSegment.To );
+            }
+
+            // snap vertically
+            if ( currentEvent.alt )
+            {
+                newPosition = SnapVertically( newPosition, nearestSegment.From, nearestSegment.To );
+            }
+
+            DrawLine( new Rail.Segment( nearestSegment.From, newPosition ), true );
+            DrawLine( new Rail.Segment( newPosition, nearestSegment.To ), true );
+
+            DrawJointGizmo( newPosition );
+
+            if ( currentEvent.type == EventType.MouseUp && currentEvent.button == 0 )
+            {
+                var newIndex = nearestSegment.FromIndex + 1;
+                Undo.RecordObject( _rail, "Add point at " + newIndex );
+                _rail.Points.Insert( newIndex, newPosition );
+                currentEvent.Use();
+            }
+
+            HandleUtility.Repaint();
+        }
+    }
+
+    private Vector3 SnapVertically( Rail rail, int index, Vector3 position )
+    {
+        int prev;
+        int next;
+        GetNeighbours( rail, index, out prev, out next );
+
+        position -= rail.transform.position;
+        var points = rail.Points;
+
+        return SnapVertically( position, points[ prev ], points[ next ] ) + rail.transform.position;
+    }
+
+    private Vector3 SnapVertically( Vector3 position, Vector3 prev, Vector3 next )
+    {
+        var distPrev = Mathf.Abs( position.x - prev.x );
+        var distNext = Mathf.Abs( position.x - next.x );
+
+        if ( distPrev < distNext )
+        {
+            position.x = prev.x;
+        }
+        else
+        {
+            position.x = next.x;
+        }
+
+        return position;
+    }
+
+    private Vector3 SnapHorizontally( Rail rail, int index, Vector3 position )
+    {
+        int prev;
+        int next;
+        GetNeighbours( rail, index, out prev, out next );
+
+        position -= rail.transform.position;
+        var points = rail.Points;
+
+        return SnapHorizontally( position, points[ prev ], points[ next ] ) + rail.transform.position;
+    }
+
+    private Vector3 SnapHorizontally( Vector3 position, Vector3 prev, Vector3 next )
+    {
+        var distPrev = Mathf.Abs( position.y - prev.y );
+        var distNext = Mathf.Abs( position.y - next.y );
+
+        if ( distPrev < distNext )
+        {
+            position.y = prev.y;
+        }
+        else
+        {
+            position.y = next.y;
+        }
+
+        return position;
+    }
+
+    private static void GetNeighbours( Rail rail, int index, out int prev, out int next )
+    {
+        var points = rail.Points;
+        if ( index == 0 )
+        {
+            prev = rail.Closed ? points.Count - 1 : index;
+        }
+        else
+        {
+            prev = index - 1;
+        }
+
+        if ( index == points.Count - 1 )
+        {
+            next = rail.Closed ? 0 : index;
+        }
+        else
+        {
+            next = index + 1;
+        }
+    }
+
+    private static void DrawRail( Rail rail )
+    {
+        DrawLines( rail );
+        if ( Event.current.type == EventType.MouseUp && Event.current.button == 0 )
+        {
+            var mouseRay = HandleUtility.GUIPointToWorldRay( Event.current.mousePosition );
+            
+            var minDistance = rail.EnumerateSegments()
+                .Min( segment =>
+                    HandleUtility.DistancePointToLineSegment( mouseRay.origin, segment.From, segment.To ) );
+            var segmentCenter = rail.EnumerateSegments().First().Center;
+            if ( minDistance * minDistance < HandleUtility.GetHandleSize( segmentCenter ) * GizmoRadius )
+            {
+                EditorApplication.update -= _setSelected;
+                EditorApplication.update += _setSelected;
+                _desiredSelection = rail.gameObject;
+
+                Event.current.Use();
+            }            
         }
     }
 
@@ -97,284 +250,46 @@ public class RailEditor : Editor
         }
     }
 
-    private void DrawHandlesEditable()
-    {
-        Handles.color = ActiveColor;
-        DrawLines( _rail );
-
-        _pointsBuffer.Clear();
-        var newIndex = -1;
-        var newPoint = DisplayNewPoint( out newIndex );
-
-        for ( var i = 0; i < _rail.Points.Count; ++i )
-        {
-            var cur = _rail.transform.position + _rail.Points[ i ];
-            if ( DrawPointHandle( ref cur, i ) )
-                _pointsBuffer.Add( cur - _rail.transform.position );
-        }
-
-        if ( newIndex != -1 )
-        {
-            _pointsBuffer.Insert( newIndex, newPoint - _rail.transform.position );
-            Undo.RecordObject( _rail, "Add new point" );
-        }
-
-        _rail.Points.Clear();
-        _rail.Points.AddRange( _pointsBuffer );
-    }
-
     private static void DrawLines( Rail rail )
     {
-        var style = new GUIStyle( GUI.skin.label );
-        style.alignment = TextAnchor.UpperLeft;
-
         foreach ( var segment in rail.EnumerateSegments() )
         {
-            Handles.color = segment.IsWall() ? WallColor : SelectedColor;
-            style.normal.textColor = Handles.color;
+            DrawLine( segment );
+        }
+    }
 
-            Handles.DrawLine( segment.From, segment.To );
+    private static void DrawLine( Rail.Segment segment, bool dotted = false )
+    {
+        using ( new Handles.DrawingScope( segment.IsWall() ? WallColor : GroundColor ) )
+        {
+            Style.normal.textColor = Handles.color;
+
+            if ( dotted )
+            {
+                Handles.DrawDottedLine( segment.From, segment.To, DottedLinesSpace );
+            }
+            else
+            {
+                Handles.DrawLine( segment.From, segment.To );
+            }
 
             var label = segment.Length.ToString( "F1" );
             if ( !segment.IsWall() )
             {
                 label += " | " + segment.Slope.ToString( "F0" ) + "°";
             }
+
             var labelPos = segment.Center + segment.Normal * -0.6f;
-            var labelSize = GUI.skin.label.CalcSize( new GUIContent(label));
+            var labelSize = GUI.skin.label.CalcSize( new GUIContent( label ) );
             var adjustedPos = HandleUtility
                 .GUIPointToWorldRay( HandleUtility.WorldToGUIPoint( labelPos ) - 0.5f * labelSize ).origin;
-            Handles.Label( adjustedPos, label, style );
+            Handles.Label( adjustedPos, label, Style );
         }
-    }
-
-    private bool ShouldBeAWall( int idx, Vector3 position )
-    {
-        if ( idx < 0 || idx >= _rail.Points.Count )
-            return false;
-
-        var point = _rail.Points[ idx ] + _rail.transform.position;
-        var prevSlope = point.Slope( position );
-        return prevSlope > 45;
-    }
-
-    private Vector3 DisplayNewPoint( out int newIndex )
-    {
-        newIndex = -1;
-
-        var mousePosition = Event.current.mousePosition;
-        mousePosition.y = Camera.current.pixelHeight - mousePosition.y;
-
-        var position = Handles.inverseMatrix.MultiplyPoint( Camera.current.ScreenToWorldPoint( mousePosition ) );
-        position.z = 0f;
-
-        var prev = 0;
-        var next = 0;
-        if ( _addKeyDown )
-        {
-            _rail.GetPreviousAndNextPoint( position, out prev, out next );
-            if ( ( prev == -1 || next == -1 ) && _rail.Points.Count > 1 )
-                prev = next =
-                    Vector2.Distance( _rail.Points[ 0 ] + _rail.transform.position, position ) >
-                    Vector2.Distance( _rail.Points[ _rail.Points.Count - 1 ] + _rail.transform.position, position )
-                        ? _rail.Points.Count - 1
-                        : 0;
-
-            if ( prev == -1 )
-                prev = next = 0;
-
-            if ( ShouldBeAWall( prev, position ) )
-            {
-                position.x = _rail.Points[ prev ].x + _rail.transform.position.x;
-            }
-
-            if ( ShouldBeAWall( next, position ) )
-            {
-                position.x = _rail.Points[ next ].x + _rail.transform.position.x;
-            }
-
-            // snap horizontally when shift is holded
-            if ( Event.current.shift )
-            {
-                var distPrev = Mathf.Abs( position.y - _rail.Points[ prev ].y - _rail.transform.position.y );
-                var distNext = Mathf.Abs( position.y - _rail.Points[ next ].y - _rail.transform.position.y );
-
-                if ( distPrev < distNext )
-                {
-                    position.y = _rail.Points[ prev ].y + _rail.transform.position.y;
-                }
-                else
-                {
-                    position.y = _rail.Points[ next ].y + _rail.transform.position.y;
-                }
-            }
-        }
-
-        switch ( Event.current.type )
-        {
-            case EventType.KeyDown:
-                if ( Event.current.keyCode == AddKey )
-                    _addKeyDown = true;
-                break;
-
-            case EventType.KeyUp:
-                if ( Event.current.keyCode == AddKey )
-                    _addKeyDown = false;
-                break;
-
-            case EventType.Repaint:
-                if ( _addKeyDown )
-                {
-                    var oldColor = Handles.color;
-                    Handles.color = NewColor;
-
-                    Handles.DrawDottedLine( _rail.Points[ prev ] + _rail.transform.position, position,
-                        DottedLinesSpace );
-                    if ( next != -1 )
-                        Handles.DrawDottedLine( _rail.Points[ next ] + _rail.transform.position, position,
-                            DottedLinesSpace );
-                    DrawJointGizmo( position );
-
-                    Handles.color = oldColor;
-                    HandleUtility.Repaint();
-                }
-
-                break;
-
-            case EventType.MouseDown:
-                if ( _addKeyDown && Event.current.button == 0 )
-                {
-                    newIndex = next == 0 ? 0 : prev + 1;
-                    Event.current.Use();
-                    return position;
-                }
-
-                break;
-        }
-
-        return Vector3.zero;
     }
 
     private static void DrawJointGizmo( Vector3 position )
     {
-        Handles.DrawSolidDisc( position, Vector3.forward, GizmoRadius * HandleUtility.GetHandleSize( position ) );
-    }
-
-    private bool DrawPointHandle( ref Vector3 position, int index )
-    {
-        var id = GUIUtility.GetControlID( FocusType.Passive );
-        var screenPosition = Handles.matrix.MultiplyPoint( position );
-        var cachedMatrix = Handles.matrix;
-
-        switch ( Event.current.GetTypeForControl( id ) )
-        {
-            case EventType.MouseDown:
-                if ( Event.current.button != 0 ) break;
-                if ( HandleUtility.nearestControl == id )
-                {
-                    GUIUtility.hotControl = id;
-
-                    _dragMouseCurrent = _dragMouseStart = Event.current.mousePosition;
-                    _dragWorldStart = position;
-
-                    Event.current.Use();
-                    EditorGUIUtility.SetWantsMouseJumping( 1 );
-                }
-
-                break;
-
-            case EventType.MouseUp:
-                if ( Event.current.button != 0 ) break;
-                if ( GUIUtility.hotControl == id && Event.current.button == 0 )
-                {
-                    GUIUtility.hotControl = 0;
-                    Event.current.Use();
-                    EditorGUIUtility.SetWantsMouseJumping( 0 );
-                }
-
-                break;
-
-            case EventType.MouseDrag:
-                if ( GUIUtility.hotControl == id )
-                {
-                    _dragMouseCurrent += new Vector2( Event.current.delta.x, -Event.current.delta.y );
-
-                    position = Camera.current.WorldToScreenPoint( Handles.matrix.MultiplyPoint( _dragWorldStart ) ) +
-                               (Vector3) ( _dragMouseCurrent - _dragMouseStart );
-                    position = Handles.inverseMatrix.MultiplyPoint( Camera.current.ScreenToWorldPoint( position ) );
-
-                    if ( index > 0 && ShouldBeAWall( index - 1, position ) )
-                        position.x = _rail.Points[ index - 1 ].x + _rail.transform.position.x;
-
-                    if ( index < _rail.Points.Count - 1 && ShouldBeAWall( index + 1, position ) )
-                        position.x = _rail.Points[ index + 1 ].x + _rail.transform.position.x;
-
-                    // snap horizontally
-                    if ( Event.current.shift )
-                    {
-                        if ( index == 0 && _rail.Points.Count > 1 )
-                        {
-                            position.y = _rail.Points[ 1 ].y + _rail.transform.position.y;
-                        }
-                        else if ( index == _rail.Points.Count - 1 && _rail.Points.Count > 1 )
-                        {
-                            position.y = _rail.Points[ _rail.Points.Count - 2 ].y + _rail.transform.position.y;
-                        }
-                        else if ( _rail.Points.Count >= 3 )
-                        {
-                            var prev = index - 1;
-                            var next = index + 1;
-                            var distPrev =
-                                Mathf.Abs( position.y - _rail.Points[ prev ].y - _rail.transform.position.y );
-                            var distNext =
-                                Mathf.Abs( position.y - _rail.Points[ next ].y - _rail.transform.position.y );
-
-                            if ( distPrev < distNext )
-                            {
-                                position.y = _rail.Points[ prev ].y + _rail.transform.position.y;
-                            }
-                            else
-                            {
-                                position.y = _rail.Points[ next ].y + _rail.transform.position.y;
-                            }
-                        }
-                    }
-
-                    GUI.changed = true;
-                    Event.current.Use();
-                    Undo.RecordObject( _rail, "Moved points" );
-                }
-
-                break;
-
-            case EventType.KeyDown:
-                if ( GUIUtility.hotControl == id && Event.current.keyCode == DelKey )
-                {
-                    Event.current.Use();
-                    Undo.RecordObject( _rail, "Delete point" );
-                    return false;
-                }
-
-                break;
-
-            case EventType.Repaint:
-                var currentColour = Handles.color;
-                if ( id == GUIUtility.hotControl )
-                    Handles.color = SelectedColor;
-
-                Handles.matrix = Matrix4x4.identity;
-                DrawJointGizmo( position );
-                Handles.matrix = cachedMatrix;
-                Handles.color = currentColour;
-                break;
-
-            case EventType.Layout:
-                Handles.matrix = Matrix4x4.identity;
-                HandleUtility.AddControl( id, HandleUtility.DistanceToCircle( screenPosition, GizmoRadius ) );
-                Handles.matrix = cachedMatrix;
-                break;
-        }
-
-        return true;
+        Handles.DrawSolidDisc( position, Vector3.forward,
+            0.5f * GizmoRadius * HandleUtility.GetHandleSize( position ) );
     }
 }
