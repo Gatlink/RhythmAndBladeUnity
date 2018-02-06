@@ -2,17 +2,18 @@
 using UnityEditor;
 using UnityEngine;
 
-[ CustomEditor( typeof( Rail ) ), CanEditMultipleObjects ]
+[ CustomEditor( typeof( Rail ) ) ]
 public class RailEditor : Editor
 {
     private const float GizmoRadius = 0.15f;
     private const int DottedLinesSpace = 3;
 
+    private static readonly Color GUIColor = new Color( 0.9f, 0.9f, 0.9f );
     private static readonly Color HandleColor = new Color( 0.4f, 0.5f, 0.7f );
     private static readonly Color GroundColor = new Color( 0.5f, 0.8f, 1f );
     private static readonly Color WallColor = new Color( 0.7f, 0.7f, 0.4f );
     private static readonly Color HighSlopeColor = new Color( 0.8f, 0.2f, 0.2f );
-    
+
     private static GUIStyle _style;
 
     private Rail _rail;
@@ -36,9 +37,31 @@ public class RailEditor : Editor
         _rail = target as Rail;
     }
 
+    private void DrawNotice()
+    {
+        var boxStyle = new GUIStyle( GUI.skin.box );
+        boxStyle.alignment = TextAnchor.UpperLeft;
+        var labelStyle = new GUIStyle( GUI.skin.label );
+        
+        var content = new GUIContent( "Mouse drag to move points" +
+                                      "\nHold Shift to snap horizontally" +
+                                      "\nHold Alt to snap vertically" +
+                                      "\nHold Ctrl to add new point" +
+                                      "\nRight mouse click to delete point" );
+
+        var size = labelStyle.CalcSize( content );
+
+        Handles.BeginGUI();
+        GUI.Box(
+            new Rect( 10 * Vector2.one, size + new Vector2( boxStyle.padding.horizontal, boxStyle.padding.vertical ) ),
+            content, boxStyle );
+        Handles.EndGUI();
+    }
+
     private void OnSceneGUI()
     {
         DrawRailEditable();
+        DrawNotice();
     }
 
     [ DrawGizmo( GizmoType.NonSelected | GizmoType.Pickable | GizmoType.Selected ) ]
@@ -81,12 +104,14 @@ public class RailEditor : Editor
                     }
 
                     _rail.Points[ index ] = worldPosition - root;
-                }
+                }                
             }
         }
 
         DrawLines( _rail );
 
+        var mouseRay = HandleUtility.GUIPointToWorldRay( currentEvent.mousePosition );
+            
         // add new point
         if ( currentEvent.control )
         {
@@ -94,7 +119,6 @@ public class RailEditor : Editor
             if ( Event.current.type == EventType.Layout )
                 HandleUtility.AddDefaultControl( cid );
 
-            var mouseRay = HandleUtility.GUIPointToWorldRay( currentEvent.mousePosition );
             Vector2 newPosition = mouseRay.origin;
 
             var nearestSegment = _rail.EnumerateSegments()
@@ -123,11 +147,27 @@ public class RailEditor : Editor
             {
                 var newIndex = nearestSegment.FromIndex + 1;
                 Undo.RecordObject( _rail, "Add point at " + newIndex );
-                _rail.Points.Insert( newIndex, newPosition );
+                points.Insert( newIndex, newPosition );
                 currentEvent.Use();
             }
 
             HandleUtility.Repaint();
+        }
+        
+        // delete points 
+        if ( currentEvent.type == EventType.MouseDown && currentEvent.button == 1 )
+        {
+            for ( var index = 0; index < points.Count; index++ )
+            {
+                var point = points[ index ] + root;
+                var dist = GizmoRadius * HandleUtility.GetHandleSize( point );
+                if (Vector2.SqrMagnitude( mouseRay.origin - point ) < dist * dist )
+                {
+                    Undo.RecordObject( _rail, "Remove point at " + index );
+                    points.RemoveAt( index );
+                    currentEvent.Use();
+                }
+            }            
         }
     }
 
@@ -217,7 +257,7 @@ public class RailEditor : Editor
         if ( Event.current.type == EventType.MouseUp && Event.current.button == 0 )
         {
             var mouseRay = HandleUtility.GUIPointToWorldRay( Event.current.mousePosition );
-            
+
             var minDistance = rail.EnumerateSegments()
                 .Min( segment =>
                     HandleUtility.DistancePointToLineSegment( mouseRay.origin, segment.From, segment.To ) );
@@ -229,7 +269,7 @@ public class RailEditor : Editor
                 _desiredSelection = rail.gameObject;
 
                 Event.current.Use();
-            }            
+            }
         }
     }
 
@@ -260,10 +300,12 @@ public class RailEditor : Editor
         if ( segment.IsWall() )
         {
             color = WallColor;
-        } else if ( segment.Slope > Rail.SlopeLimit )
+        }
+        else if ( segment.Slope > Rail.SlopeLimit )
         {
             color = HighSlopeColor;
         }
+
         using ( new Handles.DrawingScope( color ) )
         {
             Style.normal.textColor = Handles.color;
