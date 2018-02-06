@@ -6,6 +6,8 @@ using UnityEngine.Serialization;
 
 public class Rail : MonoBehaviour
 {
+    public const float SlopeLimit = 35;
+
     private static readonly List<Rail> All = new List<Rail>();
 
     public bool Closed;
@@ -73,7 +75,7 @@ public class Rail : MonoBehaviour
             }
         }
     }
-    
+
     public IEnumerable<Segment> EnumerateSegments()
     {
         var points = Points;
@@ -98,7 +100,7 @@ public class Rail : MonoBehaviour
         public Vector2 To;
 
         public readonly int FromIndex;
-        
+
         public Segment( Vector2 @from, Vector2 to, int fromIndex = -1 )
         {
             From = @from;
@@ -128,7 +130,7 @@ public class Rail : MonoBehaviour
 
         public float Slope
         {
-            get { return Vector2.SignedAngle( Vector2.right, To - From ); }
+            get { return Mathf.Abs( 90 - Vector2.Angle( Vector2.up, To - From ) ); }
         }
     }
 }

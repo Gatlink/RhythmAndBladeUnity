@@ -10,10 +10,10 @@ public class RailEditor : Editor
 
     private static readonly Color HandleColor = new Color( 0.4f, 0.5f, 0.7f );
     private static readonly Color GroundColor = new Color( 0.5f, 0.8f, 1f );
-    private static readonly Color WallColor = new Color( 0.7f, 0.5f, 0.4f );
-
+    private static readonly Color WallColor = new Color( 0.7f, 0.7f, 0.4f );
+    private static readonly Color HighSlopeColor = new Color( 0.8f, 0.2f, 0.2f );
+    
     private static GUIStyle _style;
-
 
     private Rail _rail;
 
@@ -71,10 +71,6 @@ public class RailEditor : Editor
                     // snap horizontally
                     if ( currentEvent.shift )
                     {
-                        int prev;
-                        int next;
-                        GetNeighbours( _rail, index, out prev, out next );
-
                         worldPosition = SnapHorizontally( _rail, index, worldPosition );
                     }
 
@@ -260,7 +256,15 @@ public class RailEditor : Editor
 
     private static void DrawLine( Rail.Segment segment, bool dotted = false )
     {
-        using ( new Handles.DrawingScope( segment.IsWall() ? WallColor : GroundColor ) )
+        var color = GroundColor;
+        if ( segment.IsWall() )
+        {
+            color = WallColor;
+        } else if ( segment.Slope > Rail.SlopeLimit )
+        {
+            color = HighSlopeColor;
+        }
+        using ( new Handles.DrawingScope( color ) )
         {
             Style.normal.textColor = Handles.color;
 
