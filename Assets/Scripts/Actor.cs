@@ -102,6 +102,20 @@ public class Actor : GLMonoBehaviour
         return grounded;
     }
 
+    public bool CheckCeiling()
+    {
+        Vector2 normal;
+        return CheckCeiling( out normal );
+    }
+
+    public bool CheckCeiling( out Vector2 normal )
+    {
+        var hit = Physics2D.Raycast( transform.position, Vector2.up, _playerSettings.BodyRadius,
+            1 << LayerMask.NameToLayer( "Rail" ) );        
+        normal = hit.normal;
+        return hit.collider != null;
+    }
+
     public void UpdateDirection( float desiredVelocity )
     {
         if ( Mathf.Abs( desiredVelocity ) > MovementEpsilon )
