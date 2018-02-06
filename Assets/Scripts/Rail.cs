@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using Gamelogic.Extensions;
 using UnityEngine.Serialization;
 
@@ -42,6 +43,18 @@ public class Rail : MonoBehaviour
     private void Start()
     {
         CreateColliders();
+    }
+
+    public Bounds Bounds
+    {
+        get
+        {
+            return Points.Aggregate<Vector3, Bounds>( new Bounds( Points[ 0 ], Vector3.zero ), ( b, v ) =>
+            {
+                b.Encapsulate( v );
+                return b;
+            } );
+        }
     }
 
     private EdgeCollider2D NewCollider( Segment first )

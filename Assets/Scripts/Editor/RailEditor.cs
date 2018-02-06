@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 [ CustomEditor( typeof( Rail ) ) ]
@@ -18,6 +20,11 @@ public class RailEditor : Editor
 
     private Rail _rail;
 
+    private static readonly Dictionary<Rail, BoxBoundsHandle> MultiSelectionHandlesDictionary =
+        new Dictionary<Rail, BoxBoundsHandle>();
+
+    private BoxBoundsHandle _multiSelectionHandle;
+
     private static GUIStyle Style
     {
         get
@@ -35,19 +42,47 @@ public class RailEditor : Editor
     private void OnEnable()
     {
         _rail = target as Rail;
+        if ( !MultiSelectionHandlesDictionary.TryGetValue( _rail, out _multiSelectionHandle ) )
+        {
+            var bounds = _rail.Bounds;
+            _multiSelectionHandle = new BoxBoundsHandle
+            {
+                center = bounds.center,
+                axes = PrimitiveBoundsHandle.Axes.X | PrimitiveBoundsHandle.Axes.Y,
+                size = bounds.size + Vector3.one,
+                midpointHandleSizeFunction = v => HandleUtility.GetHandleSize( v ) * GizmoRadius / 2
+            };
+            MultiSelectionHandlesDictionary.Add( _rail, _multiSelectionHandle );
+        }
     }
 
-    private void DrawNotice()
+    private static void DrawNotice()
     {
         var boxStyle = new GUIStyle( GUI.skin.box );
         boxStyle.alignment = TextAnchor.UpperLeft;
         var labelStyle = new GUIStyle( GUI.skin.label );
-        
-        var content = new GUIContent( "Mouse drag to move points" +
-                                      "\nHold Shift to snap horizontally" +
-                                      "\nHold Alt to snap vertically" +
-                                      "\nHold Ctrl to add new point" +
-                                      "\nRight mouse click to delete point" );
+
+        GUIContent content;
+        switch ( Tools.current )
+        {
+            case Tool.Move:
+                content = new GUIContent( "Mouse drag to move points" +
+                                          "\nHold Shift to snap horizontally" +
+                                          "\nHold Alt to snap vertically" +
+                                          "\nHold Ctrl to add new point" +
+                                          "\nRight mouse click to delete point" );
+                break;
+            case Tool.Rect:
+                content = new GUIContent( "Mouse drag bottom left handle to move selection" +
+                                          "\nHold Shift to snap horizontally" +
+                                          "\nHold Alt to snap vertically" +
+                                          "\nHold Ctrl to move enclosed rail points" );
+                break;
+            default:
+                content = new GUIContent( "Select Move tool (W) to move individual points" + 
+                                          "\nSelect Rect tool (T) to move multiples points" );
+                break;
+        }
 
         var size = labelStyle.CalcSize( content );
 
@@ -60,7 +95,20 @@ public class RailEditor : Editor
 
     private void OnSceneGUI()
     {
-        DrawRailEditable();
+        if ( Tools.current == Tool.Rect )
+        {
+            DrawRail();
+            DrawMultiSelectionHandle();
+        }
+        else if ( Tools.current == Tool.Move )
+        {
+            DrawRailEditable();
+        }
+        else
+        {
+            DrawRail();
+        }
+
         DrawNotice();
     }
 
@@ -69,7 +117,7 @@ public class RailEditor : Editor
     {
         if ( rail.gameObject != Selection.activeGameObject )
         {
-            DrawRail( rail );
+            DrawRailPickable( rail );
         }
     }
 
@@ -104,20 +152,21 @@ public class RailEditor : Editor
                     }
 
                     _rail.Points[ index ] = worldPosition - root;
-                }                
+                }
             }
         }
 
         DrawLines( _rail );
 
         var mouseRay = HandleUtility.GUIPointToWorldRay( currentEvent.mousePosition );
-            
+
         // add new point
         if ( currentEvent.control )
         {
-            var cid = GUIUtility.GetControlID( FocusType.Passive );
             if ( Event.current.type == EventType.Layout )
-                HandleUtility.AddDefaultControl( cid );
+            {
+                HandleUtility.AddDefaultControl( GUIUtility.GetControlID( 1, FocusType.Passive ) );
+            }
 
             Vector2 newPosition = mouseRay.origin;
 
@@ -141,7 +190,7 @@ public class RailEditor : Editor
             DrawLine( new Rail.Segment( nearestSegment.From, newPosition ), true );
             DrawLine( new Rail.Segment( newPosition, nearestSegment.To ), true );
 
-            DrawJointGizmo( newPosition );
+            DrawJointGizmo( newPosition, HandleColor );
 
             if ( currentEvent.type == EventType.MouseUp && currentEvent.button == 0 )
             {
@@ -153,21 +202,68 @@ public class RailEditor : Editor
 
             HandleUtility.Repaint();
         }
-        
-        // delete points 
-        if ( currentEvent.type == EventType.MouseDown && currentEvent.button == 1 )
+        else if ( currentEvent.type == EventType.MouseDown && currentEvent.button == 1 ) // delete point
         {
             for ( var index = 0; index < points.Count; index++ )
             {
                 var point = points[ index ] + root;
                 var dist = GizmoRadius * HandleUtility.GetHandleSize( point );
-                if (Vector2.SqrMagnitude( mouseRay.origin - point ) < dist * dist )
+                if ( Vector2.SqrMagnitude( mouseRay.origin - point ) < dist * dist )
                 {
                     Undo.RecordObject( _rail, "Remove point at " + index );
                     points.RemoveAt( index );
                     currentEvent.Use();
                 }
-            }            
+            }
+        }
+    }
+
+    private void DrawMultiSelectionHandle()
+    {
+        var currentEvent = Event.current;
+        var root = _rail.transform.position;
+        var points = _rail.Points;
+
+        // multiple selection
+        _multiSelectionHandle.DrawHandle();
+
+        var multiSelectionAnchor = _multiSelectionHandle.center - _multiSelectionHandle.size / 2;
+        var bounds = new Bounds( _multiSelectionHandle.center, _multiSelectionHandle.size );
+        var multiSelectionAnchorInitial = multiSelectionAnchor;
+
+        EditorGUI.BeginChangeCheck();
+        multiSelectionAnchor = Handles.FreeMoveHandle( multiSelectionAnchor, Quaternion.identity,
+            GizmoRadius * HandleUtility.GetHandleSize( multiSelectionAnchor ), Vector3.zero,
+            Handles.DotHandleCap );
+        if ( EditorGUI.EndChangeCheck() )
+        {
+            var delta = multiSelectionAnchor - multiSelectionAnchorInitial;
+
+            if ( currentEvent.shift )
+            {
+                delta.y = 0;
+            }
+
+            if ( currentEvent.alt )
+            {
+                delta.x = 0;
+            }
+
+            // move selectionBounds
+            _multiSelectionHandle.center += delta;
+
+            if ( currentEvent.control )
+            {
+                // move points
+                Undo.RecordObject( _rail, "Move multiple points " );
+                for ( var index = 0; index < points.Count; index++ )
+                {
+                    if ( bounds.Contains( points[ index ] + root ) )
+                    {
+                        points[ index ] += delta;
+                    }
+                }
+            }
         }
     }
 
@@ -251,7 +347,7 @@ public class RailEditor : Editor
         }
     }
 
-    private static void DrawRail( Rail rail )
+    private static void DrawRailPickable( Rail rail )
     {
         DrawLines( rail );
         if ( Event.current.type == EventType.MouseUp && Event.current.button == 0 )
@@ -270,6 +366,16 @@ public class RailEditor : Editor
 
                 Event.current.Use();
             }
+        }
+    }
+
+    private void DrawRail()
+    {
+        DrawLines( _rail );
+        var root = _rail.transform.position;
+        foreach ( var point in _rail.Points )
+        {
+            DrawJointGizmo( point + root, HandleColor, 0.5f );
         }
     }
 
@@ -333,9 +439,12 @@ public class RailEditor : Editor
         }
     }
 
-    private static void DrawJointGizmo( Vector3 position )
+    private static void DrawJointGizmo( Vector3 position, Color color, float size = 1 )
     {
-        Handles.DrawSolidDisc( position, Vector3.forward,
-            0.5f * GizmoRadius * HandleUtility.GetHandleSize( position ) );
+        using ( new Handles.DrawingScope( color ) )
+        {
+            Handles.DrawSolidDisc( position, Vector3.forward,
+                size * 0.5f * GizmoRadius * HandleUtility.GetHandleSize( position ) );
+        }
     }
 }
