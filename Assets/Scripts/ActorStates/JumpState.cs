@@ -4,9 +4,11 @@ namespace ActorStates
 {
     public class JumpState : ActorStateBase
     {
+        // normalized time before wich ground is not checked
+        public const float GroundCheckInhibitionTime = 0.1f;
         private float _jumpTimeRemaining;
         private float _jumpStartPositionY;
-        private float _jumpDirection;            
+        private float _jumpDirection;
 
         protected virtual float JumpDuration
         {
@@ -58,13 +60,14 @@ namespace ActorStates
             {
                 return InitialMovementSpeed * _jumpDirection;
             }
+
             return Actor.DesiredMovement * JumpMovementSpeed;
         }
 
         public override void OnEnter()
         {
             _jumpTimeRemaining = JumpDuration;
-            _jumpStartPositionY = Actor.transform.position.y;            
+            _jumpStartPositionY = Actor.transform.position.y;
             _jumpDirection = Actor.Direction;
             Actor.CurrentVelocity.x = GetHorizontalVelocity();
         }
@@ -88,6 +91,11 @@ namespace ActorStates
             Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
 
             Actor.CheckWallCollisions();
+
+            if ( NormalizedTime > GroundCheckInhibitionTime && Actor.CheckGround() )
+            {
+                return new GroundedState( Actor );
+            }
 
             if ( Actor.CheckDash() )
             {
