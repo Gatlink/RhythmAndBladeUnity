@@ -25,6 +25,10 @@ public class RailEditor : Editor
 
     private BoxBoundsHandle _multiSelectionHandle;
 
+    private readonly int MovePointHandleHint = "MovePointHandleHint".GetHashCode();
+    private readonly int MultiSelectionHandleHint = "MultiSelectionHandleHint".GetHashCode();
+    private readonly int NewPointHandleHint = "NewPointHandleHint".GetHashCode();
+
     private static GUIStyle Style
     {
         get
@@ -132,8 +136,9 @@ public class RailEditor : Editor
             {
                 var point = points[ index ];
                 var worldPosition = root + point;
+                var cid = GUIUtility.GetControlID( MovePointHandleHint, FocusType.Passive );
                 EditorGUI.BeginChangeCheck();
-                worldPosition = Handles.FreeMoveHandle( worldPosition, Quaternion.identity,
+                worldPosition = Handles.FreeMoveHandle( cid, worldPosition, Quaternion.identity,
                     GizmoRadius * HandleUtility.GetHandleSize( worldPosition ), Vector3.zero,
                     Handles.CylinderHandleCap );
                 if ( EditorGUI.EndChangeCheck() )
@@ -161,11 +166,11 @@ public class RailEditor : Editor
         var mouseRay = HandleUtility.GUIPointToWorldRay( currentEvent.mousePosition );
 
         // add new point
-        if ( currentEvent.control )
+        if ( currentEvent.control && GUIUtility.hotControl == 0 )
         {
             if ( Event.current.type == EventType.Layout )
             {
-                HandleUtility.AddDefaultControl( GUIUtility.GetControlID( 1, FocusType.Passive ) );
+                HandleUtility.AddDefaultControl( GUIUtility.GetControlID( NewPointHandleHint, FocusType.Passive ) );
             }
 
             Vector2 newPosition = mouseRay.origin;
@@ -189,7 +194,8 @@ public class RailEditor : Editor
 
             int newIndex = nearestSegment.FromIndex + 1;
             // handles rail extremity case
-            if ( !_rail.Closed && (nearestSegment.FromIndex == 0 || nearestSegment.FromIndex + 1 == points.Count - 1))
+            if ( !_rail.Closed &&
+                 ( nearestSegment.FromIndex == 0 || nearestSegment.FromIndex + 1 == points.Count - 1 ) )
             {
                 var distToSegment =
                     HandleUtility.DistancePointToLineSegment( newPosition, nearestSegment.From, nearestSegment.To );
@@ -198,8 +204,9 @@ public class RailEditor : Editor
                 {
                     DrawLine( new Rail.Segment( newPosition, nearestSegment.From ), true );
                     newIndex = nearestSegment.FromIndex;
-                } else if ( nearestSegment.FromIndex + 1 == points.Count - 1 &&
-                            Vector2.Distance( newPosition, nearestSegment.To ) <= distToSegment )
+                }
+                else if ( nearestSegment.FromIndex + 1 == points.Count - 1 &&
+                          Vector2.Distance( newPosition, nearestSegment.To ) <= distToSegment )
                 {
                     DrawLine( new Rail.Segment( nearestSegment.To, newPosition ), true );
                     newIndex = nearestSegment.FromIndex + 2;
@@ -215,7 +222,7 @@ public class RailEditor : Editor
                 DrawLine( new Rail.Segment( nearestSegment.From, newPosition ), true );
                 DrawLine( new Rail.Segment( newPosition, nearestSegment.To ), true );
             }
-                        
+
             DrawJointGizmo( newPosition, HandleColor );
 
             if ( currentEvent.type == EventType.MouseUp && currentEvent.button == 0 )
@@ -257,8 +264,8 @@ public class RailEditor : Editor
         var multiSelectionAnchorInitial = multiSelectionAnchor;
 
         EditorGUI.BeginChangeCheck();
-        multiSelectionAnchor = Handles.FreeMoveHandle( multiSelectionAnchor, Quaternion.identity,
-            GizmoRadius * HandleUtility.GetHandleSize( multiSelectionAnchor ), Vector3.zero,
+        multiSelectionAnchor = Handles.FreeMoveHandle( MultiSelectionHandleHint, multiSelectionAnchor,
+            Quaternion.identity, GizmoRadius * HandleUtility.GetHandleSize( multiSelectionAnchor ), Vector3.zero,
             Handles.DotHandleCap );
         if ( EditorGUI.EndChangeCheck() )
         {
