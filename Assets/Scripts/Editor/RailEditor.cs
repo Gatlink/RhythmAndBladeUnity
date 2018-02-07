@@ -228,7 +228,7 @@ public class RailEditor : Editor
             if ( currentEvent.type == EventType.MouseUp && currentEvent.button == 0 )
             {
                 Undo.RecordObject( _rail, "Add point at " + newIndex );
-                points.Insert( newIndex, newPosition );
+                points.Insert( newIndex, (Vector3) newPosition - root );
                 currentEvent.Use();
             }
 
