@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Gamelogic.Extensions.Editor.Internal;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 [ CustomEditor( typeof( Rail ) ) ]
-public class RailEditor : Editor
+public class RailEditor : GLEditor<Rail>
 {
     private const float GizmoRadius = 0.15f;
     private const int DottedLinesSpace = 3;
@@ -58,6 +59,12 @@ public class RailEditor : Editor
             };
             MultiSelectionHandlesDictionary.Add( _rail, _multiSelectionHandle );
         }
+    }
+    
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+        DrawInspectorButtons(3);
     }
 
     private static void DrawNotice()

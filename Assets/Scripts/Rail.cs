@@ -5,7 +5,7 @@ using System.Runtime.Remoting.Messaging;
 using Gamelogic.Extensions;
 using UnityEngine.Serialization;
 
-public class Rail : MonoBehaviour
+public class Rail : GLMonoBehaviour
 {
     public const float SlopeLimit = 35;
 
@@ -87,6 +87,12 @@ public class Rail : MonoBehaviour
                 currentColliderIsWall = segment.IsWall();
             }
         }
+    }
+
+    [ InspectorButton ]
+    public void ReversePointsOrder()
+    {
+        Points.Reverse();
     }
 
     public IEnumerable<Segment> EnumerateSegments()
