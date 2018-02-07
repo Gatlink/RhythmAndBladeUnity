@@ -100,7 +100,7 @@ MonoBehaviour:
   Offset:
     useValue: 0
     value: {x: 0, y: 0}
-  TrackingInertia: {x: 0.3, y: 0.3}
+  TrackingInertia: {x: 0.3, y: 0.2}
   OffsetInertia: 0.4
 --- !u!124 &124886592782502638
 Behaviour:
