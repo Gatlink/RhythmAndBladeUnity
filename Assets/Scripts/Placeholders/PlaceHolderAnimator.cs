@@ -1,4 +1,5 @@
-﻿using Gamelogic.Extensions;
+﻿using ActorStates;
+using Gamelogic.Extensions;
 using UnityEngine;
 
 public class PlaceHolderAnimator : MonoBehaviour
@@ -10,6 +11,8 @@ public class PlaceHolderAnimator : MonoBehaviour
     private void Start()
     {
         _actor = GetComponentInParent<Actor>();
+        _actor.StateChangeEvent += StateChangeHandler;
+        
         _muzzle = transform.Find( "Ball/Muzzle" );
         _initialScale = _muzzle.localScale;
     }
@@ -17,5 +20,9 @@ public class PlaceHolderAnimator : MonoBehaviour
     private void Update()
     {
         _muzzle.localScale = _initialScale.WithX( _initialScale.x * _actor.Direction );
+    }
+    private void StateChangeHandler( IActorState previous, IActorState next )
+    {
+        
     }
 }
