@@ -27,9 +27,8 @@ public class PlayerAnimator : MonoBehaviour
 
     private void StateChangeHandler( IActorState previous, IActorState next )
     {
-        if ( next is JumpState )
-        {
-            _animator.SetTrigger( "Jump" );
-        }
+        _animator.SetBool( "Jumping", next is JumpState );
+        _animator.SetBool( "Dashing", next is DashState );
+        _animator.SetBool( "Sliding", next is WallSlideState );
     }
 }
