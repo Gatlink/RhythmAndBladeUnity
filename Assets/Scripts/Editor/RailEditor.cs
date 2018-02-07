@@ -79,7 +79,7 @@ public class RailEditor : Editor
                                           "\nHold Ctrl to move enclosed rail points" );
                 break;
             default:
-                content = new GUIContent( "Select Move tool (W) to move individual points" + 
+                content = new GUIContent( "Select Move tool (W) to move individual points" +
                                           "\nSelect Rect tool (T) to move multiples points" );
                 break;
         }
@@ -187,14 +187,39 @@ public class RailEditor : Editor
                 newPosition = SnapVertically( newPosition, nearestSegment.From, nearestSegment.To );
             }
 
-            DrawLine( new Rail.Segment( nearestSegment.From, newPosition ), true );
-            DrawLine( new Rail.Segment( newPosition, nearestSegment.To ), true );
-
+            int newIndex = nearestSegment.FromIndex + 1;
+            // handles rail extremity case
+            if ( !_rail.Closed && (nearestSegment.FromIndex == 0 || nearestSegment.FromIndex + 1 == points.Count - 1))
+            {
+                var distToSegment =
+                    HandleUtility.DistancePointToLineSegment( newPosition, nearestSegment.From, nearestSegment.To );
+                if ( nearestSegment.FromIndex == 0 &&
+                     Vector2.Distance( newPosition, nearestSegment.From ) <= distToSegment )
+                {
+                    DrawLine( new Rail.Segment( newPosition, nearestSegment.From ), true );
+                    newIndex = nearestSegment.FromIndex;
+                } else if ( nearestSegment.FromIndex + 1 == points.Count - 1 &&
+                            Vector2.Distance( newPosition, nearestSegment.To ) <= distToSegment )
+                {
+                    DrawLine( new Rail.Segment( nearestSegment.To, newPosition ), true );
+                    newIndex = nearestSegment.FromIndex + 2;
+                }
+                else
+                {
+                    DrawLine( new Rail.Segment( nearestSegment.From, newPosition ), true );
+                    DrawLine( new Rail.Segment( newPosition, nearestSegment.To ), true );
+                }
+            }
+            else
+            {
+                DrawLine( new Rail.Segment( nearestSegment.From, newPosition ), true );
+                DrawLine( new Rail.Segment( newPosition, nearestSegment.To ), true );
+            }
+                        
             DrawJointGizmo( newPosition, HandleColor );
 
             if ( currentEvent.type == EventType.MouseUp && currentEvent.button == 0 )
             {
-                var newIndex = nearestSegment.FromIndex + 1;
                 Undo.RecordObject( _rail, "Add point at " + newIndex );
                 points.Insert( newIndex, newPosition );
                 currentEvent.Use();
