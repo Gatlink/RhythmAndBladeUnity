@@ -157,6 +157,7 @@ namespace Gamelogic.Extensions.Editor.Internal
 
 				if (GUILayout.Button(method.Name.SplitCamelCase()))
 				{
+					Undo.RecordObject( Target, "Calling " + method.Name );
 					if (method.ReturnType == typeof(IEnumerator))
 					{
 						Target.StartCoroutine((IEnumerator)method.Invoke(Target, new object[] { }));
@@ -164,7 +165,7 @@ namespace Gamelogic.Extensions.Editor.Internal
 					else
 					{
 						method.Invoke(Target, new object[] { });
-					}
+					}				
 				}
 
 				if (i % columnCount == columnCount - 1)
