@@ -5,11 +5,16 @@ namespace ActorStates
 {
     public class DashState : ActorStateBase
     {
-        private float _dashTimeRemaining;
-        private float _dashDirection;
-        private bool _groundedDash;
+        private float _timeRemaining;
+        private float _direction;
+        private bool _initiatedGrounded;
         private float _lastNormalizedTime;
         private Vector2 _lastTangent;
+
+        protected virtual float TotalDuration
+        {
+            get { return PlayerSettings.DashDuration; }
+        }
 
         public DashState( Actor actor ) : base( actor )
         {
@@ -18,24 +23,25 @@ namespace ActorStates
         public override void OnEnter()
         {
             Actor.DashCount--;
-            _dashTimeRemaining = PlayerSettings.DashDuration;
-            _dashDirection = Actor.Direction;
-            _groundedDash = Actor.CheckGround();
+            _timeRemaining = TotalDuration;
+            _direction = Actor.Direction;
+            _initiatedGrounded = Actor.CheckGround();
             _lastNormalizedTime = 0;
         }
 
         public override IActorState Update()
         {
             // apply dash tangencial velocity curve
-            var deltaU = _dashDirection * PlayerSettings.DashLength *
-                         ( PlayerSettings.DashPositionCurve.Evaluate( NormalizedTime ) -
-                           PlayerSettings.DashPositionCurve.Evaluate( _lastNormalizedTime ) );
+            var deltaU = _direction * MovementLength *
+                         ( MovementCurve.Evaluate( NormalizedTime ) - MovementCurve.Evaluate( _lastNormalizedTime ) );
 
             _lastNormalizedTime = NormalizedTime;
 
-            Vector2 tangent;
             Vector2 normal;
-            if ( _groundedDash && Actor.CheckGround( out normal ) )
+            var currentlyGrounded = Actor.CheckGround( out normal );
+
+            Vector2 tangent;
+            if ( currentlyGrounded )
             {
                 tangent = normal.Rotate270();
             }
@@ -45,27 +51,27 @@ namespace ActorStates
             }
 
             Actor.CurrentVelocity = tangent * deltaU / Time.deltaTime;
-            
+
             // default move
             Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
 
             Actor.CheckWallCollisions();
 
-            if ( Actor.CheckWallProximity( Actor.Direction, out normal ) )
+            if ( !currentlyGrounded && Actor.CheckWallProximity( Actor.Direction, out normal ) )
             {
                 return new WallSlideState( Actor, normal );
             }
 
             if ( NormalizedTime >= PlayerSettings.DashJumpTiming
                  && Actor.CheckJump()
-                 && _groundedDash )
+                 && _initiatedGrounded )
             {
                 Actor.DashCount = 1;
                 return new DashJumpState( Actor );
             }
 
-            _dashTimeRemaining -= Time.deltaTime;
-            if ( _dashTimeRemaining <= 0 )
+            _timeRemaining -= Time.deltaTime;
+            if ( _timeRemaining <= 0 )
             {
                 if ( Actor.CheckGround() )
                 {
@@ -80,9 +86,19 @@ namespace ActorStates
             return null;
         }
 
+        protected virtual AnimationCurve MovementCurve
+        {
+            get { return PlayerSettings.DashPositionCurve; }
+        }
+
+        protected virtual float MovementLength
+        {
+            get { return PlayerSettings.DashLength; }
+        }
+
         private float NormalizedTime
         {
-            get { return 1 - _dashTimeRemaining / PlayerSettings.DashDuration; }
+            get { return 1 - _timeRemaining / PlayerSettings.DashDuration; }
         }
     }
 }
