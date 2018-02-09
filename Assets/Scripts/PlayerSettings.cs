@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Gamelogic.Extensions;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 [ CreateAssetMenu ]
@@ -17,6 +18,13 @@ public class PlayerSettings : ScriptableObject
 
             return _instance;
         }
+    }
+
+    private void OnValidate()
+    {
+        _attack1TotalDuration = Attack1HitDuration + Attack1ComboDuration + Attack1RecoveryDuration;
+        _attack2TotalDuration = Attack2HitDuration + Attack2ComboDuration + Attack2RecoveryDuration;
+        _attack3TotalDuration = Attack3HitDuration + Attack3RecoveryDuration;
     }
 
     [ Header( "General" ) ]
@@ -73,10 +81,10 @@ public class PlayerSettings : ScriptableObject
     [ FormerlySerializedAs( "_dashJumpTiming" ) ]
     public float DashJumpTiming = 0.33f;
 
-    [ Header( "Jump" ) ]    
+    [ Header( "Jump" ) ]
     [ Range( 0, 1 ) ]
     public float JumpAirControlTiming = 0.66f;
-    
+
     [ FormerlySerializedAs( "_jumpDuration" ) ]
     public float JumpDuration = 0.3f;
 
@@ -93,26 +101,26 @@ public class PlayerSettings : ScriptableObject
     [ FormerlySerializedAs( "_jumpHeight" ) ]
     public float JumpHeight = 5;
 
-    public float JumpInitialMovementSpeed = 10;   
-    
+    public float JumpInitialMovementSpeed = 10;
+
     [ Header( "Wall Jump" ) ]
     [ Range( 0, 1 ) ]
     [ FormerlySerializedAs( "_wallJumpAirControlTiming" ) ]
     public float WallJumpAirControlTiming = 0.66f;
 
     public float WallJumpDuration = 0.3f;
-    
+
     public float WallJumpMovementSpeed = 10;
-    
+
     public float WallJumpMoveInertia = 0.2f;
 
     [ ClampedCurve ]
     public AnimationCurve WallJumpHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
 
     public float WallJumpHeight = 5;
-    
+
     public float WallJumpInitialMovementSpeed = 10;
-        
+
     [ Header( "Dash Jump" ) ]
     [ Range( 0, 1 ) ]
     [ FormerlySerializedAs( "_dashJumpAirControlTiming" ) ]
@@ -122,7 +130,7 @@ public class PlayerSettings : ScriptableObject
     public float DashJumpDuration = 0.6f;
 
     public float DashJumpMovementSpeed = 10;
-    
+
     public float DashJumpMoveInertia = 0.2f;
 
     [ ClampedCurve ]
@@ -132,5 +140,54 @@ public class PlayerSettings : ScriptableObject
     public float DashJumpHeight = 3;
 
     [ FormerlySerializedAs( "_dashJumpInitialMovementSpeed" ) ]
-    public float DashJumpInitialMovementSpeed = 25;    
+    public float DashJumpInitialMovementSpeed = 25;
+
+    [ Header( "Attack 1" ) ]
+    [ SerializeField ]
+    [ ReadOnly ]
+    private float _attack1TotalDuration;
+
+    public float Attack1HitDuration = 0.2f;
+
+    public float Attack1ComboDuration = 0.2f;
+
+    public float Attack1RecoveryDuration = 0.2f;
+
+    public float Attack1MovementLength = 0.5f;
+
+    public AnimationCurve Attack1MovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+
+    public float Attack1Cooldown = 1;
+
+    [ Header( "Attack 2" ) ]
+    [ SerializeField ]
+    [ ReadOnly ]
+    private float _attack2TotalDuration;
+
+    public float Attack2HitDuration = 0.2f;
+
+    public float Attack2ComboDuration = 0.2f;
+
+    public float Attack2RecoveryDuration = 0.2f;
+
+    public float Attack2MovementLength = 0.5f;
+
+    public AnimationCurve Attack2MovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+
+    public float Attack2Cooldown = 1;
+
+    [ Header( "Attack 3" ) ]
+    [ SerializeField ]
+    [ ReadOnly ]
+    private float _attack3TotalDuration;
+
+    public float Attack3HitDuration = 0.2f;
+
+    public float Attack3RecoveryDuration = 0.2f;
+
+    public float Attack3MovementLength = 0.5f;
+
+    public AnimationCurve Attack3MovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+
+    public float Attack3Cooldown = 1;
 }

@@ -18,7 +18,7 @@ public class CameraController : MonoBehaviour
 
     public void Start()
     {
-        _target = GameObject.FindGameObjectWithTag( "Player" ).GetComponent<Actor>();
+        _target = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Actor>();
         if ( !Offset.UseValue )
         {
             Offset.UseValue = true;

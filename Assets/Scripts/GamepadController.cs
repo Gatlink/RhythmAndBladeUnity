@@ -38,6 +38,6 @@ public class GamepadController : ActorControllerBase
         actor.DesiredMovement = direction * amplitude;        
         actor.DesiredJump = Input.GetButtonDown( "Jump" );
         actor.DesiredDash = Input.GetButtonDown( "Dash" );
-        //actor.DesiredAttack = Input.GetButtonDown( "Fire1" );
+        actor.DesiredAttack = Input.GetButtonDown( "Fire1" );
     }
 }

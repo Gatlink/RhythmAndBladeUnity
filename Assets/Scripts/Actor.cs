@@ -54,6 +54,10 @@ public class Actor : GLMonoBehaviour
 
     private PlayerSettings _playerSettings;
 
+    private ContactFilter2D _wallCollisionContactFilter2D;
+
+    private int _moveBlockingLayerMask;
+
     public bool CheckJump()
     {
         return DesiredJump;
@@ -64,9 +68,9 @@ public class Actor : GLMonoBehaviour
         return DesiredDash && DashCount > 0;
     }
 
-    public bool CheckAttack()
+    public bool CheckAttack( bool ignoreCoolDown = false )
     {
-        return DesiredAttack && AttackCooldown <= 0;
+        return DesiredAttack && ( ignoreCoolDown || AttackCooldown <= 0 );
     }
 
     public bool CheckGround( bool snap = true )
@@ -78,11 +82,11 @@ public class Actor : GLMonoBehaviour
     public bool CheckGround( out Vector2 normal, bool snap = true )
     {
         var frontHit = Physics2D.Raycast( transform.position, Vector2.down,
-            _playerSettings.BodyRadius + _playerSettings.RailStickiness, 1 << LayerMask.NameToLayer( "Rail" ) );
+            _playerSettings.BodyRadius + _playerSettings.RailStickiness, 1 << LayerMask.NameToLayer( Layers.Ground ) );
         var backHit = Physics2D.Raycast(
             transform.position - 0.5f * _playerSettings.BodyRadius * Direction * Vector3.right,
             Vector2.down, _playerSettings.BodyRadius + _playerSettings.RailStickiness,
-            1 << LayerMask.NameToLayer( "Rail" ) );
+            1 << LayerMask.NameToLayer( Layers.Ground ) );
 
         var selectedHit = backHit;
         if ( frontHit.collider != null )
@@ -111,7 +115,7 @@ public class Actor : GLMonoBehaviour
     public bool CheckCeiling( out Vector2 normal )
     {
         var hit = Physics2D.Raycast( transform.position, Vector2.up, _playerSettings.BodyRadius,
-            1 << LayerMask.NameToLayer( "Rail" ) );        
+            1 << LayerMask.NameToLayer( Layers.Ground ) );
         normal = hit.normal;
         return hit.collider != null;
     }
@@ -130,7 +134,7 @@ public class Actor : GLMonoBehaviour
 
         var direction = amount.normalized;
         var hit = Physics2D.Raycast( transform.position, direction, length + _playerSettings.BodyRadius,
-            1 << LayerMask.NameToLayer( "Rail" ) | 1 << LayerMask.NameToLayer( "Wall" ) );
+            _moveBlockingLayerMask );
         if ( hit.collider != null )
         {
             length = hit.distance - _playerSettings.BodyRadius;
@@ -149,7 +153,7 @@ public class Actor : GLMonoBehaviour
     public bool CheckWallProximity( float direction, out Vector2 normal )
     {
         var hit = Physics2D.Raycast( transform.position, Vector2.right * direction,
-            _playerSettings.BodyRadius + _playerSettings.WallStickiness, 1 << LayerMask.NameToLayer( "Wall" ) );
+            _playerSettings.BodyRadius + _playerSettings.WallStickiness, 1 << LayerMask.NameToLayer( Layers.Wall ) );
         if ( hit.collider != null )
         {
             // snap to wall
@@ -169,8 +173,7 @@ public class Actor : GLMonoBehaviour
     public bool CheckWallCollisions()
     {
         var thisCollider = GetComponent<Collider2D>();
-        var filter = new ContactFilter2D() { layerMask = 1 << LayerMask.NameToLayer( "Wall" ), useLayerMask = true };
-        if ( thisCollider.OverlapCollider( filter, _wallColliders ) > 0 )
+        if ( thisCollider.OverlapCollider( _wallCollisionContactFilter2D, _wallColliders ) > 0 )
         {
             var distance2D = thisCollider.Distance( _wallColliders[ 0 ] );
             if ( distance2D.distance > 0 )
@@ -207,6 +210,18 @@ public class Actor : GLMonoBehaviour
     }
 
     #region UNITY MESSAGES
+
+    private void Awake()
+    {
+        _wallCollisionContactFilter2D = new ContactFilter2D()
+        {
+            layerMask = 1 << LayerMask.NameToLayer( Layers.Wall ) | 1 << LayerMask.NameToLayer( Layers.Destructible ),
+            useLayerMask = true
+        };
+        _moveBlockingLayerMask = 1 << LayerMask.NameToLayer( Layers.Ground ) |
+                                 1 << LayerMask.NameToLayer( Layers.Wall ) |
+                                 1 << LayerMask.NameToLayer( Layers.Destructible );
+    }
 
     private void Start()
     {
@@ -247,6 +262,10 @@ public class Actor : GLMonoBehaviour
         }
 
         ResetInputs();
+        if ( AttackCooldown > 0 )
+        {
+            AttackCooldown = Mathf.Max( 0, AttackCooldown - Time.deltaTime );
+        }
     }
 
 #if UNITY_EDITOR

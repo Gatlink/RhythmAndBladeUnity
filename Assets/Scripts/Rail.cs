@@ -62,7 +62,7 @@ public class Rail : GLMonoBehaviour
         var edgeCollider = new GameObject( first.IsWall() ? "Wall" : "Rail Part", typeof( EdgeCollider2D ) )
             .GetComponent<EdgeCollider2D>();
         edgeCollider.transform.SetParent( transform, true );
-        edgeCollider.gameObject.layer = LayerMask.NameToLayer( first.IsWall() ? "Wall" : "Rail" );
+        edgeCollider.gameObject.layer = LayerMask.NameToLayer( first.IsWall() ? Layers.Wall : Layers.Ground );
         edgeCollider.points = new Vector2[] { first.From, first.To };
         return edgeCollider;
     }

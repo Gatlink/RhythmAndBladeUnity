@@ -116,3 +116,74 @@ MonoBehaviour:
     m_RotationOrder: 0
   DashJumpHeight: 3
   DashJumpInitialMovementSpeed: 25
+  _attack1TotalDuration: 0.5
+  Attack1HitDuration: 0.1
+  Attack1ComboDuration: 0.2
+  Attack1RecoveryDuration: 0.2
+  Attack1MovementLength: 1
+  Attack1MovementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 2.1562495
+      outSlope: 2.1562495
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0.37500045
+      outSlope: 0.37500045
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  Attack1Cooldown: 1
+  _attack2TotalDuration: 0.6
+  Attack2HitDuration: 0.2
+  Attack2ComboDuration: 0.2
+  Attack2RecoveryDuration: 0.2
+  Attack2MovementLength: 1
+  Attack2MovementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 2.1562495
+      outSlope: 2.1562495
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0.37500045
+      outSlope: 0.37500045
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  Attack2Cooldown: 1
+  _attack3TotalDuration: 0.6
+  Attack3HitDuration: 0.2
+  Attack3RecoveryDuration: 0.4
+  Attack3MovementLength: 2
+  Attack3MovementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 2.1562495
+      outSlope: 2.1562495
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0.37500045
+      outSlope: 0.37500045
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  Attack3Cooldown: 2

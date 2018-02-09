@@ -65,11 +65,6 @@ namespace ActorStates
                 return new DashState( Actor );
             }
 
-            if ( Actor.CheckAttack() )
-            {
-                return new AttackState( Actor );
-            }
-
             if ( Actor.CheckJump() )
             {
                 return new WallJumpState( Actor );
