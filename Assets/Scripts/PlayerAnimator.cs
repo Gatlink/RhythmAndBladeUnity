@@ -22,8 +22,21 @@ public class PlayerAnimator : MonoBehaviour
         var horizontalSpeed = Mathf.Max( 0, Mathf.Abs( _actor.CurrentVelocity.x ) - HorizontalSpeedThreshold );
         _animator.SetFloat( "HorizontalSpeed", horizontalSpeed );
         _animator.SetFloat( "HorizontalAcceleration", _actor.CurrentAcceleration.x * Mathf.Sign( _actor.CurrentVelocity.x ) );
-        _animator.SetBool( "Grounded", _actor.CheckGround( snap: false ) );
+        
         _spriteRenderer.flipX = _actor.Direction < 0;
+        
+        Vector2 normal;
+        var grounded = _actor.CheckGround( out normal, snap: false );
+        _animator.SetBool( "Grounded", grounded);
+
+        if ( grounded )
+        {
+            transform.localRotation = Quaternion.FromToRotation( Vector3.up, normal );
+        }
+        else
+        {
+            transform.localRotation = Quaternion.identity;
+        }
     }
 
     private void StateChangeHandler( IActorState previous, IActorState next )
