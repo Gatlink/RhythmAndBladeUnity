@@ -139,7 +139,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  Attack1Cooldown: 1
+  Attack1Cooldown: 0.3
   _attack2TotalDuration: 0.6
   Attack2HitDuration: 0.2
   Attack2ComboDuration: 0.2
@@ -163,7 +163,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  Attack2Cooldown: 1
+  Attack2Cooldown: 0.3
   _attack3TotalDuration: 0.6
   Attack3HitDuration: 0.2
   Attack3RecoveryDuration: 0.4
@@ -186,4 +186,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  Attack3Cooldown: 2
+  Attack3Cooldown: 0.3

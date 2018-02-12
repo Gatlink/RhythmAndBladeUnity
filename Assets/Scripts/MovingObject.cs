@@ -18,4 +18,12 @@ public class MovingObject : MonoBehaviour
 	{
 		transform.position = Vector3.Lerp(_initialPosition, _initialPosition + (Vector3) Displacement, Mathf.PingPong(Time.time + Phase, Period * 0.5f) / (Period * 0.5f));
 	}
+
+#if UNITY_EDITOR
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.green;
+		Gizmos.DrawLine(transform.position, transform.position + (Vector3) Displacement);
+	}
+#endif
 }
