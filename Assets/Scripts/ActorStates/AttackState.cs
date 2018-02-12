@@ -8,8 +8,9 @@ namespace ActorStates
     {
         private const int MaxComboCount = 3;
 
-        private readonly int _comboCount;
+        public readonly int ComboCount;
         public readonly float HitDuration;
+
         private readonly float _comboDuration;
         private readonly float _recoveryDuration;
         private readonly float _movementLength;
@@ -22,8 +23,8 @@ namespace ActorStates
 
         private AttackState( Actor actor, int comboCount ) : base( actor )
         {
-            _comboCount = comboCount;
-            switch ( _comboCount )
+            ComboCount = comboCount;
+            switch ( ComboCount )
             {
                 case 2:
                     HitDuration = PlayerSettings.Attack3HitDuration;
@@ -72,6 +73,7 @@ namespace ActorStates
         {
             base.OnEnter();
             Actor.AttackCooldown = _coolDown;
+            Actor.AttackCount--;
         }
 
         private readonly Collider2D[] _colliderBuffer = new Collider2D[ 5 ];
@@ -111,17 +113,29 @@ namespace ActorStates
                     }
                 }
             }
-            else
+            else if ( time > HitDuration && time <= HitDuration + _comboDuration )
             {
-                if ( time > HitDuration
-                     && time <= HitDuration + _comboDuration
-                     && _comboCount + 1 < MaxComboCount
-                     && Actor.CheckAttack( ignoreCoolDown: true ) )
+                // combo phase
+                if ( ComboCount + 1 < MaxComboCount
+                     && Actor.CheckAttack( isCombo: true ) )
                 {
                     // combo phase
-                    return new AttackState( Actor, _comboCount + 1 );
+                    return new AttackState( Actor, ComboCount + 1 );
                 }
 
+                if ( Actor.CheckJump() )
+                {
+                    return new JumpState( Actor );
+                }
+
+                if ( Actor.CheckDash() )
+                {
+                    return new DashState( Actor );
+                }
+            }
+            else
+            {
+                // recovery phase
                 if ( !Actor.CheckGround() )
                 {
                     return new FallState( Actor );

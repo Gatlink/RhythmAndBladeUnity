@@ -18,6 +18,7 @@ namespace ActorStates
             Actor.CurrentVelocity = Vector3.zero;
             _unstickInhibition = PlayerSettings.TimeToUnstickFromWall;
             Actor.DashCount = 1;
+            Actor.AttackCount = 1;
         }
 
         public override IActorState Update()
@@ -49,7 +50,7 @@ namespace ActorStates
             {
                 _unstickInhibition = PlayerSettings.TimeToUnstickFromWall;
             }
-            
+
             if ( !Actor.CheckWallProximity( -Actor.Direction ) )
             {
                 return new FallState( Actor );

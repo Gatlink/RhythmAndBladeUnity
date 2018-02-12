@@ -39,6 +39,9 @@ public class Actor : GLMonoBehaviour
     public float AttackCooldown;
 
     [ ReadOnly ]
+    public float AttackCount = 1;
+
+    [ ReadOnly ]
     public Vector3 CurrentVelocity;
 
     [ HideInInspector ]
@@ -68,9 +71,9 @@ public class Actor : GLMonoBehaviour
         return DesiredDash && DashCount > 0;
     }
 
-    public bool CheckAttack( bool ignoreCoolDown = false )
+    public bool CheckAttack( bool isCombo = false )
     {
-        return DesiredAttack && ( ignoreCoolDown || AttackCooldown <= 0 );
+        return DesiredAttack && ( isCombo || AttackCooldown <= 0 && AttackCount > 0 );
     }
 
     public bool CheckGround( bool snap = true )

@@ -12,6 +12,7 @@ namespace ActorStates
         public override void OnEnter()
         {
             Actor.DashCount = 1;
+            Actor.AttackCount = 1;
         }
 
         public override IActorState Update()
@@ -33,16 +34,16 @@ namespace ActorStates
             Actor.CurrentVelocity = Vector3.SmoothDamp( Actor.CurrentVelocity, tangent * desiredVelocity,
                 ref Actor.CurrentAcceleration, PlayerSettings.GroundedMoveInertia );
 
-            // default move            
+            // default move
             Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
 
             Actor.CheckWallCollisions();
-            
+
             if ( !Actor.CheckGround() )
             {
                 return new FallState( Actor );
             }
-            
+
             if ( Actor.CheckJump() )
             {
                 return new JumpState( Actor );
