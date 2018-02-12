@@ -218,12 +218,13 @@ public class Actor : GLMonoBehaviour
     {
         _wallCollisionContactFilter2D = new ContactFilter2D()
         {
-            layerMask = 1 << LayerMask.NameToLayer( Layers.Wall ) | 1 << LayerMask.NameToLayer( Layers.Destructible ),
+            layerMask = 1 << LayerMask.NameToLayer( Layers.Wall )
+                        | 1 << LayerMask.NameToLayer( Layers.Obstacle ),
             useLayerMask = true
         };
         _moveBlockingLayerMask = 1 << LayerMask.NameToLayer( Layers.Ground ) |
                                  1 << LayerMask.NameToLayer( Layers.Wall ) |
-                                 1 << LayerMask.NameToLayer( Layers.Destructible );
+                                 1 << LayerMask.NameToLayer( Layers.Obstacle );
     }
 
     private void Start()
