@@ -27,6 +27,12 @@ namespace ActorStates
 
             Actor.CheckWallCollisions();
 
+            var harmfull = Actor.CheckDamages();
+            if ( harmfull != null )
+            {
+                return new HurtState( Actor, harmfull );
+            }
+
             Vector2 normal;
             if ( Actor.CheckWallProximity( Actor.Direction, out normal ) )
             {

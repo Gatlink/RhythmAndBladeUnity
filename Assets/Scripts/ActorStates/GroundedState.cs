@@ -39,6 +39,13 @@ namespace ActorStates
 
             Actor.CheckWallCollisions();
 
+            // check damages
+            var harmfull = Actor.CheckDamages();
+            if ( harmfull != null )
+            {
+                return new HurtState( Actor, harmfull );
+            }
+
             if ( !Actor.CheckGround() )
             {
                 return new FallState( Actor );

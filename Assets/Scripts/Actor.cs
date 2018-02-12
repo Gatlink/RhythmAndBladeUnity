@@ -30,6 +30,9 @@ public class Actor : GLMonoBehaviour
     public string StateName;
 
     [ ReadOnly ]
+    public int HitCount = 3;
+
+    [ ReadOnly ]
     public float Direction = 1;
 
     [ ReadOnly ]
@@ -53,13 +56,17 @@ public class Actor : GLMonoBehaviour
     // minimum movement to change direction
     private const float MovementEpsilon = 0.01f;
 
-    public IActorState CurrentState { get; private set; }
+    private IActorState _currentState;
 
     private PlayerSettings _playerSettings;
 
     private ContactFilter2D _wallCollisionContactFilter2D;
 
     private int _moveBlockingLayerMask;
+
+    private readonly Collider2D[] _colliderBuffer = new Collider2D[ 5 ];
+
+    private ContactFilter2D _hurtContactFilter2D;
 
     public bool CheckJump()
     {
@@ -196,6 +203,26 @@ public class Actor : GLMonoBehaviour
         return false;
     }
 
+    public Collider2D CheckDamages()
+    {
+        foreach ( var hurtbox in GetComponentsInChildren<Collider2D>()
+            .Where( col => col.CompareTag( Tags.Hurtbox ) && col.enabled ) )
+        {
+            var hitCount = hurtbox.OverlapCollider( _hurtContactFilter2D, _colliderBuffer );
+            if ( hitCount > 0 )
+            {
+                return _colliderBuffer[ 0 ];
+            }
+        }
+
+        return null;
+    }
+
+    public void AccountDamages( int amount )
+    {
+        HitCount = Mathf.Max( 0, HitCount - amount );
+    }
+
     private void ResetInputs()
     {
         DesiredMovement = 0;
@@ -225,14 +252,20 @@ public class Actor : GLMonoBehaviour
         _moveBlockingLayerMask = 1 << LayerMask.NameToLayer( Layers.Ground ) |
                                  1 << LayerMask.NameToLayer( Layers.Wall ) |
                                  1 << LayerMask.NameToLayer( Layers.Obstacle );
+        _hurtContactFilter2D = new ContactFilter2D()
+        {
+            layerMask = 1 << LayerMask.NameToLayer( Layers.Harmfull ),
+            useLayerMask = true
+        };
     }
 
     private void Start()
     {
         _playerSettings = PlayerSettings.Instance;
-        CurrentState = new FallState( this );
-        CurrentState.OnEnter();
-        StateName = CurrentState.Name;
+        HitCount = _playerSettings.InitialHitCount;
+        _currentState = new FallState( this );
+        _currentState.OnEnter();
+        StateName = _currentState.Name;
     }
 
     private void Update()
@@ -247,21 +280,21 @@ public class Actor : GLMonoBehaviour
             Controller.UpdateActorIntent( this );
         }
 
-        if ( CurrentState == null )
+        if ( _currentState == null )
         {
             Debug.LogError( "Actor has no current state", this );
         }
         else
         {
-            var nextState = CurrentState.Update();
+            var nextState = _currentState.Update();
             if ( nextState != null )
             {
-                Debug.Log( string.Format( "Going from {0} to {1}", CurrentState.Name, nextState.Name ) );
-                CurrentState.OnExit();
-                OnStateChangeEvent( CurrentState, nextState );
+                Debug.Log( string.Format( "Going from {0} to {1}", _currentState.Name, nextState.Name ) );
+                _currentState.OnExit();
+                OnStateChangeEvent( _currentState, nextState );
                 nextState.OnEnter();
-                CurrentState = nextState;
-                StateName = CurrentState.Name;
+                _currentState = nextState;
+                StateName = _currentState.Name;
             }
         }
 
@@ -270,6 +303,12 @@ public class Actor : GLMonoBehaviour
         {
             AttackCooldown = Mathf.Max( 0, AttackCooldown - Time.deltaTime );
         }
+
+//        if ( HitCount <= 0 )
+//        {
+//            // todo die
+//            Debug.Log( this + " died", this );
+//        }
     }
 
 #if UNITY_EDITOR

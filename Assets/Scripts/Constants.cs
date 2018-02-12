@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public static class Layers
+﻿public static class Layers
 {
     public const string Ground = "Rail";
     public const string Wall = "Wall";
@@ -11,11 +9,7 @@ public static class Layers
 
 public static class Tags
 {
+    public const string Hurtbox = "Hurtbox";
     public const string Player = "Player";
     public const string Hitbox = "Hitbox";
-}
-
-public interface IDestructible
-{
-    void Hit( GameObject source );
 }

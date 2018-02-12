@@ -3,9 +3,8 @@ using UnityEngine;
 
 namespace ActorStates
 {
-    public abstract class FixedHorizontalMovementStateBase : ActorStateBase
+    public abstract class FixedHorizontalMovementStateBase : FixedTimeStateBaseBase
     {
-        private float _timeRemaining;
         private float _direction;
         private float _lastNormalizedTime;
         private Vector2 _lastTangent;
@@ -15,45 +14,15 @@ namespace ActorStates
         {
         }
 
-        protected abstract float TotalDuration { get; }
-        
         protected abstract float MovementLength { get; }
-        
-        protected abstract AnimationCurve MovementCurve { get; }
 
-        protected float ElapsedTime
-        {
-            get { return TotalDuration - _timeRemaining; }
-        }
-        
-        protected float NormalizedTime
-        {
-            get { return ElapsedTime / TotalDuration; }
-        }
+        protected abstract AnimationCurve MovementCurve { get; }
 
         public override void OnEnter()
         {
-            _timeRemaining = TotalDuration;
+            base.OnEnter();
             _direction = Actor.Direction;
             _lastNormalizedTime = 0;
-        }
-
-        protected IActorState ChangeStateOnFinish()
-        {
-            _timeRemaining -= Time.deltaTime;
-            if ( _timeRemaining <= 0 )
-            {
-                if ( Actor.CheckGround() )
-                {
-                    return new GroundedState( Actor );
-                }
-                else
-                {
-                    return new FallState( Actor );
-                }
-            }
-
-            return null;
         }
 
         protected void ApplyHorizontalMovement()

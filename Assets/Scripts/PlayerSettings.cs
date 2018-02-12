@@ -34,6 +34,13 @@ public class PlayerSettings : ScriptableObject
     [ FormerlySerializedAs( "_railStickiness" ) ]
     public float RailStickiness = 0.2f;
 
+    public int InitialHitCount = 3;
+
+    [ Header( "Hurt Recoil" ) ]
+    public float HurtRecoilDuration = 0.5f;
+
+    public float HurtRecoilDistance = 5;
+
     [ Header( "Grounded" ) ]
     [ FormerlySerializedAs( "_groundedMovementSpeed" ) ]
     public float GroundedMovementSpeed = 15;

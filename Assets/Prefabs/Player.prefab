@@ -11,6 +11,22 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1963247483546628}
   m_IsPrefabParent: 1
+--- !u!1 &1007431955454466
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4344273620983628}
+  - component: {fileID: 58196197219234178}
+  m_Layer: 0
+  m_Name: Hurtbox
+  m_TagString: Hurtbox
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1227399726811376
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,8 +168,22 @@ Transform:
   m_Children:
   - {fileID: 4383877775590038}
   - {fileID: 4375083811458350}
+  - {fileID: 4344273620983628}
   m_Father: {fileID: 4855078756398926}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4344273620983628
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1007431955454466}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4272248732145132}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4375083811458350
 Transform:
@@ -239,6 +269,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.95
+--- !u!58 &58196197219234178
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1007431955454466}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.8
 --- !u!58 &58993953046550908
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -317,14 +362,16 @@ MonoBehaviour:
   DesiredAttack: 0
   DesiredDash: 0
   StateName: 
+  HitCount: 3
   Direction: 1
   DashCount: 1
   AttackCooldown: 0
+  AttackCount: 1
   CurrentVelocity: {x: 0, y: 0, z: 0}
   CurrentAcceleration: {x: 0, y: 0, z: 0}
   Controller: {fileID: 114136602439705628}
   TrackPositions:
-    useValue: 0
+    useValue: 1
     value: 200
 --- !u!114 &114237450469582642
 MonoBehaviour:

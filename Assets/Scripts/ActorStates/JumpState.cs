@@ -6,10 +6,10 @@ namespace ActorStates
     {
         // normalized time before wich ground is not checked yet
         private const float GroundCheckInhibitionTime = 0.1f;
-        
+
         // normalized time after wich ceiling is not checked any more
         private const float CeilingCheckInhibitionTime = 0.8f;
-        
+
         private float _jumpTimeRemaining;
         private float _jumpStartPositionY;
         private float _jumpDirection;
@@ -96,11 +96,17 @@ namespace ActorStates
 
             Actor.CheckWallCollisions();
 
+            var harmfull = Actor.CheckDamages();
+            if ( harmfull != null )
+            {
+                return new HurtState( Actor, harmfull );
+            }
+
             if ( NormalizedTime < CeilingCheckInhibitionTime && Actor.CheckCeiling() )
             {
                 return new FallState( Actor );
             }
-            
+
             if ( NormalizedTime > GroundCheckInhibitionTime && Actor.CheckGround() )
             {
                 return new GroundedState( Actor );

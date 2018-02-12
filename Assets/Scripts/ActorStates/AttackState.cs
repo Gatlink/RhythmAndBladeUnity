@@ -116,10 +116,16 @@ namespace ActorStates
             else if ( time > HitDuration && time <= HitDuration + _comboDuration )
             {
                 // combo phase
+
+                var harmfull = Actor.CheckDamages();
+                if ( harmfull != null )
+                {
+                    return new HurtState( Actor, harmfull );
+                }
+
                 if ( ComboCount + 1 < MaxComboCount
                      && Actor.CheckAttack( isCombo: true ) )
                 {
-                    // combo phase
                     return new AttackState( Actor, ComboCount + 1 );
                 }
 
