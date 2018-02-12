@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+
 public class MovingObject : MonoBehaviour
 {	
 	public Vector2 Displacement = Vector2.up;
@@ -22,8 +27,10 @@ public class MovingObject : MonoBehaviour
 #if UNITY_EDITOR
 	private void OnDrawGizmos()
 	{
+		var position = EditorApplication.isPlaying ? _initialPosition : transform.position;
+
 		Gizmos.color = Color.green;
-		Gizmos.DrawLine(transform.position, transform.position + (Vector3) Displacement);
+		Gizmos.DrawLine(position, position + (Vector3) Displacement);
 	}
 #endif
 }
