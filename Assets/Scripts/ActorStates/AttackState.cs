@@ -14,7 +14,7 @@ namespace ActorStates
         private readonly float _comboDuration;
         private readonly float _recoveryDuration;
         private readonly float _movementLength;
-        private readonly float _coolDown;
+        private readonly float _cooldown;
         private readonly AnimationCurve _movementCurve;
 
         public AttackState( Actor actor ) : this( actor, 0 )
@@ -31,7 +31,7 @@ namespace ActorStates
                     _comboDuration = 0;
                     _recoveryDuration = PlayerSettings.Attack3RecoveryDuration;
                     _movementLength = PlayerSettings.Attack3MovementLength;
-                    _coolDown = PlayerSettings.Attack3Cooldown;
+                    _cooldown = PlayerSettings.Attack3Cooldown;
                     _movementCurve = PlayerSettings.Attack3MovementCurve;
                     break;
                 case 1:
@@ -39,7 +39,7 @@ namespace ActorStates
                     _comboDuration = PlayerSettings.Attack2ComboDuration;
                     _recoveryDuration = PlayerSettings.Attack2RecoveryDuration;
                     _movementLength = PlayerSettings.Attack2MovementLength;
-                    _coolDown = PlayerSettings.Attack2Cooldown;
+                    _cooldown = PlayerSettings.Attack2Cooldown;
                     _movementCurve = PlayerSettings.Attack2MovementCurve;
                     break;
                 // case 0:
@@ -48,7 +48,7 @@ namespace ActorStates
                     _comboDuration = PlayerSettings.Attack1ComboDuration;
                     _recoveryDuration = PlayerSettings.Attack1RecoveryDuration;
                     _movementLength = PlayerSettings.Attack1MovementLength;
-                    _coolDown = PlayerSettings.Attack1Cooldown;
+                    _cooldown = PlayerSettings.Attack1Cooldown;
                     _movementCurve = PlayerSettings.Attack1MovementCurve;
                     break;
             }
@@ -72,8 +72,7 @@ namespace ActorStates
         public override void OnEnter()
         {
             base.OnEnter();
-            Actor.AttackCooldown = _coolDown;
-            Actor.AttackCount--;
+            Actor.ConsumeAttack( _cooldown );
         }
 
         private readonly Collider2D[] _colliderBuffer = new Collider2D[ 5 ];

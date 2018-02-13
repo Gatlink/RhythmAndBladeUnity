@@ -36,13 +36,19 @@ public class Actor : GLMonoBehaviour
     public float Direction = 1;
 
     [ ReadOnly ]
-    public int DashCount = 1;
+    [ SerializeField ]
+    private int _dashCount = 1;
+
+    [ SerializeField ]
+    [ ReadOnly ]
+    private int _jumpCount = 1;
 
     [ ReadOnly ]
     public float AttackCooldown;
 
+    [ SerializeField ]
     [ ReadOnly ]
-    public float AttackCount = 1;
+    private float _attackCount = 1;
 
     [ ReadOnly ]
     public Vector3 CurrentVelocity;
@@ -70,17 +76,48 @@ public class Actor : GLMonoBehaviour
 
     public bool CheckJump()
     {
-        return DesiredJump;
+        return DesiredJump && _jumpCount > 0;
+    }
+
+    public void ConsumeJump()
+    {
+        _jumpCount--;
+    }
+
+    public void ResetJump()
+    {
+        _jumpCount = 1;
+    }
+
+    public void ConsumeDash()
+    {
+        _dashCount--;
+    }
+
+    public void ResetDash()
+    {
+        _dashCount = 1;
     }
 
     public bool CheckDash()
     {
-        return DesiredDash && DashCount > 0;
+        return DesiredDash && _dashCount > 0;
+    }
+
+    public void ConsumeAttack( float cooldown )
+    {
+        _attackCount--;
+        AttackCooldown = cooldown;
+    }
+
+    public void ResetAttack()
+    {
+        _attackCount = 1;
     }
 
     public bool CheckAttack( bool isCombo = false )
     {
-        return DesiredAttack && ( isCombo || AttackCooldown <= 0 && AttackCount > 0 );
+        return DesiredAttack && ( isCombo || AttackCooldown <= 0 && _attackCount > 0 );
     }
 
     public bool CheckGround( bool snap = true )

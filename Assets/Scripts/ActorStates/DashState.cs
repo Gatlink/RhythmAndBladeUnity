@@ -28,7 +28,7 @@ namespace ActorStates
         public override void OnEnter()
         {
             base.OnEnter();
-            Actor.DashCount--;
+            Actor.ConsumeDash();
             _initiatedGrounded = Actor.CheckGround();
         }
 
@@ -46,7 +46,7 @@ namespace ActorStates
                  && NormalizedTime >= PlayerSettings.DashJumpTiming
                  && Actor.CheckJump() )
             {
-                Actor.DashCount = 1;
+                Actor.ResetDash();
                 return new DashJumpState( Actor );
             }
 

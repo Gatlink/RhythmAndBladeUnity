@@ -11,8 +11,9 @@ namespace ActorStates
 
         public override void OnEnter()
         {
-            Actor.DashCount = 1;
-            Actor.AttackCount = 1;
+            Actor.ResetDash();
+            Actor.ResetJump();
+            Actor.ResetAttack();
         }
 
         public override IActorState Update()

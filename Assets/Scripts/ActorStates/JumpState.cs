@@ -73,6 +73,7 @@ namespace ActorStates
             _jumpTimeRemaining = JumpDuration;
             _jumpStartPositionY = Actor.transform.position.y;
             _jumpDirection = Actor.Direction;
+            Actor.ConsumeJump();
             Actor.CurrentVelocity.x = GetHorizontalVelocity();
         }
 
