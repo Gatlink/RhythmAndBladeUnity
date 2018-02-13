@@ -2,11 +2,11 @@
 
 namespace ActorStates
 {
-    public abstract class FixedTimeStateBaseBase : ActorStateBase
+    public abstract class FixedTimeStateBase : ActorStateBase
     {
         private float _timeRemaining;
 
-        protected FixedTimeStateBaseBase( Actor actor ) : base( actor )
+        protected FixedTimeStateBase( Actor actor ) : base( actor )
         {
         }
 

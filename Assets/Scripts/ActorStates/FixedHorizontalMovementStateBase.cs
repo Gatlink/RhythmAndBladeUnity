@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ActorStates
 {
-    public abstract class FixedHorizontalMovementStateBase : FixedTimeStateBaseBase
+    public abstract class FixedHorizontalMovementStateBase : FixedTimeStateBase
     {
         private float _direction;
         private float _lastNormalizedTime;

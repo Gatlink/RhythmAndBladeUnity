@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ActorStates
 {
-    public class HurtState : FixedTimeStateBaseBase
+    public class HurtState : FixedTimeStateBase
     {
         private readonly float _recoilDirection;
         private readonly float _recoilStrength;
