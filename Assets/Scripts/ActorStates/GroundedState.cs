@@ -1,5 +1,6 @@
 ﻿using Gamelogic.Extensions;
 using UnityEngine;
+using UnityEngine.Collections;
 
 namespace ActorStates
 {
@@ -19,7 +20,8 @@ namespace ActorStates
         public override IActorState Update()
         {
             Vector2 normal;
-            if ( !Actor.CheckGround( out normal ) )
+            Collider2D collider;
+            if ( !Actor.CheckGround( out collider, out normal ) )
             {
                 Debug.LogWarning( "Should not happen except during the very first frame" );
                 return new FallState( Actor );
@@ -35,8 +37,23 @@ namespace ActorStates
             Actor.CurrentVelocity = Vector3.SmoothDamp( Actor.CurrentVelocity, tangent * desiredVelocity,
                 ref Actor.CurrentAcceleration, PlayerSettings.GroundedMoveInertia );
 
+            // todo add ground movement if there is any
+            var groundMovement = Vector2.zero;
+            if ( collider.gameObject.CompareTag( Tags.Moving ) )
+            {
+                var moving = collider.GetInterfaceComponentInParent<IMoving>();
+                if ( moving == null )
+                {
+                    Debug.LogError( "IMoving component not found in " + collider, collider );
+                }
+                else
+                {
+                    groundMovement = moving.CurrentVelocity;
+                }
+            }
+
             // default move
-            Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
+            Actor.Move( ( groundMovement + (Vector2) Actor.CurrentVelocity ) * Time.deltaTime );
 
             Actor.CheckWallCollisions();
 

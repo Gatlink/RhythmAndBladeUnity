@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Hitbox
   - Hurtbox
+  - Moving
   layers:
   - Default
   - TransparentFX

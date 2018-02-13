@@ -123,10 +123,17 @@ public class Actor : GLMonoBehaviour
     public bool CheckGround( bool snap = true )
     {
         Vector2 normal;
-        return CheckGround( out normal, snap );
+        Collider2D col;
+        return CheckGround( out col, out normal, snap );
     }
 
     public bool CheckGround( out Vector2 normal, bool snap = true )
+    {
+        Collider2D col;
+        return CheckGround( out col, out normal, snap );
+    }
+    
+    public bool CheckGround( out Collider2D collider2D, out Vector2 normal, bool snap = true )
     {
         var frontHit = Physics2D.Raycast( transform.position, Vector2.down,
             _playerSettings.BodyRadius + _playerSettings.RailStickiness, 1 << LayerMask.NameToLayer( Layers.Ground ) );
@@ -150,6 +157,7 @@ public class Actor : GLMonoBehaviour
         }
 
         normal = selectedHit.normal;
+        collider2D = selectedHit.collider;
         return grounded;
     }
 

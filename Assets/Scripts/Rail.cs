@@ -12,7 +12,6 @@ public class Rail : GLMonoBehaviour
 
     public bool Closed;
 
-    [ HideInInspector, SerializeField ]
     [ FormerlySerializedAs( "points" ) ]
     public List<Vector3> Points;
 
@@ -101,12 +100,35 @@ public class Rail : GLMonoBehaviour
         Points.Reverse();
     }
 
+    [ InspectorButton ]
+    public void MoveTransformToFirstPoint()
+    {
+        var delta = Points[ 0 ];
+        MoveTransform( delta );
+    }
+
+    [ InspectorButton ]
+    public void MoveTransformToBoundsCenter()
+    {
+        var delta = Bounds.center - transform.position;
+        MoveTransform( delta );
+    }
+
+    private void MoveTransform( Vector3 delta )
+    {
+        transform.position += delta;
+        for ( var i = 0; i < Points.Count; i++ )
+        {
+            Points[ i ] -= delta;
+        }
+    }
+
     public IEnumerable<Segment> EnumerateSegments()
     {
         var points = Points;
         var position = transform.position;
 
-        for ( int i = 1; i < points.Count; i++ )
+        for ( var i = 1; i < points.Count; i++ )
         {
             var from = points[ i - 1 ] + position;
             var to = points[ i ] + position;

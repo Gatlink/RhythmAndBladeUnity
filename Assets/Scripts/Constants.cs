@@ -9,6 +9,7 @@
 
 public static class Tags
 {
+    public const string Moving = "Moving";
     public const string Hurtbox = "Hurtbox";
     public const string Player = "Player";
     public const string Hitbox = "Hitbox";
