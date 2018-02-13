@@ -202,10 +202,17 @@ public class Actor : GLMonoBehaviour
     public bool CheckWallProximity( float direction )
     {
         Vector2 normal;
-        return CheckWallProximity( direction, out normal );
+        Collider2D col;
+        return CheckWallProximity( direction, out normal, out col );
     }
 
     public bool CheckWallProximity( float direction, out Vector2 normal )
+    {
+        Collider2D col;
+        return CheckWallProximity( direction, out normal, out col );
+    }
+    
+    public bool CheckWallProximity( float direction, out Vector2 normal, out Collider2D collider )
     {
         var hit = Physics2D.Raycast( transform.position, Vector2.right * direction,
             _playerSettings.BodyRadius + _playerSettings.WallStickiness, 1 << LayerMask.NameToLayer( Layers.Wall ) );
@@ -216,10 +223,12 @@ public class Actor : GLMonoBehaviour
             CurrentVelocity.x = 0;
             CurrentAcceleration.x = 0;
             normal = hit.normal;
+            collider = hit.collider;
             return true;
         }
 
         normal = Vector2.zero;
+        collider = null;
         return false;
     }
 

@@ -15,6 +15,7 @@ namespace ActorStates
 
         public override void OnEnter()
         {
+            Actor.UpdateDirection( _wallDirection.Dot( Vector2.right ) );
             Actor.CurrentVelocity = Vector3.zero;
             _unstickInhibition = PlayerSettings.TimeToUnstickFromWall;
             Actor.ResetDash();
@@ -24,7 +25,13 @@ namespace ActorStates
 
         public override IActorState Update()
         {
-            Actor.UpdateDirection( _wallDirection.Dot( Vector2.right ) );
+            Vector2 normal;
+            Collider2D collider;
+            if ( !Actor.CheckWallProximity( -Actor.Direction, out normal, out collider ) )
+            {
+                Debug.LogWarning( "Should not happen except during the very first frame" );
+                return new FallState( Actor );
+            }
 
             // update horizontal velocity is 0
             Actor.CurrentVelocity.x = 0;
@@ -33,8 +40,23 @@ namespace ActorStates
             Actor.CurrentVelocity.y -= PlayerSettings.WallSlideGravity * Time.deltaTime;
             Actor.CurrentVelocity.y = Mathf.Max( -PlayerSettings.MaxWallSlideVelocity, Actor.CurrentVelocity.y );
 
+            // add wall movement if there is any
+            var wallMovement = Vector2.zero;
+            if ( collider.gameObject.CompareTag( Tags.Moving ) )
+            {
+                var moving = collider.GetInterfaceComponentInParent<IMoving>();
+                if ( moving == null )
+                {
+                    Debug.LogError( "IMoving component not found in " + collider, collider );
+                }
+                else
+                {
+                    wallMovement = moving.CurrentVelocity;
+                }
+            }
+
             // default move
-            Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
+            Actor.Move( ( (Vector2) Actor.CurrentVelocity + wallMovement ) * Time.deltaTime );
 
             Actor.CheckWallCollisions();
 

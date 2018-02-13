@@ -37,7 +37,7 @@ namespace ActorStates
             Actor.CurrentVelocity = Vector3.SmoothDamp( Actor.CurrentVelocity, tangent * desiredVelocity,
                 ref Actor.CurrentAcceleration, PlayerSettings.GroundedMoveInertia );
 
-            // todo add ground movement if there is any
+            // add ground movement if there is any
             var groundMovement = Vector2.zero;
             if ( collider.gameObject.CompareTag( Tags.Moving ) )
             {
