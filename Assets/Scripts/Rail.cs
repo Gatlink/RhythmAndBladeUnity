@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
 using Gamelogic.Extensions;
 using UnityEngine.Serialization;
 
@@ -49,11 +48,12 @@ public class Rail : GLMonoBehaviour
     {
         get
         {
-            return Points.Aggregate<Vector3, Bounds>( new Bounds( Points[ 0 ], Vector3.zero ), ( b, v ) =>
-            {
-                b.Encapsulate( v );
-                return b;
-            } );
+            return Points.Aggregate<Vector3, Bounds>( new Bounds( Points[ 0 ] + transform.position, Vector3.zero ),
+                ( b, p ) =>
+                {
+                    b.Encapsulate( p + transform.position );
+                    return b;
+                } );
         }
     }
 
