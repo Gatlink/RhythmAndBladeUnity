@@ -61,9 +61,15 @@ public class Rail : GLMonoBehaviour
     {
         var edgeCollider = new GameObject( first.IsWall() ? "Wall" : "Rail Part", typeof( EdgeCollider2D ) )
             .GetComponent<EdgeCollider2D>();
-        edgeCollider.transform.SetParent( transform, true );
+        edgeCollider.transform.SetParent( transform, false );
         edgeCollider.gameObject.layer = LayerMask.NameToLayer( first.IsWall() ? Layers.Wall : Layers.Ground );
-        edgeCollider.points = new Vector2[] { first.From, first.To };
+        if ( this.GetInterfaceComponent<IMoving>() != null )
+        {
+            edgeCollider.gameObject.tag = Tags.Moving;
+        }
+
+        edgeCollider.points = new Vector2[]
+            { first.From - (Vector2) transform.position, first.To - (Vector2) transform.position };
         return edgeCollider;
     }
 
@@ -78,7 +84,7 @@ public class Rail : GLMonoBehaviour
             if ( segment.IsWall() == currentColliderIsWall )
             {
                 // add point to current collider
-                currentCollider.points = currentCollider.points.Concat( Enumerable.Repeat( segment.To, 1 ) )
+                currentCollider.points = currentCollider.points.Concat( Enumerable.Repeat( segment.To - (Vector2)transform.position, 1 ) )
                     .ToArray();
             }
             else
