@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 58993198116627378}
   m_Layer: 0
   m_Name: Circle
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -70,7 +70,7 @@ GameObject:
   - component: {fileID: 61930582944305492}
   m_Layer: 0
   m_Name: Box
-  m_TagString: Untagged
+  m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -197,7 +197,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4855078756398926}
   - component: {fileID: 114143317058885136}
-  - component: {fileID: 114136602439705628}
+  - component: {fileID: 114400863273475366}
   - component: {fileID: 58141123315222818}
   m_Layer: 0
   m_Name: Player
@@ -337,7 +337,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1963247483546628}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.8, y: 1.5, z: 0}
+  m_LocalPosition: {x: 5.7, y: 2.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4272248732145132}
@@ -502,23 +502,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HorizontalSpeedThreshold: 0.1
---- !u!114 &114136602439705628
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1963247483546628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02e2de36d06a3aa4fbfbeb18da15128c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  DeadZone: 0.3
-  Step: 1
-  DebugAxis:
-    useValue: 0
-    value: 0
 --- !u!114 &114143317058885136
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -544,7 +527,7 @@ MonoBehaviour:
   _attackCount: 1
   CurrentVelocity: {x: 0, y: 0, z: 0}
   CurrentAcceleration: {x: 0, y: 0, z: 0}
-  Controller: {fileID: 114136602439705628}
+  Controller: {fileID: 114400863273475366}
   TrackPositions:
     useValue: 1
     value: 200
@@ -577,6 +560,20 @@ MonoBehaviour:
   MinVelocity: 0.001
   Smoothing: 0.1
   _percievedVelocity: {x: 0, y: 0}
+--- !u!114 &114400863273475366
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1963247483546628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5df47c9828364238a8c4df94619d805e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  DeadZone: 0.3
+  Step: 1
 --- !u!212 &212407158061269768
 SpriteRenderer:
   m_ObjectHideFlags: 1
