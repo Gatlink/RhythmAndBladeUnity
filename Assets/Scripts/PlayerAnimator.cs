@@ -21,13 +21,13 @@ public class PlayerAnimator : MonoBehaviour
     {
         var horizontalSpeed = Mathf.Max( 0, Mathf.Abs( _actor.CurrentVelocity.x ) - HorizontalSpeedThreshold );
         _animator.SetFloat( "HorizontalSpeed", horizontalSpeed );
-        _animator.SetFloat( "HorizontalAcceleration", _actor.CurrentAcceleration.x * Mathf.Sign( _actor.CurrentVelocity.x ) );
-        
+        _animator.SetFloat( "HorizontalAcceleration",
+            _actor.CurrentAcceleration.x * Mathf.Sign( _actor.CurrentVelocity.x ) );
+
         _spriteRenderer.flipX = _actor.Direction < 0;
-        
+
         Vector2 normal;
         var grounded = _actor.CheckGround( out normal, snap: false );
-        _animator.SetBool( "Grounded", grounded);
 
         if ( grounded )
         {
@@ -41,8 +41,31 @@ public class PlayerAnimator : MonoBehaviour
 
     private void StateChangeHandler( IActorState previous, IActorState next )
     {
-        _animator.SetBool( "Jumping", next is JumpState );
-        _animator.SetBool( "Dashing", next is DashState );
-        _animator.SetBool( "Sliding", next is WallSlideState );
+        if ( next is JumpState )
+        {
+            _animator.SetTrigger( "Jump" );
+        }
+        else if ( next is DashState )
+        {
+            _animator.SetTrigger( "Dash" );
+        }
+        else if ( next is WallSlideState )
+        {
+            _animator.SetTrigger( "Slide" );
+        }
+        else if ( next is FallState )
+        {
+            _animator.SetTrigger( "Fall" );
+        }
+        else if ( next is GroundedState )
+        {
+            _animator.SetTrigger( "Ground" );
+        }
+        else if ( next is AttackState )
+        {
+            var attackState = (AttackState) next;
+            _animator.SetInteger( "Combo", attackState.ComboCount );
+            _animator.SetTrigger( "Attack" );
+        }
     }
 }
