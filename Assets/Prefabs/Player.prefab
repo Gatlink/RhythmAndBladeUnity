@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 4957404127566470}
   - component: {fileID: 70125590090389302}
   m_Layer: 0
-  m_Name: Hurtboxes
+  m_Name: Hurtbox
   m_TagString: Hurtbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
