@@ -60,6 +60,13 @@ namespace ActorStates
 
             Actor.CheckWallCollisions();
 
+            // check damages
+            var harmfull = Actor.CheckDamages();
+            if ( harmfull != null )
+            {
+                return new HurtState( Actor, harmfull );
+            }
+
             // check if player wants to unstick from wall
             if ( Actor.DesiredMovement * Actor.Direction > 0 )
             {
