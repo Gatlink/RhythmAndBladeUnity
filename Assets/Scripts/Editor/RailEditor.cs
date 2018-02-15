@@ -60,11 +60,11 @@ public class RailEditor : GLEditor<Rail>
             MultiSelectionHandlesDictionary.Add( _rail, _multiSelectionHandle );
         }
     }
-    
+
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        DrawInspectorButtons(3);
+        DrawInspectorButtons(1);
     }
 
     private static void DrawNotice()
