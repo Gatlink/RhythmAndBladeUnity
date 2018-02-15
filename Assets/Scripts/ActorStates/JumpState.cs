@@ -5,7 +5,7 @@ namespace ActorStates
     public class JumpState : ActorStateBase
     {
         // normalized time before wich ground is not checked yet
-        private const float GroundCheckInhibitionTime = 0.1f;
+        private const float GroundCheckInhibitionTime = 1f;
 
         // normalized time after wich ceiling is not checked any more
         private const float CeilingCheckInhibitionTime = 0.8f;
