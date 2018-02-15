@@ -22,7 +22,7 @@ MonoBehaviour:
   FallMoveInertia: 0.2
   Gravity: 40
   MaxFallVelocity: 60
-  WallStickiness: 0.1
+  WallStickiness: 0.2
   WallSlideGravity: 100
   MaxWallSlideVelocity: 3
   TimeToUnstickFromWall: 0.06
