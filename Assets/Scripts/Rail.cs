@@ -8,8 +8,6 @@ public class Rail : GLMonoBehaviour
 {
     public const float SlopeLimit = 35;
 
-    private static readonly List<Rail> All = new List<Rail>();
-
     public bool Closed;
 
     [ FormerlySerializedAs( "points" ) ]
@@ -34,11 +32,6 @@ public class Rail : GLMonoBehaviour
     }
 
     private void Awake()
-    {
-        All.Add( this );
-    }
-
-    private void Start()
     {
         CreateColliders();
     }
