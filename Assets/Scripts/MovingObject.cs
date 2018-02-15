@@ -4,7 +4,7 @@ using UnityEditor;
 
 #endif
 
-
+[ DefaultExecutionOrder( -101 ) ]
 public class MovingObject : MonoBehaviour, IMoving
 {
     public Vector2 Displacement = Vector2.up;
@@ -21,7 +21,8 @@ public class MovingObject : MonoBehaviour, IMoving
     {
         get
         {
-            return Displacement / ( Period / 2 ) * Mathf.Sign( 0.5f - Mathf.Repeat( Time.time + Phase, Period ) / Period );
+            return Displacement / ( Period / 2 ) *
+                   Mathf.Sign( 0.5f - Mathf.Repeat( Time.time + Phase, Period ) / Period );
         }
     }
 
