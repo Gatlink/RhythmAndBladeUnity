@@ -1,6 +1,5 @@
 ﻿using Gamelogic.Extensions;
 using UnityEngine;
-using UnityEngine.Collections;
 
 namespace ActorStates
 {

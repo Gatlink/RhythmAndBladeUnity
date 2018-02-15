@@ -2,8 +2,8 @@
 {
     public abstract class ActorStateBase : IActorState
     {
-        protected Actor Actor;
-        protected PlayerSettings PlayerSettings;
+        protected readonly Actor Actor;
+        protected readonly PlayerSettings PlayerSettings;
 
         protected ActorStateBase( Actor actor )
         {

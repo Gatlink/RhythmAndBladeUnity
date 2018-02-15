@@ -132,7 +132,7 @@ public class Actor : GLMonoBehaviour
         Collider2D col;
         return CheckGround( out col, out normal, snap );
     }
-    
+
     public bool CheckGround( out Collider2D collider2D, out Vector2 normal, bool snap = true )
     {
         var frontHit = Physics2D.Raycast( transform.position, Vector2.down,
@@ -211,7 +211,7 @@ public class Actor : GLMonoBehaviour
         Collider2D col;
         return CheckWallProximity( direction, out normal, out col );
     }
-    
+
     public bool CheckWallProximity( float direction, out Vector2 normal, out Collider2D collider )
     {
         var hit = Physics2D.Raycast( transform.position, Vector2.right * direction,
