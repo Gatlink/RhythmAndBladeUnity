@@ -298,20 +298,18 @@ public class Actor : GLMonoBehaviour
 
     private void Awake()
     {
-        _wallCollisionContactFilter2D = new ContactFilter2D()
-        {
-            layerMask = 1 << LayerMask.NameToLayer( Layers.Wall )
-                        | 1 << LayerMask.NameToLayer( Layers.Obstacle ),
-            useLayerMask = true
-        };
+        _wallCollisionContactFilter2D = new ContactFilter2D();
+        _wallCollisionContactFilter2D.NoFilter();
+        _wallCollisionContactFilter2D.SetLayerMask( 1 << LayerMask.NameToLayer( Layers.Wall )
+                                                    | 1 << LayerMask.NameToLayer( Layers.Obstacle ) );
+
         _moveBlockingLayerMask = 1 << LayerMask.NameToLayer( Layers.Ground ) |
                                  1 << LayerMask.NameToLayer( Layers.Wall ) |
                                  1 << LayerMask.NameToLayer( Layers.Obstacle );
-        _hurtContactFilter2D = new ContactFilter2D()
-        {
-            layerMask = 1 << LayerMask.NameToLayer( Layers.Harmfull ),
-            useLayerMask = true
-        };
+
+        _hurtContactFilter2D = new ContactFilter2D();
+        _hurtContactFilter2D.NoFilter();
+        _hurtContactFilter2D.SetLayerMask( 1 << LayerMask.NameToLayer( Layers.Harmfull ) );
     }
 
     private void Start()

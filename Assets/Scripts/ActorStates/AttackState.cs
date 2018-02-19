@@ -54,6 +54,12 @@ namespace ActorStates
                     _movementCurve = PlayerSettings.Attack1MovementCurve;
                     break;
             }
+
+            _hitContactFilter2D = new ContactFilter2D();
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
+            _hitContactFilter2D.NoFilter();
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
+            _hitContactFilter2D.SetLayerMask( 1 << LayerMask.NameToLayer( Layers.Destructible ) );
         }
 
         protected override float TotalDuration
@@ -81,11 +87,7 @@ namespace ActorStates
         private readonly Collider2D[] _colliderBuffer = new Collider2D[ 5 ];
 
 
-        private readonly ContactFilter2D _hitContactFilter2D = new ContactFilter2D()
-        {
-            layerMask = 1 << LayerMask.NameToLayer( Layers.Destructible ),
-            useLayerMask = true
-        };
+        private readonly ContactFilter2D _hitContactFilter2D;
 
         public override IActorState Update()
         {
