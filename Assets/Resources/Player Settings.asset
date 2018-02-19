@@ -167,9 +167,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   Attack2Cooldown: 0.3
-  _attack3TotalDuration: 0.6
+  _attack3TotalDuration: 0.4
   Attack3HitDuration: 0.2
-  Attack3RecoveryDuration: 0.4
+  Attack3RecoveryDuration: 0.2
   Attack3MovementLength: 2
   Attack3MovementCurve:
     serializedVersion: 2
