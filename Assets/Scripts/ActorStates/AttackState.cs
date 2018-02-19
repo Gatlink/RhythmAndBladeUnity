@@ -7,6 +7,7 @@ namespace ActorStates
     public class AttackState : FixedHorizontalMovementStateBase
     {
         private const int MaxComboCount = 3;
+        private uint _hitID;
 
         public readonly int ComboCount;
         public readonly float HitDuration;
@@ -16,6 +17,7 @@ namespace ActorStates
         private readonly float _movementLength;
         private readonly float _cooldown;
         private readonly AnimationCurve _movementCurve;
+
 
         public AttackState( Actor actor ) : this( actor, 0 )
         {
@@ -73,9 +75,11 @@ namespace ActorStates
         {
             base.OnEnter();
             Actor.ConsumeAttack( _cooldown );
+            _hitID = HitInfo.GenerateId();
         }
 
         private readonly Collider2D[] _colliderBuffer = new Collider2D[ 5 ];
+
 
         private readonly ContactFilter2D _hitContactFilter2D = new ContactFilter2D()
         {
@@ -95,18 +99,16 @@ namespace ActorStates
                 foreach ( var hitbox in Actor.GetComponentsInChildren<Collider2D>()
                     .Where( collider => collider.CompareTag( Tags.Hitbox ) && collider.enabled ) )
                 {
-                    Debug.Log( this + " testing hitbox " + hitbox, hitbox );
                     var hitCount = hitbox.OverlapCollider( _hitContactFilter2D, _colliderBuffer );
                     if ( hitCount > 0 )
                     {
                         for ( int i = 0; i < hitCount; i++ )
                         {
                             var colliderHit = _colliderBuffer[ i ];
-                            Debug.Log( hitbox + " hit " + colliderHit, colliderHit );
                             var destructible = colliderHit.GetInterfaceComponent<IDestructible>();
                             if ( destructible != null )
                             {
-                                destructible.Hit( Actor.gameObject );
+                                destructible.Hit( new HitInfo( _hitID ) );
                             }
                         }
                     }

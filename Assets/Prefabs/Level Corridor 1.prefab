@@ -290,6 +290,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Root: {fileID: 4861275888128790}
+  HitCount: 4
+  _hitRemaining: 0
 --- !u!212 &212519289617345950
 SpriteRenderer:
   m_ObjectHideFlags: 1
