@@ -37,9 +37,9 @@ public class PlayerSettings : ScriptableObject
     public int InitialHitCount = 3;
 
     [ Header( "Hurt Recoil" ) ]
-    public float HurtRecoilDuration = 0.5f;
+    public float HurtRecoilDuration = 0.25f;
 
-    public float HurtRecoilDistance = 5;
+    public float HurtRecoilDistance = 3;
 
     [ Header( "Grounded" ) ]
     [ FormerlySerializedAs( "_groundedMovementSpeed" ) ]
@@ -53,7 +53,7 @@ public class PlayerSettings : ScriptableObject
     public float FallMovementSpeed = 10;
 
     [ FormerlySerializedAs( "_fallMoveInertia" ) ]
-    public float FallMoveInertia = 0.1f;
+    public float FallMoveInertia = 0.2f;
 
     [ FormerlySerializedAs( "_gravity" ) ]
     public float Gravity = 40;
@@ -63,7 +63,7 @@ public class PlayerSettings : ScriptableObject
 
     [ Header( "Wall Slide" ) ]
     [ FormerlySerializedAs( "_wallStickiness" ) ]
-    public float WallStickiness = 0.1f;
+    public float WallStickiness = 0.2f;
 
     [ FormerlySerializedAs( "_wallSlideGravity" ) ]
     public float WallSlideGravity = 100;
@@ -90,7 +90,7 @@ public class PlayerSettings : ScriptableObject
 
     [ Header( "Jump" ) ]
     [ Range( 0, 1 ) ]
-    public float JumpAirControlTiming = 0.66f;
+    public float JumpAirControlTiming = 0;
 
     [ FormerlySerializedAs( "_jumpDuration" ) ]
     public float JumpDuration = 0.3f;
@@ -154,17 +154,17 @@ public class PlayerSettings : ScriptableObject
     [ ReadOnly ]
     private float _attack1TotalDuration;
 
-    public float Attack1HitDuration = 0.2f;
+    public float Attack1HitDuration = 0.1f;
 
     public float Attack1ComboDuration = 0.2f;
 
     public float Attack1RecoveryDuration = 0.2f;
 
-    public float Attack1MovementLength = 0.5f;
+    public float Attack1MovementLength = 1f;
 
     public AnimationCurve Attack1MovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
 
-    public float Attack1Cooldown = 1;
+    public float Attack1Cooldown = 0.3f;
 
     [ Header( "Attack 2" ) ]
     [ SerializeField ]
@@ -177,11 +177,11 @@ public class PlayerSettings : ScriptableObject
 
     public float Attack2RecoveryDuration = 0.2f;
 
-    public float Attack2MovementLength = 0.5f;
+    public float Attack2MovementLength = 1f;
 
     public AnimationCurve Attack2MovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
 
-    public float Attack2Cooldown = 1;
+    public float Attack2Cooldown = 0.3f;
 
     [ Header( "Attack 3" ) ]
     [ SerializeField ]
@@ -192,9 +192,9 @@ public class PlayerSettings : ScriptableObject
 
     public float Attack3RecoveryDuration = 0.2f;
 
-    public float Attack3MovementLength = 0.5f;
+    public float Attack3MovementLength = 2f;
 
     public AnimationCurve Attack3MovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
 
-    public float Attack3Cooldown = 1;
+    public float Attack3Cooldown = 0.3f;
 }
