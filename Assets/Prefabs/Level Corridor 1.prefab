@@ -68,6 +68,7 @@ GameObject:
   - component: {fileID: 4361069472224426}
   - component: {fileID: 114266128841186978}
   - component: {fileID: 114019210159112026}
+  - component: {fileID: 114239147711464628}
   m_Layer: 0
   m_Name: Rail
   m_TagString: Untagged
@@ -307,6 +308,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Width: 0.3
+--- !u!114 &114239147711464628
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1584460167459244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be643f418b04aec81db6bdd17f6fd7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
 --- !u!114 &114266128841186978
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -321,18 +334,18 @@ MonoBehaviour:
   __messageText: 
   Closed: 0
   Points:
-  - {x: 12.283716, y: 20.902918, z: 0}
-  - {x: -2.772667, y: 20.902918, z: 0}
-  - {x: -2.772667, y: 0.27524328, z: 0}
-  - {x: 16.804924, y: 0.27524328, z: 0}
-  - {x: 47.49799, y: -2.960866, z: 0}
-  - {x: 80.0551, y: -2.960867, z: 0}
-  - {x: 93.1873, y: 1.0601339, z: 0}
-  - {x: 124.90959, y: 1.2298517, z: 0}
-  - {x: 124.90959, y: 5.2531667, z: 0}
-  - {x: 198.76404, y: 5.253162, z: 0}
-  - {x: 198.76404, y: 25.277752, z: 0}
-  - {x: 183.71745, y: 25.277752, z: 0}
+  - {x: 12.283716, y: 20.902918}
+  - {x: -2.772667, y: 20.902918}
+  - {x: -2.772667, y: 0.27524328}
+  - {x: 16.804924, y: 0.27524328}
+  - {x: 47.49799, y: -2.960866}
+  - {x: 80.0551, y: -2.960867}
+  - {x: 93.1873, y: 1.0601339}
+  - {x: 124.90959, y: 1.2298517}
+  - {x: 124.90959, y: 5.2531667}
+  - {x: 198.76404, y: 5.253162}
+  - {x: 198.76404, y: 25.277752}
+  - {x: 183.71745, y: 25.277752}
 --- !u!114 &114764182517479676
 MonoBehaviour:
   m_ObjectHideFlags: 1
