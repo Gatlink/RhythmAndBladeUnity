@@ -2,11 +2,12 @@
 using Gamelogic.Extensions;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class CameraController : GLMonoBehaviour
 {
     private Actor _target;
 
-    public OptionalVector2 Offset = new OptionalVector2();
+    [ ReadOnly ]
+    public Vector2 Offset;
 
     public Vector2 TrackingInertia = Vector2.zero;
     public float OffsetInertia;
@@ -19,16 +20,11 @@ public class CameraController : MonoBehaviour
     public void Start()
     {
         _target = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Actor>();
-        if ( !Offset.UseValue )
-        {
-            Offset.UseValue = true;
-            Offset.Value = transform.position - _target.transform.position;
-        }
     }
 
     public void LateUpdate()
     {
-        var targetOffset = Offset.Value;
+        var targetOffset = Offset;
         targetOffset.x *= _target.Direction;
 
         _currentOffset = Vector2.SmoothDamp( _currentOffset, targetOffset, ref _currentOffsetVelocity, OffsetInertia,
@@ -41,5 +37,12 @@ public class CameraController : MonoBehaviour
         pos.y = Mathf.SmoothDamp( pos.y, desiredPosition.y, ref _currentVelocity.y, TrackingInertia.y );
 
         transform.position = pos;
+    }
+
+    [ InspectorButton ]
+    public void SetPlayerOffset()
+    {
+        var player = GameObject.FindGameObjectWithTag( Tags.Player ).transform;
+        Offset = transform.position - player.position;
     }
 }
