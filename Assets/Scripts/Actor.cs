@@ -31,11 +31,16 @@ public class Actor : GLMonoBehaviour
     [ ReadOnly ]
     public string StateName;
 
+    public event Action<IActorState, IActorState> StateChangeEvent;
+
     [ ReadOnly ]
     public int TotalHitCount = 3;
 
     [ ReadOnly ]
     public int CurrentHitCount = 3;
+
+    public delegate void ActorHitHandler(Actor actor);
+    public event ActorHitHandler HitEvent;
 
     [ ReadOnly ]
     public float Direction = 1;
@@ -280,6 +285,7 @@ public class Actor : GLMonoBehaviour
     public void AccountDamages( int amount )
     {
         CurrentHitCount = Mathf.Max( 0, CurrentHitCount - amount );
+        OnHitEvent( this );
     }
 
     private void ResetInputs()
@@ -290,12 +296,16 @@ public class Actor : GLMonoBehaviour
         DesiredDash = false;
     }
 
-    public event Action<IActorState, IActorState> StateChangeEvent;
-
     private void OnStateChangeEvent( IActorState previousState, IActorState nextState )
     {
         var handler = StateChangeEvent;
         if ( handler != null ) handler( previousState, nextState );
+    }
+
+    private void OnHitEvent( Actor actor )
+    {
+        var handler = HitEvent;
+        if ( handler != null ) handler( actor );
     }
 
     #region UNITY MESSAGES

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class HitPointsHUD : MonoBehaviour
 {
@@ -17,6 +19,20 @@ public class HitPointsHUD : MonoBehaviour
         _hitPointPrefab.transform.SetParent( null );
 
         InitializeHitPoints();
+
+        Target.HitEvent += OnTargetHit;
+    }
+
+    private void OnTargetHit( Actor actor )
+    {
+        var container = transform;
+        var total = actor.TotalHitCount;
+        var current = actor.CurrentHitCount;
+
+        for ( var i = 0; i < total; i++ )
+        {
+            container.GetChild( i ).Find( "Fill" ).GetComponent<Image>().enabled = i < current;
+        }
     }
 
     private void InitializeHitPoints()
