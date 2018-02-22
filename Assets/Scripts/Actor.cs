@@ -39,7 +39,8 @@ public class Actor : GLMonoBehaviour
     [ ReadOnly ]
     public int CurrentHitCount = 3;
 
-    public delegate void ActorHitHandler(Actor actor);
+    public delegate void ActorHitHandler( Actor actor );
+
     public event ActorHitHandler HitEvent;
 
     [ ReadOnly ]
@@ -375,7 +376,6 @@ public class Actor : GLMonoBehaviour
         {
             // todo die
             Debug.Log( this + " died", this );
-            SceneManager.LoadScene( SceneManager.GetActiveScene().buildIndex );
         }
     }
 

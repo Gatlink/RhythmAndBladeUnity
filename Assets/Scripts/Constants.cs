@@ -5,6 +5,7 @@
     public const string Destructible = "Destructible";
     public const string Harmfull = "Harmfull";
     public const string Obstacle = "Obstacle";
+    public const string LevelTrigger = "LevelTrigger";
 }
 
 public static class Tags
