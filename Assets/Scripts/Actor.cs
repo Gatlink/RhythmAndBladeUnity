@@ -32,7 +32,10 @@ public class Actor : GLMonoBehaviour
     public string StateName;
 
     [ ReadOnly ]
-    public int HitCount = 3;
+    public int TotalHitCount = 3;
+
+    [ ReadOnly ]
+    public int CurrentHitCount = 3;
 
     [ ReadOnly ]
     public float Direction = 1;
@@ -276,7 +279,7 @@ public class Actor : GLMonoBehaviour
 
     public void AccountDamages( int amount )
     {
-        HitCount = Mathf.Max( 0, HitCount - amount );
+        CurrentHitCount = Mathf.Max( 0, CurrentHitCount - amount );
     }
 
     private void ResetInputs()
@@ -316,7 +319,7 @@ public class Actor : GLMonoBehaviour
     private void Start()
     {
         _playerSettings = PlayerSettings.Instance;
-        HitCount = _playerSettings.InitialHitCount;
+        TotalHitCount = CurrentHitCount = _playerSettings.InitialHitCount;
         _currentState = new FallState( this );
         _currentState.OnEnter();
         StateName = _currentState.Name;
@@ -358,7 +361,7 @@ public class Actor : GLMonoBehaviour
             AttackCooldown = Mathf.Max( 0, AttackCooldown - Time.deltaTime );
         }
 
-        if ( HitCount <= 0 )
+        if ( CurrentHitCount <= 0 )
         {
             // todo die
             Debug.Log( this + " died", this );
