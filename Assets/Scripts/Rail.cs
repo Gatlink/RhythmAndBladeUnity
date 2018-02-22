@@ -11,12 +11,12 @@ public class Rail : GLMonoBehaviour
     public bool Closed;
 
     [ FormerlySerializedAs( "points" ) ]
-    public List<Vector3> Points;
+    public List<Vector2> Points;
 
     private void Reset()
     {
         if ( Points == null )
-            Points = new List<Vector3>();
+            Points = new List<Vector2>();
 
         Points.Clear();
         Points.Add( new Vector2( -1, 0 ) );
@@ -31,59 +31,17 @@ public class Rail : GLMonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        CreateColliders();
-    }
-
     public Bounds Bounds
     {
         get
         {
-            return Points.Aggregate<Vector3, Bounds>( new Bounds( Points[ 0 ] + transform.position, Vector3.zero ),
+            var pos = (Vector2) transform.position;
+            return Points.Aggregate<Vector2, Bounds>( new Bounds( Points[ 0 ] + pos, Vector2.zero ),
                 ( b, p ) =>
                 {
-                    b.Encapsulate( p + transform.position );
+                    b.Encapsulate( p + pos );
                     return b;
                 } );
-        }
-    }
-
-    private EdgeCollider2D NewCollider( Segment first )
-    {
-        var edgeCollider = new GameObject( first.IsWall() ? "Wall" : "Rail Part", typeof( EdgeCollider2D ) )
-            .GetComponent<EdgeCollider2D>();
-        edgeCollider.transform.SetParent( transform, false );
-        edgeCollider.gameObject.layer = LayerMask.NameToLayer( first.IsWall() ? Layers.Wall : Layers.Ground );
-        if ( this.GetInterfaceComponent<IMoving>() != null )
-        {
-            edgeCollider.gameObject.tag = Tags.Moving;
-        }
-
-        edgeCollider.points = new Vector2[]
-            { first.From - (Vector2) transform.position, first.To - (Vector2) transform.position };
-        return edgeCollider;
-    }
-
-    private void CreateColliders()
-    {
-        var first = EnumerateSegments().First();
-        var currentCollider = NewCollider( first );
-        var currentColliderIsWall = first.IsWall();
-
-        foreach ( var segment in EnumerateSegments().Skip( 1 ) )
-        {
-            if ( segment.IsWall() == currentColliderIsWall )
-            {
-                // add point to current collider
-                currentCollider.points = currentCollider.points.Concat( Enumerable.Repeat( segment.To - (Vector2)transform.position, 1 ) )
-                    .ToArray();
-            }
-            else
-            {
-                currentCollider = NewCollider( segment );
-                currentColliderIsWall = segment.IsWall();
-            }
         }
     }
 
@@ -107,9 +65,9 @@ public class Rail : GLMonoBehaviour
         MoveTransform( delta );
     }
 
-    private void MoveTransform( Vector3 delta )
+    private void MoveTransform( Vector2 delta )
     {
-        transform.position += delta;
+        transform.position += (Vector3) delta;
         for ( var i = 0; i < Points.Count; i++ )
         {
             Points[ i ] -= delta;
@@ -119,7 +77,7 @@ public class Rail : GLMonoBehaviour
     public IEnumerable<Segment> EnumerateSegments()
     {
         var points = Points;
-        var position = transform.position;
+        var position = (Vector2) transform.position;
 
         for ( var i = 1; i < points.Count; i++ )
         {
@@ -132,6 +90,12 @@ public class Rail : GLMonoBehaviour
         {
             yield return new Segment( points[ points.Count - 1 ] + position, points[ 0 ] + position, points.Count - 1 );
         }
+    }
+
+    public Vector2 GetNearestPoint( Vector2 point )
+    {
+        var pos = (Vector2) transform.position;
+        return GeometryUtils.ClosestPointToPolyLine( point - pos, Points ) + pos;
     }
 
     public struct Segment

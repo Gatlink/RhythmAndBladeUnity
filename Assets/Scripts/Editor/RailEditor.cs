@@ -6,6 +6,7 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 [ CustomEditor( typeof( Rail ) ) ]
+[ CanEditMultipleObjects ]
 public class RailEditor : GLEditor<Rail>
 {
     private const float GizmoRadius = 0.15f;
@@ -18,8 +19,6 @@ public class RailEditor : GLEditor<Rail>
     private static readonly Color HighSlopeColor = new Color( 0.8f, 0.2f, 0.2f );
 
     private static GUIStyle _style;
-
-    private Rail _rail;
 
     private static readonly Dictionary<Rail, BoxBoundsHandle> MultiSelectionHandlesDictionary =
         new Dictionary<Rail, BoxBoundsHandle>();
@@ -46,10 +45,9 @@ public class RailEditor : GLEditor<Rail>
 
     private void OnEnable()
     {
-        _rail = target as Rail;
-        if ( !MultiSelectionHandlesDictionary.TryGetValue( _rail, out _multiSelectionHandle ) )
+        if ( !MultiSelectionHandlesDictionary.TryGetValue( Target, out _multiSelectionHandle ) )
         {
-            var bounds = _rail.Bounds;
+            var bounds = Target.Bounds;
             _multiSelectionHandle = new BoxBoundsHandle
             {
                 center = bounds.center,
@@ -57,14 +55,33 @@ public class RailEditor : GLEditor<Rail>
                 size = bounds.size + Vector3.one,
                 midpointHandleSizeFunction = v => HandleUtility.GetHandleSize( v ) * GizmoRadius / 2
             };
-            MultiSelectionHandlesDictionary.Add( _rail, _multiSelectionHandle );
+            MultiSelectionHandlesDictionary.Add( Target, _multiSelectionHandle );
         }
     }
 
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        DrawInspectorButtons(1);
+        DrawInspectorButtons( 1 );
+        EditorGUILayout.Separator();
+        using ( new EditorGUILayout.HorizontalScope() )
+        {
+            if ( Target.GetComponent<RailView>() == null )
+            {
+                if ( GUILayout.Button( "Add Placeholder View" ) )
+                {
+                    Target.gameObject.AddComponent<RailView>();
+                }
+            }
+
+            if ( Target.GetComponent<RailCollider>() == null )
+            {
+                if ( GUILayout.Button( "Add Rail Collider" ) )
+                {
+                    Target.gameObject.AddComponent<RailCollider>();
+                }
+            }
+        }
     }
 
     private static void DrawNotice()
@@ -135,8 +152,8 @@ public class RailEditor : GLEditor<Rail>
     private void DrawRailEditable()
     {
         var currentEvent = Event.current;
-        var root = _rail.transform.position;
-        var points = _rail.Points;
+        var root = (Vector2) Target.transform.position;
+        var points = Target.Points;
         using ( new Handles.DrawingScope( HandleColor ) )
         {
             for ( var index = 0; index < points.Count; index++ )
@@ -150,25 +167,25 @@ public class RailEditor : GLEditor<Rail>
                     Handles.CylinderHandleCap );
                 if ( EditorGUI.EndChangeCheck() )
                 {
-                    Undo.RecordObject( _rail, "Move point " + index );
+                    Undo.RecordObject( Target, "Move point " + index );
                     // snap horizontally
                     if ( currentEvent.shift )
                     {
-                        worldPosition = SnapHorizontally( _rail, index, worldPosition );
+                        worldPosition = SnapHorizontally( Target, index, worldPosition );
                     }
 
                     // snap vertically
                     if ( currentEvent.alt )
                     {
-                        worldPosition = SnapVertically( _rail, index, worldPosition );
+                        worldPosition = SnapVertically( Target, index, worldPosition );
                     }
 
-                    _rail.Points[ index ] = worldPosition - root;
+                    Target.Points[ index ] = worldPosition - root;
                 }
             }
         }
 
-        DrawLines( _rail );
+        DrawLines( Target );
 
         var mouseRay = HandleUtility.GUIPointToWorldRay( currentEvent.mousePosition );
 
@@ -182,7 +199,7 @@ public class RailEditor : GLEditor<Rail>
 
             Vector2 newPosition = mouseRay.origin;
 
-            var nearestSegment = _rail.EnumerateSegments()
+            var nearestSegment = Target.EnumerateSegments()
                 .OrderBy( segment =>
                     HandleUtility.DistancePointToLineSegment( newPosition, segment.From, segment.To ) )
                 .First();
@@ -201,7 +218,7 @@ public class RailEditor : GLEditor<Rail>
 
             int newIndex = nearestSegment.FromIndex + 1;
             // handles rail extremity case
-            if ( !_rail.Closed &&
+            if ( !Target.Closed &&
                  ( nearestSegment.FromIndex == 0 || nearestSegment.FromIndex + 1 == points.Count - 1 ) )
             {
                 var distToSegment =
@@ -234,8 +251,8 @@ public class RailEditor : GLEditor<Rail>
 
             if ( currentEvent.type == EventType.MouseUp && currentEvent.button == 0 )
             {
-                Undo.RecordObject( _rail, "Add point at " + newIndex );
-                points.Insert( newIndex, (Vector3) newPosition - root );
+                Undo.RecordObject( Target, "Add point at " + newIndex );
+                points.Insert( newIndex, newPosition - root );
                 currentEvent.Use();
             }
 
@@ -247,9 +264,9 @@ public class RailEditor : GLEditor<Rail>
             {
                 var point = points[ index ] + root;
                 var dist = GizmoRadius * HandleUtility.GetHandleSize( point );
-                if ( Vector2.SqrMagnitude( mouseRay.origin - point ) < dist * dist )
+                if ( Vector2.SqrMagnitude( (Vector2) mouseRay.origin - point ) < dist * dist )
                 {
-                    Undo.RecordObject( _rail, "Remove point at " + index );
+                    Undo.RecordObject( Target, "Remove point at " + index );
                     points.RemoveAt( index );
                     currentEvent.Use();
                 }
@@ -260,8 +277,8 @@ public class RailEditor : GLEditor<Rail>
     private void DrawMultiSelectionHandle()
     {
         var currentEvent = Event.current;
-        var root = _rail.transform.position;
-        var points = _rail.Points;
+        var root = (Vector2) Target.transform.position;
+        var points = Target.Points;
 
         // multiple selection
         _multiSelectionHandle.DrawHandle();
@@ -276,7 +293,7 @@ public class RailEditor : GLEditor<Rail>
             Handles.DotHandleCap );
         if ( EditorGUI.EndChangeCheck() )
         {
-            var delta = multiSelectionAnchor - multiSelectionAnchorInitial;
+            Vector2 delta = multiSelectionAnchor - multiSelectionAnchorInitial;
 
             if ( currentEvent.shift )
             {
@@ -289,12 +306,12 @@ public class RailEditor : GLEditor<Rail>
             }
 
             // move selectionBounds
-            _multiSelectionHandle.center += delta;
+            _multiSelectionHandle.center += (Vector3) delta;
 
             if ( currentEvent.control )
             {
                 // move points
-                Undo.RecordObject( _rail, "Move multiple points " );
+                Undo.RecordObject( Target, "Move multiple points " );
                 for ( var index = 0; index < points.Count; index++ )
                 {
                     if ( bounds.Contains( points[ index ] + root ) )
@@ -410,9 +427,9 @@ public class RailEditor : GLEditor<Rail>
 
     private void DrawRail()
     {
-        DrawLines( _rail );
-        var root = _rail.transform.position;
-        foreach ( var point in _rail.Points )
+        DrawLines( Target );
+        var root = (Vector2) Target.transform.position;
+        foreach ( var point in Target.Points )
         {
             DrawJointGizmo( point + root, HandleColor, 0.5f );
         }
