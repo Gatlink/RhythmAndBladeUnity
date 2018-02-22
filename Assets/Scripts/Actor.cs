@@ -5,6 +5,7 @@ using ActorStates;
 using Controllers;
 using Gamelogic.Extensions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [ SelectionBase ]
 public class Actor : GLMonoBehaviour
@@ -357,11 +358,12 @@ public class Actor : GLMonoBehaviour
             AttackCooldown = Mathf.Max( 0, AttackCooldown - Time.deltaTime );
         }
 
-//        if ( HitCount <= 0 )
-//        {
-//            // todo die
-//            Debug.Log( this + " died", this );
-//        }
+        if ( HitCount <= 0 )
+        {
+            // todo die
+            Debug.Log( this + " died", this );
+            SceneManager.LoadScene( SceneManager.GetActiveScene().buildIndex );
+        }
     }
 
 #if UNITY_EDITOR
