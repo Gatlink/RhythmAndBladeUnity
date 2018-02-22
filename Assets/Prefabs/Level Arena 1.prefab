@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 114204071879260378}
   - component: {fileID: 114111574567364926}
   - component: {fileID: 114925577033947742}
+  - component: {fileID: 114678213090184594}
   m_Layer: 0
   m_Name: Platform1
   m_TagString: Untagged
@@ -55,6 +56,7 @@ GameObject:
   - component: {fileID: 4777819757478548}
   - component: {fileID: 114259118889914218}
   - component: {fileID: 114644441924894856}
+  - component: {fileID: 114222751242400084}
   m_Layer: 0
   m_Name: EntryDoor
   m_TagString: Untagged
@@ -73,6 +75,7 @@ GameObject:
   - component: {fileID: 114277486829107884}
   - component: {fileID: 114269305255537190}
   - component: {fileID: 114728461564059314}
+  - component: {fileID: 114980329915899334}
   m_Layer: 0
   m_Name: Platform2
   m_TagString: Untagged
@@ -90,6 +93,7 @@ GameObject:
   - component: {fileID: 4651821752668208}
   - component: {fileID: 114029286469213772}
   - component: {fileID: 114611327543723714}
+  - component: {fileID: 114481222486118512}
   m_Layer: 0
   m_Name: ExitDoor
   m_TagString: Untagged
@@ -107,6 +111,7 @@ GameObject:
   - component: {fileID: 4007377332628706}
   - component: {fileID: 114510403002001428}
   - component: {fileID: 114741148608843356}
+  - component: {fileID: 114338002914085528}
   m_Layer: 0
   m_Name: Rail1
   m_TagString: Untagged
@@ -265,8 +270,8 @@ MonoBehaviour:
   __messageText: 
   Closed: 0
   Points:
-  - {x: 0, y: -2.5, z: 0}
-  - {x: 0, y: 2.5, z: 0}
+  - {x: 0, y: -2.5}
+  - {x: 0, y: 2.5}
 --- !u!114 &114111574567364926
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -293,8 +298,20 @@ MonoBehaviour:
   __messageText: 
   Closed: 0
   Points:
-  - {x: -4, y: 0, z: 0}
-  - {x: 4, y: 0, z: 0}
+  - {x: -4, y: 0}
+  - {x: 4, y: 0}
+--- !u!114 &114222751242400084
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1396095242613580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be643f418b04aec81db6bdd17f6fd7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
 --- !u!114 &114259118889914218
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -309,8 +326,8 @@ MonoBehaviour:
   __messageText: 
   Closed: 0
   Points:
-  - {x: 0, y: -2.5, z: 0}
-  - {x: 0, y: 2.5, z: 0}
+  - {x: 0, y: -2.5}
+  - {x: 0, y: 2.5}
 --- !u!114 &114269305255537190
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -337,8 +354,32 @@ MonoBehaviour:
   __messageText: 
   Closed: 0
   Points:
-  - {x: -4, y: 0, z: 0}
-  - {x: 4, y: 0, z: 0}
+  - {x: -4, y: 0}
+  - {x: 4, y: 0}
+--- !u!114 &114338002914085528
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1779352363100298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be643f418b04aec81db6bdd17f6fd7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+--- !u!114 &114481222486118512
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1634703790122622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be643f418b04aec81db6bdd17f6fd7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
 --- !u!114 &114510403002001428
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -353,14 +394,14 @@ MonoBehaviour:
   __messageText: 
   Closed: 1
   Points:
-  - {x: 0, y: 15, z: 0}
-  - {x: 0, y: 5, z: 0}
-  - {x: -15, y: 5, z: 0}
-  - {x: -15, y: 0, z: 0}
-  - {x: 40, y: 0, z: 0}
-  - {x: 40, y: 5, z: 0}
-  - {x: 25, y: 5, z: 0}
-  - {x: 25, y: 15, z: 0}
+  - {x: 0, y: 15}
+  - {x: 0, y: 5}
+  - {x: -15, y: 5}
+  - {x: -15, y: 0}
+  - {x: 40, y: 0}
+  - {x: 40, y: 5}
+  - {x: 25, y: 5}
+  - {x: 25, y: 15}
 --- !u!114 &114611327543723714
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -385,6 +426,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Width: 0.3
+--- !u!114 &114678213090184594
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1138218678171228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be643f418b04aec81db6bdd17f6fd7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
 --- !u!114 &114728461564059314
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -421,3 +474,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Threshold: 0
+--- !u!114 &114980329915899334
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1428680275462562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be643f418b04aec81db6bdd17f6fd7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
