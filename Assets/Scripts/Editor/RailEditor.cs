@@ -66,19 +66,25 @@ public class RailEditor : GLEditor<Rail>
         EditorGUILayout.Separator();
         using ( new EditorGUILayout.HorizontalScope() )
         {
-            if ( Target.GetComponent<RailView>() == null )
+            if ( Targets.Any( rail => rail.GetComponent<RailView>() == null ) )
             {
                 if ( GUILayout.Button( "Add Placeholder View" ) )
                 {
-                    Target.gameObject.AddComponent<RailView>();
+                    foreach ( var rail in Targets.Where( rail => rail.GetComponent<RailView>() == null ) )
+                    {
+                        rail.gameObject.AddComponent<RailView>();
+                    }
                 }
             }
 
-            if ( Target.GetComponent<RailCollider>() == null )
+            if ( Targets.Any( rail => rail.GetComponent<RailCollider>() == null ) )
             {
                 if ( GUILayout.Button( "Add Rail Collider" ) )
                 {
-                    Target.gameObject.AddComponent<RailCollider>();
+                    foreach ( var rail in Targets.Where( rail => rail.GetComponent<RailCollider>() == null ) )
+                    {
+                        rail.gameObject.AddComponent<RailCollider>();
+                    }
                 }
             }
         }
