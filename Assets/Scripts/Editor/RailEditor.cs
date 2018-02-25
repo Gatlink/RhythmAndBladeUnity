@@ -29,6 +29,8 @@ public class RailEditor : GLEditor<Rail>
     private readonly int MultiSelectionHandleHint = "MultiSelectionHandleHint".GetHashCode();
     private readonly int NewPointHandleHint = "NewPointHandleHint".GetHashCode();
 
+    private static float _snapValue = 0.5f;
+
     private static GUIStyle Style
     {
         get
@@ -97,14 +99,16 @@ public class RailEditor : GLEditor<Rail>
         var labelStyle = new GUIStyle( GUI.skin.label );
 
         GUIContent content;
+        var showSnapVal = false;
         switch ( Tools.current )
         {
             case Tool.Move:
                 content = new GUIContent( "Mouse drag to move points" +
                                           "\nHold Shift to snap horizontally" +
                                           "\nHold Alt to snap vertically" +
-                                          "\nHold Ctrl to add new point" +
+                                          "\nHold Ctrl to add new point or snap moving point" +
                                           "\nRight mouse click to delete point" );
+                showSnapVal = true;
                 break;
             case Tool.Rect:
                 content = new GUIContent( "Mouse drag bottom left handle to move selection" +
@@ -121,9 +125,15 @@ public class RailEditor : GLEditor<Rail>
         var size = labelStyle.CalcSize( content );
 
         Handles.BeginGUI();
-        GUI.Box(
-            new Rect( 10 * Vector2.one, size + new Vector2( boxStyle.padding.horizontal, boxStyle.padding.vertical ) ),
-            content, boxStyle );
+        using ( new GUILayout.VerticalScope( boxStyle, GUILayout.Width( size.x + boxStyle.padding.horizontal ) ) )
+        {
+            GUILayout.Label( content );
+            if ( showSnapVal )
+            {
+                _snapValue = EditorGUILayout.FloatField( "Snap to val (Ctrl)", _snapValue );
+            }
+        }
+
         Handles.EndGUI();
     }
 
@@ -171,6 +181,8 @@ public class RailEditor : GLEditor<Rail>
                 worldPosition = Handles.FreeMoveHandle( cid, worldPosition, Quaternion.identity,
                     GizmoRadius * HandleUtility.GetHandleSize( worldPosition ), Vector3.zero,
                     Handles.CylinderHandleCap );
+                worldPosition.x = Handles.SnapValue( worldPosition.x, _snapValue );
+                worldPosition.y = Handles.SnapValue( worldPosition.y, _snapValue );
                 if ( EditorGUI.EndChangeCheck() )
                 {
                     Undo.RecordObject( Target, "Move point " + index );
