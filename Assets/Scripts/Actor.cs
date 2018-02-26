@@ -313,6 +313,9 @@ public class Actor : GLMonoBehaviour
 
     private void Awake()
     {
+        _playerSettings = PlayerSettings.Instance;
+        TotalHitCount = CurrentHitCount = _playerSettings.InitialHitCount;
+        
         _wallCollisionContactFilter2D = new ContactFilter2D();
         _wallCollisionContactFilter2D.NoFilter();
         _wallCollisionContactFilter2D.SetLayerMask( 1 << LayerMask.NameToLayer( Layers.Wall )
@@ -325,12 +328,10 @@ public class Actor : GLMonoBehaviour
         _hurtContactFilter2D = new ContactFilter2D();
         _hurtContactFilter2D.NoFilter();
         _hurtContactFilter2D.SetLayerMask( 1 << LayerMask.NameToLayer( Layers.Harmfull ) );
-    // }
+    }
 
-    // private void Start()
-    // {
-        _playerSettings = PlayerSettings.Instance;
-        TotalHitCount = CurrentHitCount = _playerSettings.InitialHitCount;
+    private void Start()
+    {
         _currentState = new FallState( this );
         _currentState.OnEnter();
         StateName = _currentState.Name;

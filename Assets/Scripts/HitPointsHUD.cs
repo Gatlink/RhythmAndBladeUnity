@@ -42,7 +42,7 @@ public class HitPointsHUD : MonoBehaviour
         for ( var i = 0; i < total; i++ )
         {
             var hitPoint = Instantiate( _hitPointPrefab );
-            hitPoint.transform.SetParent( container, false );
+            hitPoint.transform.SetParent( container, true );
         }
     }
 }

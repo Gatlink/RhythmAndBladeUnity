@@ -98,6 +98,29 @@ public class Rail : GLMonoBehaviour
         return GeometryUtils.ClosestPointToPolyLine( point - pos, Points ) + pos;
     }
 
+    public Vector2 EvaluatePosition( float normalizedPosition )
+    {
+        if ( normalizedPosition <= 0 )
+        {
+            return Points[ 0 ] + (Vector2) transform.position;
+        }
+
+        var sum = EnumerateSegments().Sum( segment => segment.Length );
+        var linearPosition = sum * normalizedPosition;
+
+        foreach ( var segment in EnumerateSegments() )
+        {
+            if ( linearPosition < segment.Length )
+            {
+                return Vector2.Lerp( segment.From, segment.To, linearPosition / segment.Length );
+            }
+
+            linearPosition -= segment.Length;
+        }
+
+        return Points[ Points.Count - 1 ] + (Vector2) transform.position;
+    }
+
     public struct Segment
     {
         public Vector2 From;
