@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using ActorStates;
 using Controllers;
 using Gamelogic.Extensions;
@@ -8,8 +7,6 @@ using UnityEngine;
 [ SelectionBase ]
 public class Actor : GLMonoBehaviour
 {
-    #region ACTOR INPUTS
-
     [ Header( "Inputs" ) ]
     [ ReadOnly ]
     public float DesiredMovement;
@@ -22,8 +19,6 @@ public class Actor : GLMonoBehaviour
 
     [ ReadOnly ]
     public bool DesiredDash;
-
-    #endregion
 
     [ Header( "State" ) ]
     [ ReadOnly ]

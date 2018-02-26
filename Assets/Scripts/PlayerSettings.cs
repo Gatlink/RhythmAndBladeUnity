@@ -34,7 +34,7 @@ public class PlayerSettings : ScriptableObject
     [ FormerlySerializedAs( "_railStickiness" ) ]
     public float RailStickiness = 0.2f;
 
-    public int InitialHitCount = 3;
+    public int InitialHitCount = 5;
 
     [ Header( "Hurt Recoil" ) ]
     public float HurtRecoilDuration = 0.25f;
@@ -76,17 +76,17 @@ public class PlayerSettings : ScriptableObject
 
     [ Header( "Dash" ) ]
     [ FormerlySerializedAs( "_dashDuration" ) ]
-    public float DashDuration = 0.2f;
+    public float DashDuration = 0.3f;
 
     [ FormerlySerializedAs( "_dashPositionCurve" ) ]
     public AnimationCurve DashPositionCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
 
     [ FormerlySerializedAs( "_dashLength" ) ]
-    public float DashLength = 4;
+    public float DashLength = 6;
 
     [ Range( 0, 1 ) ]
     [ FormerlySerializedAs( "_dashJumpTiming" ) ]
-    public float DashJumpTiming = 0.33f;
+    public float DashJumpTiming = 0f;
 
     [ Header( "Jump" ) ]
     [ Range( 0, 1 ) ]
