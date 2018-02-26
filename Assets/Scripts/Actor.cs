@@ -325,10 +325,10 @@ public class Actor : GLMonoBehaviour
         _hurtContactFilter2D = new ContactFilter2D();
         _hurtContactFilter2D.NoFilter();
         _hurtContactFilter2D.SetLayerMask( 1 << LayerMask.NameToLayer( Layers.Harmfull ) );
-    }
+    // }
 
-    private void Start()
-    {
+    // private void Start()
+    // {
         _playerSettings = PlayerSettings.Instance;
         TotalHitCount = CurrentHitCount = _playerSettings.InitialHitCount;
         _currentState = new FallState( this );

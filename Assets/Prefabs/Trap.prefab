@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damage: 1
-  _recoil: 2
+  _recoil: 0.5
 --- !u!212 &212645507162072920
 SpriteRenderer:
   m_ObjectHideFlags: 1

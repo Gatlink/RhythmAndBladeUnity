@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BodyRadius: 1
   RailStickiness: 0.2
-  InitialHitCount: 3
+  InitialHitCount: 5
   HurtRecoilDuration: 0.25
   HurtRecoilDistance: 3
   GroundedMovementSpeed: 15
