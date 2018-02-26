@@ -47,7 +47,7 @@ namespace ActorStates
                  && Actor.CheckJump() )
             {
                 Actor.ResetDash();
-                return new DashJumpState( Actor );
+                return new JumpState( Actor, PlayerSettings.DashJump );
             }
 
             return ChangeStateOnFinish();

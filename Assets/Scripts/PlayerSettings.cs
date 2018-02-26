@@ -1,4 +1,4 @@
-﻿using Gamelogic.Extensions;
+﻿using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -18,13 +18,6 @@ public class PlayerSettings : ScriptableObject
 
             return _instance;
         }
-    }
-
-    private void OnValidate()
-    {
-        _attack1TotalDuration = Attack1HitDuration + Attack1ComboDuration + Attack1RecoveryDuration;
-        _attack2TotalDuration = Attack2HitDuration + Attack2ComboDuration + Attack2RecoveryDuration;
-        _attack3TotalDuration = Attack3HitDuration + Attack3RecoveryDuration;
     }
 
     [ Header( "General" ) ]
@@ -86,115 +79,68 @@ public class PlayerSettings : ScriptableObject
 
     [ Range( 0, 1 ) ]
     [ FormerlySerializedAs( "_dashJumpTiming" ) ]
-    public float DashJumpTiming = 0f;
+    public float DashJumpTiming;
 
-    [ Header( "Jump" ) ]
-    [ Range( 0, 1 ) ]
-    public float JumpAirControlTiming = 0;
+    [ Header( "Jumps" ) ]
+    public JumpSetting NormalJump;
 
-    [ FormerlySerializedAs( "_jumpDuration" ) ]
-    public float JumpDuration = 0.3f;
+    public JumpSetting WallJump;
 
-    [ FormerlySerializedAs( "_jumpMovementSpeed" ) ]
-    public float JumpMovementSpeed = 10;
+    public JumpSetting DashJump;
 
-    [ FormerlySerializedAs( "_jumpMoveInertia" ) ]
-    public float JumpMoveInertia = 0.2f;
+    [ Header( "Attacks" ) ]
+    public AttackSetting Attack1;
 
-    [ ClampedCurve ]
-    [ FormerlySerializedAs( "_jumpHeightCurve" ) ]
-    public AnimationCurve JumpHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+    public AttackSetting Attack2;
 
-    [ FormerlySerializedAs( "_jumpHeight" ) ]
-    public float JumpHeight = 5;
+    public AttackSetting Attack3;
+}
 
-    public float JumpInitialMovementSpeed = 10;
+[ Serializable ]
+public struct JumpSetting
+{
+    [ Tooltip( "Jump duration (before going to fall state)" ) ]
+    public float Duration;
 
-    [ Header( "Wall Jump" ) ]
-    [ Range( 0, 1 ) ]
-    [ FormerlySerializedAs( "_wallJumpAirControlTiming" ) ]
-    public float WallJumpAirControlTiming = 0.66f;
-
-    public float WallJumpDuration = 0.3f;
-
-    public float WallJumpMovementSpeed = 10;
-
-    public float WallJumpMoveInertia = 0.2f;
+    [ Tooltip( "Jump height (max Y)" ) ]
+    public float Height;
 
     [ ClampedCurve ]
-    public AnimationCurve WallJumpHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+    [ Tooltip( "Height (Y) trajectory from t=0 to t=Duration" ) ]
+    public AnimationCurve HeightCurve;
 
-    public float WallJumpHeight = 5;
+    [ Tooltip( "Movement speed during air control" ) ]
+    public float HorizontalMovementSpeed;
 
-    public float WallJumpInitialMovementSpeed = 10;
+    [ Tooltip( "Movement inertia during air control" ) ]
+    public float HorizontalMovementInertia;
 
-    [ Header( "Dash Jump" ) ]
     [ Range( 0, 1 ) ]
-    [ FormerlySerializedAs( "_dashJumpAirControlTiming" ) ]
-    public float DashJumpAirControlTiming = 0.66f;
+    [ Tooltip( "Normalized time after which air control is enabled" ) ]
+    public float AirControlTiming;
 
-    [ FormerlySerializedAs( "_dashJumpDuration" ) ]
-    public float DashJumpDuration = 0.6f;
+    [ Tooltip( "Movement speed before air control is enabled" ) ]
+    public float InitialMovementSpeed;
+}
 
-    public float DashJumpMovementSpeed = 10;
+[ Serializable ]
+public struct AttackSetting
+{
+    [ Tooltip( "Hit phase (active hitbox phase) duration" ) ]
+    public float HitDuration;
 
-    public float DashJumpMoveInertia = 0.2f;
+    [ Tooltip( "Combo phase (combo is possible) duration" ) ]
+    public float ComboDuration;
 
-    [ ClampedCurve ]
-    public AnimationCurve DashJumpHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+    [ Tooltip( "Recovery phase duration (animation end)" ) ]
+    public float RecoveryDuration;
 
-    [ FormerlySerializedAs( "_dashJumpHeight" ) ]
-    public float DashJumpHeight = 3;
+    [ Tooltip( "Horizontal distance traveled during whole attack" ) ]
+    public float HorizontalMovementLength;
 
-    [ FormerlySerializedAs( "_dashJumpInitialMovementSpeed" ) ]
-    public float DashJumpInitialMovementSpeed = 25;
+    [ Tooltip( "Horizontal (X) trajectory from t=0 to t=Hit+Combo+Recovery" ) ]
+    public AnimationCurve MovementCurve;
 
-    [ Header( "Attack 1" ) ]
-    [ SerializeField ]
-    [ ReadOnly ]
-    private float _attack1TotalDuration;
-
-    public float Attack1HitDuration = 0.1f;
-
-    public float Attack1ComboDuration = 0.2f;
-
-    public float Attack1RecoveryDuration = 0.2f;
-
-    public float Attack1MovementLength = 1f;
-
-    public AnimationCurve Attack1MovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
-
-    public float Attack1Cooldown = 0.3f;
-
-    [ Header( "Attack 2" ) ]
-    [ SerializeField ]
-    [ ReadOnly ]
-    private float _attack2TotalDuration;
-
-    public float Attack2HitDuration = 0.2f;
-
-    public float Attack2ComboDuration = 0.2f;
-
-    public float Attack2RecoveryDuration = 0.2f;
-
-    public float Attack2MovementLength = 1f;
-
-    public AnimationCurve Attack2MovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
-
-    public float Attack2Cooldown = 0.3f;
-
-    [ Header( "Attack 3" ) ]
-    [ SerializeField ]
-    [ ReadOnly ]
-    private float _attack3TotalDuration;
-
-    public float Attack3HitDuration = 0.2f;
-
-    public float Attack3RecoveryDuration = 0.2f;
-
-    public float Attack3MovementLength = 2f;
-
-    public AnimationCurve Attack3MovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
-
-    public float Attack3Cooldown = 0.3f;
+    [ Tooltip( "Cannot trigger another attack during cooldown" ) ]
+    public float Cooldown;
 }

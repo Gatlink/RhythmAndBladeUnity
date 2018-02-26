@@ -102,7 +102,7 @@ namespace ActorStates
 
             if ( Actor.CheckJump() )
             {
-                return new WallJumpState( Actor );
+                return new JumpState( Actor, PlayerSettings.WallJump );
             }
 
             return null;

@@ -15,39 +15,41 @@ namespace ActorStates
         private float _jumpStartPositionY;
         private float _jumpDirection;
 
+        private JumpSetting _setting;
+        
         protected virtual float JumpDuration
         {
-            get { return PlayerSettings.JumpDuration; }
+            get { return _setting.Duration; }
         }
 
         protected virtual float JumpMovementSpeed
         {
-            get { return PlayerSettings.JumpMovementSpeed; }
+            get { return _setting.HorizontalMovementSpeed; }
         }
 
         protected virtual float JumpMoveInertia
         {
-            get { return PlayerSettings.JumpMoveInertia; }
+            get { return _setting.HorizontalMovementInertia; }
         }
 
         protected virtual AnimationCurve JumpHeightCurve
         {
-            get { return PlayerSettings.JumpHeightCurve; }
+            get { return _setting.HeightCurve; }
         }
 
         protected virtual float JumpHeight
         {
-            get { return PlayerSettings.JumpHeight; }
+            get { return _setting.Height; }
         }
 
         protected virtual float AirControlTiming
         {
-            get { return PlayerSettings.JumpAirControlTiming; }
+            get { return _setting.AirControlTiming; }
         }
 
         protected virtual float InitialMovementSpeed
         {
-            get { return PlayerSettings.JumpInitialMovementSpeed; }
+            get { return _setting.InitialMovementSpeed; }
         }
 
         private float NormalizedTime
@@ -55,8 +57,9 @@ namespace ActorStates
             get { return 1 - _jumpTimeRemaining / JumpDuration; }
         }
 
-        public JumpState( Actor actor ) : base( actor )
+        public JumpState( Actor actor, JumpSetting setting ) : base( actor )
         {
+            _setting = setting;
         }
 
         private float GetHorizontalVelocity()

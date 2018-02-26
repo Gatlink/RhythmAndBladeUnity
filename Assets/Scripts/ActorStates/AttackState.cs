@@ -10,15 +10,14 @@ namespace ActorStates
         private uint _hitID;
 
         public readonly int ComboCount;
-        public readonly float HitDuration;
 
-        private readonly float _comboDuration;
-        private readonly float _recoveryDuration;
-        private readonly float _movementLength;
-        private readonly float _cooldown;
-        private readonly AnimationCurve _movementCurve;
+        public float HitDuration
+        {
+            get { return _setting.HitDuration; }
+        }
 
-
+        private AttackSetting _setting;
+        
         public AttackState( Actor actor ) : this( actor, 0 )
         {
         }
@@ -29,29 +28,14 @@ namespace ActorStates
             switch ( ComboCount )
             {
                 case 2:
-                    HitDuration = PlayerSettings.Attack3HitDuration;
-                    _comboDuration = 0;
-                    _recoveryDuration = PlayerSettings.Attack3RecoveryDuration;
-                    _movementLength = PlayerSettings.Attack3MovementLength;
-                    _cooldown = PlayerSettings.Attack3Cooldown;
-                    _movementCurve = PlayerSettings.Attack3MovementCurve;
+                    _setting = PlayerSettings.Attack3;
                     break;
                 case 1:
-                    HitDuration = PlayerSettings.Attack2HitDuration;
-                    _comboDuration = PlayerSettings.Attack2ComboDuration;
-                    _recoveryDuration = PlayerSettings.Attack2RecoveryDuration;
-                    _movementLength = PlayerSettings.Attack2MovementLength;
-                    _cooldown = PlayerSettings.Attack2Cooldown;
-                    _movementCurve = PlayerSettings.Attack2MovementCurve;
+                    _setting = PlayerSettings.Attack2;
                     break;
                 // case 0:
                 default:
-                    HitDuration = PlayerSettings.Attack1HitDuration;
-                    _comboDuration = PlayerSettings.Attack1ComboDuration;
-                    _recoveryDuration = PlayerSettings.Attack1RecoveryDuration;
-                    _movementLength = PlayerSettings.Attack1MovementLength;
-                    _cooldown = PlayerSettings.Attack1Cooldown;
-                    _movementCurve = PlayerSettings.Attack1MovementCurve;
+                    _setting = PlayerSettings.Attack1;
                     break;
             }
 
@@ -64,23 +48,23 @@ namespace ActorStates
 
         protected override float TotalDuration
         {
-            get { return HitDuration + _comboDuration + _recoveryDuration; }
+            get { return HitDuration + _setting.ComboDuration + _setting.RecoveryDuration; }
         }
 
         protected override float MovementLength
         {
-            get { return _movementLength; }
+            get { return _setting.HorizontalMovementLength; }
         }
 
         protected override AnimationCurve MovementCurve
         {
-            get { return _movementCurve; }
+            get { return _setting.MovementCurve; }
         }
 
         public override void OnEnter()
         {
             base.OnEnter();
-            Actor.ConsumeAttack( _cooldown );
+            Actor.ConsumeAttack( _setting.Cooldown );
             _hitID = HitInfo.GenerateId();
         }
 
@@ -116,7 +100,7 @@ namespace ActorStates
                     }
                 }
             }
-            else if ( time > HitDuration && time <= HitDuration + _comboDuration )
+            else if ( time > HitDuration && time <= HitDuration + _setting.ComboDuration )
             {
                 // combo phase
 
@@ -134,7 +118,7 @@ namespace ActorStates
 
                 if ( Actor.CheckJump() )
                 {
-                    return new JumpState( Actor );
+                    return new JumpState( Actor, PlayerSettings.NormalJump );
                 }
 
                 if ( Actor.CheckDash() )
@@ -152,7 +136,7 @@ namespace ActorStates
 
                 if ( Actor.CheckJump() )
                 {
-                    return new JumpState( Actor );
+                    return new JumpState( Actor, PlayerSettings.NormalJump );
                 }
 
                 if ( Actor.CheckDash() )

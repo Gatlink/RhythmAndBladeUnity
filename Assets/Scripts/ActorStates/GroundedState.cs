@@ -76,7 +76,7 @@ namespace ActorStates
 
             if ( Actor.CheckJump() )
             {
-                return new JumpState( Actor );
+                return new JumpState( Actor, PlayerSettings.NormalJump );
             }
 
             if ( Actor.CheckDash() )
