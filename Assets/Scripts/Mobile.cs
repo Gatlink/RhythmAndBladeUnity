@@ -3,7 +3,7 @@ using System.Linq;
 using Gamelogic.Extensions;
 using UnityEngine;
 
-public class MobileActor : MonoBehaviour, IMoving
+public class Mobile : MonoBehaviour, IMoving
 {
     [ HideInInspector ]
     public float BodyRadius = 1;

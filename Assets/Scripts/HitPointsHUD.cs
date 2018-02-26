@@ -1,10 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class HitPointsHUD : MonoBehaviour
 {
-    public Actor Target;
+    public ActorHealth Target;
     private GameObject _hitPointPrefab;
 
     private void Start()
@@ -12,7 +11,7 @@ public class HitPointsHUD : MonoBehaviour
         if ( Target == null )
         {
             Target = GameObject.FindGameObjectWithTag( Tags.Player )
-                .GetComponent<Actor>();
+                .GetComponent<ActorHealth>();
         }
 
         _hitPointPrefab = transform.GetChild( 0 ).gameObject;
@@ -23,7 +22,7 @@ public class HitPointsHUD : MonoBehaviour
         Target.HitEvent += OnTargetHit;
     }
 
-    private void OnTargetHit( Actor actor )
+    private void OnTargetHit( ActorHealth actor )
     {
         var container = transform;
         var total = actor.TotalHitCount;

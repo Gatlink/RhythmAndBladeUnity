@@ -120,7 +120,7 @@ namespace ActorStates
             {
                 // combo phase
 
-                var harmfull = Actor.CheckDamages();
+                var harmfull = Actor.Health.CheckDamages();
                 if ( harmfull != null )
                 {
                     return new HurtState( Actor, harmfull );

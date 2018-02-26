@@ -17,7 +17,7 @@ public class SceneLoader : MonoBehaviour
     {
         if ( _sceneLoadPending ) return;
 
-        if ( _player.CurrentHitCount == 0 )
+        if ( _player.Health.CurrentHitCount == 0 )
         {
             // reload current scene
             LoadScene( SceneManager.GetActiveScene().buildIndex );

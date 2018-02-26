@@ -32,16 +32,6 @@ public class Actor : GLMonoBehaviour
     public event Action<IActorState, IActorState> StateChangeEvent;
 
     [ ReadOnly ]
-    public int TotalHitCount = 3;
-
-    [ ReadOnly ]
-    public int CurrentHitCount = 3;
-
-    public delegate void ActorHitHandler( Actor actor );
-
-    public event ActorHitHandler HitEvent;
-   
-    [ ReadOnly ]
     [ SerializeField ]
     private int _dashCount = 1;
 
@@ -63,11 +53,9 @@ public class Actor : GLMonoBehaviour
 
     private PlayerSettings _playerSettings;
 
-    private readonly Collider2D[] _colliderBuffer = new Collider2D[ 5 ];
-
-    private ContactFilter2D _hurtContactFilter2D;
-
-    public MobileActor Mobile { get; private set; }
+    public Mobile Mobile { get; private set; }
+    
+    public ActorHealth Health { get; private set; }
 
     public bool CheckJump()
     {
@@ -115,27 +103,6 @@ public class Actor : GLMonoBehaviour
         return DesiredAttack && ( isCombo || AttackCooldown <= 0 && _attackCount > 0 );
     }
 
-    public Collider2D CheckDamages()
-    {
-        foreach ( var hurtbox in GetComponentsInChildren<Collider2D>()
-            .Where( col => col.CompareTag( Tags.Hurtbox ) && col.enabled ) )
-        {
-            var hitCount = hurtbox.OverlapCollider( _hurtContactFilter2D, _colliderBuffer );
-            if ( hitCount > 0 )
-            {
-                return _colliderBuffer[ 0 ];
-            }
-        }
-
-        return null;
-    }
-
-    public void AccountDamages( int amount )
-    {
-        CurrentHitCount = Mathf.Max( 0, CurrentHitCount - amount );
-        OnHitEvent( this );
-    }
-
     private void ResetInputs()
     {
         DesiredMovement = 0;
@@ -149,32 +116,24 @@ public class Actor : GLMonoBehaviour
         var handler = StateChangeEvent;
         if ( handler != null ) handler( previousState, nextState );
     }
-
-    private void OnHitEvent( Actor actor )
-    {
-        var handler = HitEvent;
-        if ( handler != null ) handler( actor );
-    }
-
+   
     #region UNITY MESSAGES
 
     private void Awake()
     {
         _playerSettings = PlayerSettings.Instance;
-        TotalHitCount = CurrentHitCount = _playerSettings.InitialHitCount;
-
-        _hurtContactFilter2D = new ContactFilter2D();
-        _hurtContactFilter2D.NoFilter();
-        _hurtContactFilter2D.SetLayerMask( 1 << LayerMask.NameToLayer( Layers.Harmfull ) );
-    }
-
-    private void Start()
-    {
-        Mobile = GetRequiredComponent<MobileActor>();
+        
+        Mobile = GetRequiredComponent<Mobile>();
         Mobile.BodyRadius = _playerSettings.BodyRadius;
         Mobile.RailStickiness = _playerSettings.RailStickiness;
         Mobile.WallStickiness = _playerSettings.WallStickiness;
 
+        Health = GetRequiredComponent<ActorHealth>();
+        Health.TotalHitCount = _playerSettings.InitialHitCount;
+    }
+
+    private void Start()
+    {        
         _currentState = new FallState( this );
         _currentState.OnEnter();
         StateName = _currentState.Name;
@@ -214,12 +173,6 @@ public class Actor : GLMonoBehaviour
         if ( AttackCooldown > 0 )
         {
             AttackCooldown = Mathf.Max( 0, AttackCooldown - Time.deltaTime );
-        }
-
-        if ( CurrentHitCount <= 0 )
-        {
-            // todo die
-            Debug.Log( this + " died", this );
         }
     }
 
