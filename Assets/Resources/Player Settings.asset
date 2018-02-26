@@ -26,7 +26,7 @@ MonoBehaviour:
   WallSlideGravity: 100
   MaxWallSlideVelocity: 3
   TimeToUnstickFromWall: 0.06
-  DashDuration: 0.2
+  DashDuration: 0.3
   DashPositionCurve:
     serializedVersion: 2
     m_Curve:
@@ -45,7 +45,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  DashLength: 4
+  DashLength: 6
   DashJumpTiming: 0.33
   JumpAirControlTiming: 0
   JumpDuration: 0.3
