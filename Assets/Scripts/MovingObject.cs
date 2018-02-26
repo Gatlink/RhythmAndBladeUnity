@@ -13,11 +13,6 @@ public class MovingObject : MonoBehaviour, IMoving
     public float Phase = 0f;
     private Vector2 _initialPosition;
 
-    private void Start()
-    {
-        _initialPosition = transform.position;
-    }
-
     public Vector2 CurrentVelocity
     {
         get
@@ -32,6 +27,11 @@ public class MovingObject : MonoBehaviour, IMoving
     {
         get { return Vector2.zero; }
         set { throw new NotSupportedException( "Cannot set current acceleration" ); }
+    }
+
+    private void Start()
+    {
+        _initialPosition = transform.position;
     }
 
     private void Update()

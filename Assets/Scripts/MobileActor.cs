@@ -5,11 +5,17 @@ using UnityEngine;
 
 public class MobileActor : MonoBehaviour, IMoving
 {
+    [ HideInInspector ]
     public float BodyRadius = 1;
 
-    private int _moveBlockingLayerMask;
+    [ HideInInspector ]
+    public float RailStickiness = 0.2f;
 
-    private ContactFilter2D _wallCollisionContactFilter2D;
+    [ HideInInspector ]
+    public float WallStickiness = 0.2f;
+
+    [ ReadOnly ]
+    public float Direction = 1;
 
     [ ReadOnly, SerializeField ]
     private Vector2 _currentVelocity;
@@ -29,6 +35,45 @@ public class MobileActor : MonoBehaviour, IMoving
         set { _currentAcceleration = value; }
     }
 
+    public void CancelHorizontalMovement()
+    {
+        _currentVelocity.x = _currentAcceleration.x = 0;
+    }
+
+    public void CancelVerticalMovement()
+    {
+        _currentVelocity.y = _currentAcceleration.y = 0;
+    }
+
+    public void CancelMovement()
+    {
+        _currentAcceleration = _currentAcceleration = Vector2.zero;
+    }
+
+    // minimum movement to change direction
+    private const float MovementEpsilon = 0.01f;
+
+    public void UpdateDirection( float direction )
+    {
+        if ( Mathf.Abs( direction ) > MovementEpsilon )
+        {
+            Direction = Mathf.Sign( direction );
+        }
+    }
+
+    #region CACHING
+
+    private int _moveBlockingLayerMask;
+    private int _groundLayerMask;
+    private int _wallLayerMask;
+    private int _obstacleLayerMask;
+    private ContactFilter2D _wallCollisionContactFilter2D;
+    private readonly Collider2D[] _wallColliders = new Collider2D[ 1 ];
+
+    #endregion
+
+    #region MOVE METHODS
+
     public void Move()
     {
         Move( Vector2.zero );
@@ -45,7 +90,8 @@ public class MobileActor : MonoBehaviour, IMoving
         if ( hit.collider != null )
         {
             length = hit.distance - BodyRadius;
-            CurrentVelocity = Vector3.zero;
+            CancelHorizontalMovement();
+            //CurrentVelocity = Vector3.zero;
         }
 
         transform.Translate( direction * length );
@@ -53,9 +99,7 @@ public class MobileActor : MonoBehaviour, IMoving
         CheckWallCollisions();
     }
 
-    private readonly Collider2D[] _wallColliders = new Collider2D[ 1 ];
-
-    public bool CheckWallCollisions()
+    private void CheckWallCollisions()
     {
         var thisCollider = GetComponent<Collider2D>();
         if ( thisCollider.OverlapCollider( _wallCollisionContactFilter2D, _wallColliders ) > 0 )
@@ -70,46 +114,126 @@ public class MobileActor : MonoBehaviour, IMoving
             {
                 transform.Translate( distance2D.normal * distance2D.distance );
                 CancelHorizontalMovement();
-                return true;
             }
         }
+    }
 
+    #endregion
+
+    #region COLLISION CHECKS
+
+    public bool CheckGround( bool snap = true )
+    {
+        Vector2 normal;
+        Collider2D col;
+        return CheckGround( out col, out normal, snap );
+    }
+
+    public bool CheckGround( out Vector2 normal, bool snap = true )
+    {
+        Collider2D col;
+        return CheckGround( out col, out normal, snap );
+    }
+
+    public bool CheckGround( out Collider2D col, out Vector2 normal, bool snap = true )
+    {
+        var frontHit = Physics2D.Raycast( transform.position, Vector2.down, BodyRadius + RailStickiness,
+            _groundLayerMask );
+        var backHit = Physics2D.Raycast( transform.position - 0.5f * BodyRadius * Direction * Vector3.right,
+            Vector2.down, BodyRadius + RailStickiness, _groundLayerMask );
+
+        var selectedHit = backHit;
+        if ( frontHit.collider != null )
+        {
+            selectedHit = frontHit;
+        }
+
+        var grounded = selectedHit.collider != null;
+        if ( snap && grounded )
+        {
+            transform.position = transform.position.WithY( selectedHit.point.y + BodyRadius );
+            CancelVerticalMovement();
+        }
+
+        normal = selectedHit.normal;
+        col = selectedHit.collider;
+        return grounded;
+    }
+
+    public bool CheckCeiling()
+    {
+        Vector2 normal;
+        return CheckCeiling( out normal );
+    }
+
+    public bool CheckCeiling( out Vector2 normal )
+    {
+        var hit = Physics2D.Raycast( transform.position, Vector2.up, BodyRadius, _groundLayerMask );
+        normal = hit.normal;
+        return hit.collider != null;
+    }
+
+    public bool CheckWallProximity( float direction )
+    {
+        Vector2 normal;
+        Collider2D col;
+        return CheckWallProximity( direction, out normal, out col );
+    }
+
+    public bool CheckWallProximity( float direction, out Vector2 normal )
+    {
+        Collider2D col;
+        return CheckWallProximity( direction, out normal, out col );
+    }
+
+    public bool CheckWallProximity( float direction, out Vector2 normal, out Collider2D col )
+    {
+        var hit = Physics2D.Raycast( transform.position, Vector2.right * direction, BodyRadius + WallStickiness,
+            _wallLayerMask );
+        if ( hit.collider != null )
+        {
+            // snap to wall
+            transform.position = hit.point + hit.normal * BodyRadius;
+            CancelHorizontalMovement();
+            normal = hit.normal;
+            col = hit.collider;
+            return true;
+        }
+
+        normal = Vector2.zero;
+        col = null;
         return false;
     }
 
-    public void CancelHorizontalMovement()
-    {
-        _currentVelocity.x = _currentAcceleration.x = 0;
-    }
+    #endregion
 
-    public void CancelVerticalMovement()
-    {
-        _currentVelocity.y = _currentAcceleration.y = 0;
-    }
-
-    public void CancelMovement()
-    {
-        _currentAcceleration = _currentAcceleration = Vector2.zero;
-    }
-
+    #region UNITY MESSAGES
+    
     private void Awake()
     {
-        _moveBlockingLayerMask = 1 << LayerMask.NameToLayer( Layers.Ground ) |
-                                 1 << LayerMask.NameToLayer( Layers.Wall ) |
-                                 1 << LayerMask.NameToLayer( Layers.Obstacle );
+        _groundLayerMask = 1 << LayerMask.NameToLayer( Layers.Ground );
+        _wallLayerMask = 1 << LayerMask.NameToLayer( Layers.Wall );
+        _obstacleLayerMask = 1 << LayerMask.NameToLayer( Layers.Obstacle );
+
+        _moveBlockingLayerMask = _groundLayerMask |
+                                 _wallLayerMask |
+                                 _obstacleLayerMask;
 
         _wallCollisionContactFilter2D = new ContactFilter2D();
         _wallCollisionContactFilter2D.NoFilter();
-        _wallCollisionContactFilter2D.SetLayerMask( 1 << LayerMask.NameToLayer( Layers.Wall )
-                                                    | 1 << LayerMask.NameToLayer( Layers.Obstacle ) );
+        _wallCollisionContactFilter2D.SetLayerMask( _wallLayerMask |
+                                                    _obstacleLayerMask );
     }
+    
+    #endregion
+
+    #region GIZMOS
 
 #if UNITY_EDITOR
     [ Header( "Gizmos" ) ]
     public OptionalInt TrackPositions = new OptionalInt();
 
     private readonly Queue<Vector3> _previousPositions = new Queue<Vector3>( 100 );
-
 
     private void LateUpdate()
     {
@@ -138,4 +262,6 @@ public class MobileActor : MonoBehaviour, IMoving
         }
     }
 #endif
+
+    #endregion
 }

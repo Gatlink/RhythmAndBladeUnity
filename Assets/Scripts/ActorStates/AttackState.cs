@@ -145,7 +145,7 @@ namespace ActorStates
             else
             {
                 // recovery phase
-                if ( !Actor.CheckGround() )
+                if ( !Actor.Mobile.CheckGround() )
                 {
                     return new FallState( Actor );
                 }

@@ -15,7 +15,7 @@ namespace ActorStates
 
         public override void OnEnter()
         {
-            Actor.UpdateDirection( _wallDirection.Dot( Vector2.right ) );
+            Actor.Mobile.UpdateDirection( _wallDirection.Dot( Vector2.right ) );
             Actor.Mobile.CancelMovement();
             _unstickInhibition = PlayerSettings.TimeToUnstickFromWall;
             Actor.ResetDash();
@@ -25,15 +25,15 @@ namespace ActorStates
 
         public override IActorState Update()
         {
+            var mob = Actor.Mobile;
+            
             Vector2 normal;
             Collider2D collider;
-            if ( !Actor.CheckWallProximity( -Actor.Direction, out normal, out collider ) )
+            if ( !mob.CheckWallProximity( -mob.Direction, out normal, out collider ) )
             {
                 Debug.LogWarning( "Should not happen except during the very first frame" );
                 return new FallState( Actor );
             }
-
-            var mob = Actor.Mobile;
 
             // update horizontal velocity is 0
             mob.CancelHorizontalMovement();
@@ -72,7 +72,7 @@ namespace ActorStates
             }
 
             // check if player wants to unstick from wall
-            if ( Actor.DesiredMovement * Actor.Direction > 0 )
+            if ( Actor.DesiredMovement * mob.Direction > 0 )
             {
                 _unstickInhibition -= Time.deltaTime;
                 if ( _unstickInhibition <= 0 )
@@ -85,12 +85,12 @@ namespace ActorStates
                 _unstickInhibition = PlayerSettings.TimeToUnstickFromWall;
             }
 
-            if ( !Actor.CheckWallProximity( -Actor.Direction ) )
+            if ( !mob.CheckWallProximity( -mob.Direction ) )
             {
                 return new FallState( Actor );
             }
 
-            if ( Actor.CheckGround() )
+            if ( mob.CheckGround() )
             {
                 return new GroundedState( Actor );
             }

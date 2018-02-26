@@ -12,9 +12,9 @@ namespace ActorStates
         {
             var desiredVelocity = Actor.DesiredMovement * PlayerSettings.FallMovementSpeed;
 
-            Actor.UpdateDirection( desiredVelocity );
-
             var mob = Actor.Mobile;
+            mob.UpdateDirection( desiredVelocity );
+
             var velocity = mob.CurrentVelocity;
             var acceleration = mob.CurrentAcceleration;
 
@@ -39,12 +39,12 @@ namespace ActorStates
             }
 
             Vector2 normal;
-            if ( Actor.CheckWallProximity( Actor.Direction, out normal ) )
+            if ( mob.CheckWallProximity( mob.Direction, out normal ) )
             {
                 return new WallSlideState( Actor, normal );
             }
 
-            if ( Actor.CheckGround() )
+            if ( mob.CheckGround() )
             {
                 return new GroundedState( Actor );
             }

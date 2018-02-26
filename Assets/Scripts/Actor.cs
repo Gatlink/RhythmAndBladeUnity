@@ -40,10 +40,7 @@ public class Actor : GLMonoBehaviour
     public delegate void ActorHitHandler( Actor actor );
 
     public event ActorHitHandler HitEvent;
-
-    [ ReadOnly ]
-    public float Direction = 1;
-
+   
     [ ReadOnly ]
     [ SerializeField ]
     private int _dashCount = 1;
@@ -61,9 +58,6 @@ public class Actor : GLMonoBehaviour
 
     [ Header( "Setup" ) ]
     public ActorControllerBase Controller;
-
-    // minimum movement to change direction
-    private const float MovementEpsilon = 0.01f;
 
     private IActorState _currentState;
 
@@ -119,100 +113,6 @@ public class Actor : GLMonoBehaviour
     public bool CheckAttack( bool isCombo = false )
     {
         return DesiredAttack && ( isCombo || AttackCooldown <= 0 && _attackCount > 0 );
-    }
-
-    public bool CheckGround( bool snap = true )
-    {
-        Vector2 normal;
-        Collider2D col;
-        return CheckGround( out col, out normal, snap );
-    }
-
-    public bool CheckGround( out Vector2 normal, bool snap = true )
-    {
-        Collider2D col;
-        return CheckGround( out col, out normal, snap );
-    }
-
-    public bool CheckGround( out Collider2D col, out Vector2 normal, bool snap = true )
-    {
-        var frontHit = Physics2D.Raycast( transform.position, Vector2.down,
-            _playerSettings.BodyRadius + _playerSettings.RailStickiness, 1 << LayerMask.NameToLayer( Layers.Ground ) );
-        var backHit = Physics2D.Raycast(
-            transform.position - 0.5f * _playerSettings.BodyRadius * Direction * Vector3.right,
-            Vector2.down, _playerSettings.BodyRadius + _playerSettings.RailStickiness,
-            1 << LayerMask.NameToLayer( Layers.Ground ) );
-
-        var selectedHit = backHit;
-        if ( frontHit.collider != null )
-        {
-            selectedHit = frontHit;
-        }
-
-        var grounded = selectedHit.collider != null;
-        if ( snap && grounded )
-        {
-            transform.position = transform.position.WithY( selectedHit.point.y + _playerSettings.BodyRadius );
-            Mobile.CancelVerticalMovement();
-        }
-
-        normal = selectedHit.normal;
-        col = selectedHit.collider;
-        return grounded;
-    }
-
-    public bool CheckCeiling()
-    {
-        Vector2 normal;
-        return CheckCeiling( out normal );
-    }
-
-    public bool CheckCeiling( out Vector2 normal )
-    {
-        var hit = Physics2D.Raycast( transform.position, Vector2.up, _playerSettings.BodyRadius,
-            1 << LayerMask.NameToLayer( Layers.Ground ) );
-        normal = hit.normal;
-        return hit.collider != null;
-    }
-
-    public void UpdateDirection( float desiredVelocity )
-    {
-        if ( Mathf.Abs( desiredVelocity ) > MovementEpsilon )
-        {
-            Direction = Mathf.Sign( desiredVelocity );
-        }
-    }
-
-    public bool CheckWallProximity( float direction )
-    {
-        Vector2 normal;
-        Collider2D col;
-        return CheckWallProximity( direction, out normal, out col );
-    }
-
-    public bool CheckWallProximity( float direction, out Vector2 normal )
-    {
-        Collider2D col;
-        return CheckWallProximity( direction, out normal, out col );
-    }
-
-    public bool CheckWallProximity( float direction, out Vector2 normal, out Collider2D col )
-    {
-        var hit = Physics2D.Raycast( transform.position, Vector2.right * direction,
-            _playerSettings.BodyRadius + _playerSettings.WallStickiness, 1 << LayerMask.NameToLayer( Layers.Wall ) );
-        if ( hit.collider != null )
-        {
-            // snap to wall
-            transform.position = hit.point + hit.normal * _playerSettings.BodyRadius;
-            Mobile.CancelHorizontalMovement();
-            normal = hit.normal;
-            col = hit.collider;
-            return true;
-        }
-
-        normal = Vector2.zero;
-        col = null;
-        return false;
     }
 
     public Collider2D CheckDamages()
@@ -272,6 +172,8 @@ public class Actor : GLMonoBehaviour
     {
         Mobile = GetRequiredComponent<MobileActor>();
         Mobile.BodyRadius = _playerSettings.BodyRadius;
+        Mobile.RailStickiness = _playerSettings.RailStickiness;
+        Mobile.WallStickiness = _playerSettings.WallStickiness;
 
         _currentState = new FallState( this );
         _currentState.OnEnter();

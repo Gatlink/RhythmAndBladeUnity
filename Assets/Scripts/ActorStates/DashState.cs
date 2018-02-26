@@ -29,7 +29,7 @@ namespace ActorStates
         {
             base.OnEnter();
             Actor.ConsumeDash();
-            _initiatedGrounded = Actor.CheckGround();
+            _initiatedGrounded = Actor.Mobile.CheckGround();
         }
 
         public override IActorState Update()
@@ -37,7 +37,7 @@ namespace ActorStates
             ApplyHorizontalMovement();
 
             Vector2 wallNormal;
-            if ( !CurrentlyGrounded && Actor.CheckWallProximity( Actor.Direction, out wallNormal ) )
+            if ( !CurrentlyGrounded && Actor.Mobile.CheckWallProximity( Actor.Mobile.Direction, out wallNormal ) )
             {
                 return new WallSlideState( Actor, wallNormal );
             }

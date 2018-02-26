@@ -12,8 +12,8 @@ public class PlayerAnimator : MonoBehaviour
     private void Start()
     {
         _actor = GetComponentInParent<Actor>();
-        _animator = GetComponent<Animator>();
         _actor.StateChangeEvent += StateChangeHandler;
+        _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -25,10 +25,10 @@ public class PlayerAnimator : MonoBehaviour
         _animator.SetFloat( "HorizontalAcceleration",
             mob.CurrentAcceleration.x * Mathf.Sign( mob.CurrentVelocity.x ) );
 
-        _spriteRenderer.flipX = _actor.Direction < 0;
+        _spriteRenderer.flipX = mob.Direction < 0;
 
         Vector2 normal;
-        var grounded = _actor.CheckGround( out normal, snap: false );
+        var grounded = mob.CheckGround( out normal, snap: false );
 
         if ( grounded )
         {

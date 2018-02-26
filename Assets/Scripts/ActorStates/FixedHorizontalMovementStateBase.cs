@@ -21,12 +21,14 @@ namespace ActorStates
         public override void OnEnter()
         {
             base.OnEnter();
-            _direction = Actor.Direction;
+            _direction = Actor.Mobile.Direction;
             _lastNormalizedTime = 0;
         }
 
         protected void ApplyHorizontalMovement()
         {
+            var mob = Actor.Mobile;
+
             // apply tangencial velocity curve
             var deltaU = _direction * MovementLength *
                          ( MovementCurve.Evaluate( NormalizedTime ) - MovementCurve.Evaluate( _lastNormalizedTime ) );
@@ -34,7 +36,7 @@ namespace ActorStates
             _lastNormalizedTime = NormalizedTime;
 
             Vector2 groundNormal;
-            CurrentlyGrounded = Actor.CheckGround( out groundNormal );
+            CurrentlyGrounded = mob.CheckGround( out groundNormal );
 
             Vector2 tangent;
             if ( CurrentlyGrounded )
@@ -46,7 +48,6 @@ namespace ActorStates
                 tangent = Vector2.right;
             }
 
-            var mob = Actor.Mobile;
             mob.CurrentVelocity = tangent * deltaU / Time.deltaTime;
 
             // default move

@@ -73,18 +73,18 @@ namespace ActorStates
         {
             _jumpTimeRemaining = JumpDuration;
             _jumpStartPositionY = Actor.transform.position.y;
-            _jumpDirection = Actor.Direction;
+            _jumpDirection = Actor.Mobile.Direction;
             Actor.ConsumeJump();
             Actor.Mobile.CurrentVelocity = Actor.Mobile.CurrentVelocity.WithX( GetHorizontalVelocity() );
         }
 
         public override IActorState Update()
         {
+            var mob = Actor.Mobile;
             var desiredVelocity = GetHorizontalVelocity();
 
-            Actor.UpdateDirection( desiredVelocity );
+            mob.UpdateDirection( desiredVelocity );
 
-            var mob = Actor.Mobile;
             var velocity = mob.CurrentVelocity;
             var acceleration = mob.CurrentAcceleration;
 
@@ -107,12 +107,12 @@ namespace ActorStates
                 return new HurtState( Actor, harmfull );
             }
 
-            if ( NormalizedTime < CeilingCheckInhibitionTime && Actor.CheckCeiling() )
+            if ( NormalizedTime < CeilingCheckInhibitionTime && mob.CheckCeiling() )
             {
                 return new FallState( Actor );
             }
 
-            if ( NormalizedTime > GroundCheckInhibitionTime && Actor.CheckGround() )
+            if ( NormalizedTime > GroundCheckInhibitionTime && mob.CheckGround() )
             {
                 return new GroundedState( Actor );
             }

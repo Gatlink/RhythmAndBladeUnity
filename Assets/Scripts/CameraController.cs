@@ -9,7 +9,7 @@ using UnityEditor;
 
 public class CameraController : GLMonoBehaviour
 {
-    private Actor _target;
+    private MobileActor _target;
 
     [ ReadOnly ]
     public Vector2 Offset;
@@ -41,7 +41,7 @@ public class CameraController : GLMonoBehaviour
 
     public void Start()
     {
-        _target = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Actor>();
+        _target = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<MobileActor>();
         _cameraConstraintsLayer = 1 << LayerMask.NameToLayer( Layers.CameraConstraint );
     }
 

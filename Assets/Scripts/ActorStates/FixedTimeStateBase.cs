@@ -32,7 +32,7 @@ namespace ActorStates
             _timeRemaining -= Time.deltaTime;
             if ( _timeRemaining <= 0 )
             {
-                if ( Actor.CheckGround() )
+                if ( Actor.Mobile.CheckGround() )
                 {
                     return new GroundedState( Actor );
                 }

@@ -18,21 +18,22 @@ namespace ActorStates
 
         public override IActorState Update()
         {
+            var mob = Actor.Mobile;
+            
             Vector2 normal;
             Collider2D collider;
-            if ( !Actor.CheckGround( out collider, out normal ) )
+            if ( !mob.CheckGround( out collider, out normal ) )
             {
                 Debug.LogWarning( "Should not happen except during the very first frame" );
                 return new FallState( Actor );
             }
 
             var desiredVelocity = Actor.DesiredMovement * PlayerSettings.GroundedMovementSpeed;
-            Actor.UpdateDirection( desiredVelocity );
+            mob.UpdateDirection( desiredVelocity );
 
             // move along rail
             var tangent = normal.Rotate270();
 
-            var mob = Actor.Mobile;
             var velocity = mob.CurrentVelocity;
             var acceleration = mob.CurrentAcceleration;
 
@@ -68,7 +69,7 @@ namespace ActorStates
                 return new HurtState( Actor, harmfull );
             }
 
-            if ( !Actor.CheckGround() )
+            if ( !mob.CheckGround() )
             {
                 return new FallState( Actor );
             }

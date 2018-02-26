@@ -37,8 +37,8 @@ public class PlaceHolderAnimator : GLMonoBehaviour
 
     private void Update()
     {
-        _muzzle.localScale = _initialScale.WithX( _initialScale.x * _actor.Direction );
-        Hitbox.offset = _initialOffset.WithX( _initialOffset.x * _actor.Direction );
+        _muzzle.localScale = _initialScale.WithX( _initialScale.x * _actor.Mobile.Direction );
+        Hitbox.offset = _initialOffset.WithX( _initialOffset.x * _actor.Mobile.Direction );
     }
 
     private void StateChangeHandler( IActorState previous, IActorState next )
