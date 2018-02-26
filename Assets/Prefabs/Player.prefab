@@ -58,7 +58,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1232260079121612
 GameObject:
   m_ObjectHideFlags: 1
@@ -123,7 +123,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1336954960344560
 GameObject:
   m_ObjectHideFlags: 1
@@ -196,6 +196,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4855078756398926}
+  - component: {fileID: 114721990602752794}
   - component: {fileID: 114143317058885136}
   - component: {fileID: 114400863273475366}
   - component: {fileID: 58141123315222818}
@@ -337,7 +338,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1963247483546628}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.7, y: 2.2, z: 0}
+  m_LocalPosition: {x: 8.5, y: 1.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4272248732145132}
@@ -519,18 +520,14 @@ MonoBehaviour:
   DesiredAttack: 0
   DesiredDash: 0
   StateName: 
-  HitCount: 3
+  TotalHitCount: 3
+  CurrentHitCount: 3
   Direction: 1
   _dashCount: 1
   _jumpCount: 1
   AttackCooldown: 0
   _attackCount: 1
-  CurrentVelocity: {x: 0, y: 0, z: 0}
-  CurrentAcceleration: {x: 0, y: 0, z: 0}
   Controller: {fileID: 114400863273475366}
-  TrackPositions:
-    useValue: 1
-    value: 200
 --- !u!114 &114237450469582642
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -574,6 +571,23 @@ MonoBehaviour:
   __messageText: 
   DeadZone: 0.3
   Step: 1
+--- !u!114 &114721990602752794
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1963247483546628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c5c3c24457f442abc3b9622826bd484, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BodyRadius: 1
+  _currentVelocity: {x: 0, y: 0}
+  _currentAcceleration: {x: 0, y: 0}
+  TrackPositions:
+    useValue: 1
+    value: 200
 --- !u!212 &212407158061269768
 SpriteRenderer:
   m_ObjectHideFlags: 1

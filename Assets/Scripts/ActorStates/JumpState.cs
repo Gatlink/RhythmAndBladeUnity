@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Gamelogic.Extensions;
+using UnityEngine;
 
 namespace ActorStates
 {
@@ -74,7 +75,7 @@ namespace ActorStates
             _jumpStartPositionY = Actor.transform.position.y;
             _jumpDirection = Actor.Direction;
             Actor.ConsumeJump();
-            Actor.CurrentVelocity.x = GetHorizontalVelocity();
+            Actor.Mobile.CurrentVelocity = Actor.Mobile.CurrentVelocity.WithX( GetHorizontalVelocity() );
         }
 
         public override IActorState Update()
@@ -83,19 +84,22 @@ namespace ActorStates
 
             Actor.UpdateDirection( desiredVelocity );
 
+            var mob = Actor.Mobile;
+            var velocity = mob.CurrentVelocity;
+            var acceleration = mob.CurrentAcceleration;
+
             // update current horizontal velocity accounting inertia
-            Actor.CurrentVelocity.x = Mathf.SmoothDamp( Actor.CurrentVelocity.x, desiredVelocity,
-                ref Actor.CurrentAcceleration.x, JumpMoveInertia );
+            velocity.x = Mathf.SmoothDamp( velocity.x, desiredVelocity, ref acceleration.x, JumpMoveInertia );
 
             // apply jump vertical velocity curve
-            var targetPositionY = _jumpStartPositionY +
-                                  JumpHeightCurve.Evaluate( NormalizedTime ) * JumpHeight;
-            Actor.CurrentVelocity.y = ( targetPositionY - Actor.transform.position.y ) / Time.deltaTime;
+            var targetPositionY = _jumpStartPositionY + JumpHeightCurve.Evaluate( NormalizedTime ) * JumpHeight;
+            velocity.y = ( targetPositionY - Actor.transform.position.y ) / Time.deltaTime;
+
+            mob.CurrentVelocity = velocity;
+            mob.CurrentAcceleration = acceleration;
 
             // default move
-            Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
-
-            Actor.CheckWallCollisions();
+            mob.Move();
 
             var harmfull = Actor.CheckDamages();
             if ( harmfull != null )

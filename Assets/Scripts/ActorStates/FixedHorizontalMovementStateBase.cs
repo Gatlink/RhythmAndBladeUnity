@@ -46,12 +46,11 @@ namespace ActorStates
                 tangent = Vector2.right;
             }
 
-            Actor.CurrentVelocity = tangent * deltaU / Time.deltaTime;
+            var mob = Actor.Mobile;
+            mob.CurrentVelocity = tangent * deltaU / Time.deltaTime;
 
             // default move
-            Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
-
-            Actor.CheckWallCollisions();
+            mob.Move();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace ActorStates
         public override void OnEnter()
         {
             Actor.UpdateDirection( _wallDirection.Dot( Vector2.right ) );
-            Actor.CurrentVelocity = Vector3.zero;
+            Actor.Mobile.CancelMovement();
             _unstickInhibition = PlayerSettings.TimeToUnstickFromWall;
             Actor.ResetDash();
             Actor.ResetJump();
@@ -33,12 +33,18 @@ namespace ActorStates
                 return new FallState( Actor );
             }
 
+            var mob = Actor.Mobile;
+
             // update horizontal velocity is 0
-            Actor.CurrentVelocity.x = 0;
+            mob.CancelHorizontalMovement();
+
+            var velocity = mob.CurrentVelocity;
 
             // apply gravity
-            Actor.CurrentVelocity.y -= PlayerSettings.WallSlideGravity * Time.deltaTime;
-            Actor.CurrentVelocity.y = Mathf.Max( -PlayerSettings.MaxWallSlideVelocity, Actor.CurrentVelocity.y );
+            velocity.y -= PlayerSettings.WallSlideGravity * Time.deltaTime;
+            velocity.y = Mathf.Max( -PlayerSettings.MaxWallSlideVelocity, velocity.y );
+
+            mob.CurrentVelocity = velocity;
 
             // add wall movement if there is any
             var wallMovement = Vector2.zero;
@@ -56,9 +62,7 @@ namespace ActorStates
             }
 
             // default move
-            Actor.Move( ( (Vector2) Actor.CurrentVelocity + wallMovement ) * Time.deltaTime );
-
-            Actor.CheckWallCollisions();
+            mob.Move( wallMovement );
 
             // check damages
             var harmfull = Actor.CheckDamages();

@@ -19,10 +19,11 @@ public class PlayerAnimator : MonoBehaviour
 
     private void LateUpdate()
     {
-        var horizontalSpeed = Mathf.Max( 0, Mathf.Abs( _actor.CurrentVelocity.x ) - HorizontalSpeedThreshold );
+        var mob = _actor.Mobile;
+        var horizontalSpeed = Mathf.Max( 0, Mathf.Abs( mob.CurrentVelocity.x ) - HorizontalSpeedThreshold );
         _animator.SetFloat( "HorizontalSpeed", horizontalSpeed );
         _animator.SetFloat( "HorizontalAcceleration",
-            _actor.CurrentAcceleration.x * Mathf.Sign( _actor.CurrentVelocity.x ) );
+            mob.CurrentAcceleration.x * Mathf.Sign( mob.CurrentVelocity.x ) );
 
         _spriteRenderer.flipX = _actor.Direction < 0;
 

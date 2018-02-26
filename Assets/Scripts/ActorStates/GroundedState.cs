@@ -30,11 +30,18 @@ namespace ActorStates
             Actor.UpdateDirection( desiredVelocity );
 
             // move along rail
-            Vector3 tangent = normal.Rotate270();
+            var tangent = normal.Rotate270();
+
+            var mob = Actor.Mobile;
+            var velocity = mob.CurrentVelocity;
+            var acceleration = mob.CurrentAcceleration;
 
             // update current velocity accounting inertia
-            Actor.CurrentVelocity = Vector3.SmoothDamp( Actor.CurrentVelocity, tangent * desiredVelocity,
-                ref Actor.CurrentAcceleration, PlayerSettings.GroundedMoveInertia );
+            velocity = Vector2.SmoothDamp( velocity, tangent * desiredVelocity,
+                ref acceleration, PlayerSettings.GroundedMoveInertia, float.MaxValue, Time.deltaTime );
+
+            mob.CurrentVelocity = velocity;
+            mob.CurrentAcceleration = acceleration;
 
             // add ground movement if there is any
             var groundMovement = Vector2.zero;
@@ -52,9 +59,7 @@ namespace ActorStates
             }
 
             // default move
-            Actor.Move( ( groundMovement + (Vector2) Actor.CurrentVelocity ) * Time.deltaTime );
-
-            Actor.CheckWallCollisions();
+            mob.Move( groundMovement );
 
             // check damages
             var harmfull = Actor.CheckDamages();

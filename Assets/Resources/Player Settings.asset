@@ -46,7 +46,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   DashLength: 6
-  DashJumpTiming: 0.33
+  DashJumpTiming: 0
   JumpAirControlTiming: 0
   JumpDuration: 0.3
   JumpMovementSpeed: 10

@@ -2,5 +2,6 @@
 
 public interface IMoving
 {
-    Vector3 CurrentVelocity { get; }
+    Vector2 CurrentVelocity { get; set; }
+    Vector2 CurrentAcceleration { get; set; }
 }

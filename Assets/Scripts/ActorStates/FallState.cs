@@ -14,18 +14,23 @@ namespace ActorStates
 
             Actor.UpdateDirection( desiredVelocity );
 
+            var mob = Actor.Mobile;
+            var velocity = mob.CurrentVelocity;
+            var acceleration = mob.CurrentAcceleration;
+
             // update current horizontal velocity accounting inertia
-            Actor.CurrentVelocity.x = Mathf.SmoothDamp( Actor.CurrentVelocity.x, desiredVelocity,
-                ref Actor.CurrentAcceleration.x, PlayerSettings.FallMoveInertia );
+            velocity.x = Mathf.SmoothDamp( velocity.x, desiredVelocity, ref acceleration.x,
+                PlayerSettings.FallMoveInertia );
 
             // apply gravity
-            Actor.CurrentVelocity.y -= PlayerSettings.Gravity * Time.deltaTime;
-            Actor.CurrentVelocity.y = Mathf.Max( -PlayerSettings.MaxFallVelocity, Actor.CurrentVelocity.y );
+            velocity.y -= PlayerSettings.Gravity * Time.deltaTime;
+            velocity.y = Mathf.Max( -PlayerSettings.MaxFallVelocity, velocity.y );
+
+            mob.CurrentVelocity = velocity;
+            mob.CurrentAcceleration = acceleration;
 
             // default move
-            Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
-
-            Actor.CheckWallCollisions();
+            Actor.Mobile.Move();
 
             var harmfull = Actor.CheckDamages();
             if ( harmfull != null )

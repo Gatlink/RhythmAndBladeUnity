@@ -34,19 +34,22 @@ namespace ActorStates
             Actor.AccountDamages( _damage );
             var angle = Mathf.Atan( TotalDuration * TotalDuration * PlayerSettings.Gravity / 2 / RecoilLength );
             var velocity = TotalDuration * PlayerSettings.Gravity / 2 / Mathf.Sin( angle );
-            Actor.CurrentVelocity = new Vector2( _recoilDirection * Mathf.Cos( angle ), Mathf.Sin( angle ) ) * velocity;
+            Actor.Mobile.CurrentVelocity = new Vector2( _recoilDirection * Mathf.Cos( angle ), Mathf.Sin( angle ) ) * velocity;
         }
 
         public override IActorState Update()
         {
+            var mob = Actor.Mobile;
+            var velocity = mob.CurrentVelocity;
+
             // apply gravity
-            Actor.CurrentVelocity.y -= PlayerSettings.Gravity * Time.deltaTime;
-            Actor.CurrentVelocity.y = Mathf.Max( -PlayerSettings.MaxFallVelocity, Actor.CurrentVelocity.y );
+            velocity.y -= PlayerSettings.Gravity * Time.deltaTime;
+            velocity.y = Mathf.Max( -PlayerSettings.MaxFallVelocity, velocity.y );
+
+            mob.CurrentVelocity = velocity;
 
             // default move
-            Actor.Move( Actor.CurrentVelocity * Time.deltaTime );
-
-            Actor.CheckWallCollisions();
+            mob.Move();
 
             return ChangeStateOnFinish();
         }
