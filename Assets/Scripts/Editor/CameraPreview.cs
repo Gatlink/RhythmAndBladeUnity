@@ -34,6 +34,7 @@ public class CameraPreview : EditorWindow
     private Rail _cameraConstraint;
 
     private float _railPosition;
+    private bool _displayOnGameView;
 
     private RenderTexture _renderTexture;
 
@@ -51,10 +52,22 @@ public class CameraPreview : EditorWindow
         if ( _cameraConstraint != null )
         {
             EnsureRenderTexture();
+
+//            // reuse main camera
+//            var cam = Camera.main;
+//            var pos = cam.transform.position;
+//            var targetTex = cam.targetTexture;
+//            cam.transform.position = _cameraConstraint.EvaluatePosition( _railPosition ).To3DXY( -10 );
+//            cam.targetTexture = _renderTexture;
+//            cam.Render();
+//            cam.transform.position = pos;
+//            cam.targetTexture = targetTex;
+
             var cam = Camera;
 
             cam.CopyFrom( Camera.main );
 
+            cam.depth += _displayOnGameView ? 1 : -1;
             cam.transform.position = _cameraConstraint.EvaluatePosition( _railPosition ).To3DXY( -10 );
             cam.renderingPath = RenderingPath.UsePlayerSettings;
             cam.targetTexture = _renderTexture;
@@ -77,7 +90,7 @@ public class CameraPreview : EditorWindow
             CleanUp();
             return;
         }
-        
+
         _cameraConstraint = obj.GetComponent<Rail>();
         if ( _cameraConstraint == null )
         {
@@ -112,13 +125,16 @@ public class CameraPreview : EditorWindow
     {
         if ( _renderTexture != null )
         {
-            const int sliderSize = 20;
-            GUI.DrawTexture( new Rect( 0.0f, 0.0f, position.width, position.height - sliderSize ), _renderTexture );
-            _railPosition = GUI.HorizontalSlider(
-                new Rect( new Vector2( 5, position.height - sliderSize ),
-                    new Vector2( position.width - 10, sliderSize ) ),
-                _railPosition,
-                0, 1 );
+            var line = EditorGUIUtility.singleLineHeight + 1;
+            const int paddingRight = 4;
+            GUI.DrawTexture( new Rect( 0.0f, 0.0f, position.width, position.height - 2 * line ), _renderTexture );
+            GUILayout.BeginArea( new Rect( new Vector2( 0, position.height - 2 * line + 1 ),
+                new Vector2( position.width - paddingRight, 2 * line - 1 ) ) );
+
+            _railPosition = EditorGUILayout.Slider( "Position on rail", _railPosition, 0, 1 );
+            _displayOnGameView = EditorGUILayout.Toggle( "Display on game view", _displayOnGameView );
+
+            GUILayout.EndArea();
         }
     }
 }
