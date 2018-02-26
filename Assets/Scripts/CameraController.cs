@@ -53,7 +53,7 @@ public class CameraController : GLMonoBehaviour
     private void CheckConstraints()
     {
         var constraint = Physics2D.OverlapPoint( _target.transform.position, _cameraConstraintsLayer );
-        _currentConstraint = constraint != null ? constraint.GetComponent<Rail>() : null;
+        _currentConstraint = constraint != null ? constraint.GetComponentInParent<Rail>() : null;
     }
 
     [ InspectorButton ]
