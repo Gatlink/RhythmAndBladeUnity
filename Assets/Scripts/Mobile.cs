@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Mobile : MonoBehaviour, IMoving
 {
+    private const float RayCastEpsilon = 0.01f;
+    
     [ HideInInspector ]
     public float BodyRadius = 1;
 
@@ -168,9 +170,14 @@ public class Mobile : MonoBehaviour, IMoving
 
     public bool CheckCeiling( out Vector2 normal )
     {
-        var hit = Physics2D.Raycast( transform.position, Vector2.up, BodyRadius, _groundLayerMask );
+        var hit = Physics2D.Raycast( transform.position, Vector2.up, BodyRadius + RayCastEpsilon, _groundLayerMask );
         normal = hit.normal;
-        return hit.collider != null;
+        if ( hit.collider != null )
+        {
+            CancelVerticalMovement();
+            return true;
+        }
+        return false;
     }
 
     public bool CheckWallProximity( float direction )
