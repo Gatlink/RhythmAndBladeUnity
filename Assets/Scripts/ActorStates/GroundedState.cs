@@ -34,15 +34,8 @@ namespace ActorStates
             // move along rail
             var tangent = normal.Rotate270();
 
-            var velocity = mob.CurrentVelocity;
-            var acceleration = mob.CurrentAcceleration;
-
             // update current velocity accounting inertia
-            velocity = Vector2.SmoothDamp( velocity, tangent * desiredVelocity,
-                ref acceleration, PlayerSettings.GroundedMoveInertia, float.MaxValue, Time.deltaTime );
-
-            mob.CurrentVelocity = velocity;
-            mob.CurrentAcceleration = acceleration;
+            mob.ChangeVelocity( tangent * desiredVelocity, PlayerSettings.GroundedMoveInertia );
 
             // add ground movement if there is any
             var groundMovement = Vector2.zero;

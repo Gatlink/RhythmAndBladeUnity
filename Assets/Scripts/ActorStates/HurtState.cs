@@ -40,14 +40,12 @@ namespace ActorStates
         public override IActorState Update()
         {
             var mob = Actor.Mobile;
-            var velocity = mob.CurrentVelocity;
-
+            
             // apply gravity
-            velocity.y -= PlayerSettings.Gravity * Time.deltaTime;
-            velocity.y = Mathf.Max( -PlayerSettings.MaxFallVelocity, velocity.y );
-
-            mob.CurrentVelocity = velocity;
-
+            var verticalVelocity = mob.CurrentVelocity.y - PlayerSettings.Gravity * Time.deltaTime;
+            verticalVelocity = Mathf.Max( verticalVelocity, -PlayerSettings.MaxFallVelocity );
+            mob.SetVerticalVelocity( verticalVelocity  );
+            
             // default move
             mob.Move();
 

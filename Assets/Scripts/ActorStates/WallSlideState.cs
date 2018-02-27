@@ -38,13 +38,10 @@ namespace ActorStates
             // update horizontal velocity is 0
             mob.CancelHorizontalMovement();
 
-            var velocity = mob.CurrentVelocity;
-
             // apply gravity
-            velocity.y -= PlayerSettings.WallSlideGravity * Time.deltaTime;
-            velocity.y = Mathf.Max( -PlayerSettings.MaxWallSlideVelocity, velocity.y );
-
-            mob.CurrentVelocity = velocity;
+            var verticalVelocity = mob.CurrentVelocity.y - PlayerSettings.WallSlideGravity * Time.deltaTime;
+            verticalVelocity = Mathf.Max( verticalVelocity, -PlayerSettings.MaxWallSlideVelocity );
+            mob.SetVerticalVelocity( verticalVelocity  );
 
             // add wall movement if there is any
             var wallMovement = Vector2.zero;

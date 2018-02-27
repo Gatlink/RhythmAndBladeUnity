@@ -16,38 +16,38 @@ namespace ActorStates
         private float _jumpDirection;
 
         private JumpSetting _setting;
-        
-        protected virtual float JumpDuration
+
+        private float JumpDuration
         {
             get { return _setting.Duration; }
         }
 
-        protected virtual float JumpMovementSpeed
+        private float JumpMovementSpeed
         {
             get { return _setting.HorizontalMovementSpeed; }
         }
 
-        protected virtual float JumpMoveInertia
+        private float JumpMoveInertia
         {
             get { return _setting.HorizontalMovementInertia; }
         }
 
-        protected virtual AnimationCurve JumpHeightCurve
+        private AnimationCurve JumpHeightCurve
         {
             get { return _setting.HeightCurve; }
         }
 
-        protected virtual float JumpHeight
+        private float JumpHeight
         {
             get { return _setting.Height; }
         }
 
-        protected virtual float AirControlTiming
+        private float AirControlTiming
         {
             get { return _setting.AirControlTiming; }
         }
 
-        protected virtual float InitialMovementSpeed
+        private float InitialMovementSpeed
         {
             get { return _setting.InitialMovementSpeed; }
         }
@@ -88,19 +88,13 @@ namespace ActorStates
 
             mob.UpdateDirection( desiredVelocity );
 
-            var velocity = mob.CurrentVelocity;
-            var acceleration = mob.CurrentAcceleration;
-
             // update current horizontal velocity accounting inertia
-            velocity.x = Mathf.SmoothDamp( velocity.x, desiredVelocity, ref acceleration.x, JumpMoveInertia );
-
+            mob.ChangeHorizontalVelocity( desiredVelocity, JumpMoveInertia );
+            
             // apply jump vertical velocity curve
             var targetPositionY = _jumpStartPositionY + JumpHeightCurve.Evaluate( NormalizedTime ) * JumpHeight;
-            velocity.y = ( targetPositionY - Actor.transform.position.y ) / Time.deltaTime;
-
-            mob.CurrentVelocity = velocity;
-            mob.CurrentAcceleration = acceleration;
-
+            mob.SetVerticalVelocity( ( targetPositionY - Actor.transform.position.y ) / Time.deltaTime );
+            
             // default move
             mob.Move();
 

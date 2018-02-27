@@ -6,7 +6,7 @@ using UnityEngine;
 public class Mobile : MonoBehaviour, IMoving
 {
     private const float RayCastEpsilon = 0.01f;
-    
+
     [ HideInInspector ]
     public float BodyRadius = 1;
 
@@ -50,6 +50,29 @@ public class Mobile : MonoBehaviour, IMoving
     public void CancelMovement()
     {
         _currentAcceleration = _currentAcceleration = Vector2.zero;
+    }
+
+    public void SetVerticalVelocity( float velocity )
+    {
+        _currentVelocity.y = velocity;
+    }
+
+    public void ChangeHorizontalVelocity( float desiredVelocity, float inertia )
+    {
+        _currentVelocity.x =
+            Mathf.SmoothDamp( _currentVelocity.x, desiredVelocity, ref _currentAcceleration.x, inertia );
+    }
+
+    public void ChangeVerticalVelocity( float desiredVelocity, float inertia )
+    {
+        _currentVelocity.y =
+            Mathf.SmoothDamp( _currentVelocity.y, desiredVelocity, ref _currentAcceleration.y, inertia );
+    }
+
+    public void ChangeVelocity( Vector2 desiredVelocity, float inertia )
+    {
+        _currentVelocity = Vector2.SmoothDamp( _currentVelocity, desiredVelocity, ref _currentAcceleration, inertia,
+            float.MaxValue, Time.deltaTime );
     }
 
     // minimum movement to change direction
@@ -177,6 +200,7 @@ public class Mobile : MonoBehaviour, IMoving
             CancelVerticalMovement();
             return true;
         }
+
         return false;
     }
 
@@ -215,7 +239,7 @@ public class Mobile : MonoBehaviour, IMoving
     #endregion
 
     #region UNITY MESSAGES
-    
+
     private void Awake()
     {
         _groundLayerMask = 1 << LayerMask.NameToLayer( Layers.Ground );
@@ -231,7 +255,7 @@ public class Mobile : MonoBehaviour, IMoving
         _wallCollisionContactFilter2D.SetLayerMask( _wallLayerMask |
                                                     _obstacleLayerMask );
     }
-    
+
     #endregion
 
     #region GIZMOS
