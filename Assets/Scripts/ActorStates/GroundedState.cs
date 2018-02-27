@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace ActorStates
 {
-    public class GroundedState : ActorStateBase
+    public class GroundedState : PlayerActorStateBase
     {
-        public GroundedState( Actor actor ) : base( actor )
+        public GroundedState( PlayerActor actor ) : base( actor )
         {
         }
 
@@ -16,7 +16,7 @@ namespace ActorStates
             Actor.ResetAttack();
         }
 
-        public override IActorState Update()
+        public override IActorState<PlayerActor> Update()
         {
             var mob = Actor.Mobile;
             

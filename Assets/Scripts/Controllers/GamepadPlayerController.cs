@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Controllers
 {
-    public class GamepadController : ActorControllerBase
+    public class GamepadPlayerController : GLMonoBehaviour, IActorController<PlayerActor>
     {
         [ Range( 0, 0.9f ) ]
         public float DeadZone = 0.3f;
@@ -12,7 +12,7 @@ namespace Controllers
 
         public OptionalFloat DebugAxis;
     
-        public override void UpdateActorIntent( Actor actor )
+        public void UpdateActorIntent( PlayerActor actor )
         {
             var rawAxis = Input.GetAxis( "Horizontal" );
             if ( DebugAxis.UseValue )

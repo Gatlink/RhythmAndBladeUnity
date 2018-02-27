@@ -5,13 +5,13 @@ public class PlayerAnimator : MonoBehaviour
 {
     public float HorizontalSpeedThreshold = 0.1f;
 
-    private Actor _actor;
+    private PlayerActor _actor;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
 
     private void Start()
     {
-        _actor = GetComponentInParent<Actor>();
+        _actor = GetComponentInParent<PlayerActor>();
         _actor.StateChangeEvent += StateChangeHandler;
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -40,7 +40,7 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
-    private void StateChangeHandler( IActorState previous, IActorState next )
+    private void StateChangeHandler( IActorState<PlayerActor> previous, IActorState<PlayerActor> next )
     {
         if ( next is JumpState )
         {

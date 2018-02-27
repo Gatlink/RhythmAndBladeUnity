@@ -2,11 +2,11 @@
 
 namespace ActorStates
 {
-    public abstract class FixedTimeStateBase : ActorStateBase
+    public abstract class FixedTimeStateBase : PlayerActorStateBase
     {
         private float _timeRemaining;
 
-        protected FixedTimeStateBase( Actor actor ) : base( actor )
+        protected FixedTimeStateBase( PlayerActor actor ) : base( actor )
         {
         }
 
@@ -27,7 +27,7 @@ namespace ActorStates
             _timeRemaining = TotalDuration;
         }
 
-        protected IActorState ChangeStateOnFinish()
+        protected IActorState<PlayerActor> ChangeStateOnFinish()
         {
             _timeRemaining -= Time.deltaTime;
             if ( _timeRemaining <= 0 )

@@ -19,7 +19,7 @@ namespace ActorStates
             get { return PlayerSettings.HurtRecoilDistance * _recoilStrength; }
         }
 
-        public HurtState( Actor actor, Collider2D source ) : base( actor )
+        public HurtState( PlayerActor actor, Collider2D source ) : base( actor )
         {
             _recoilDirection = Mathf.Sign( Actor.transform.position.x - source.transform.position.x );
 
@@ -37,7 +37,7 @@ namespace ActorStates
             Actor.Mobile.CurrentVelocity = new Vector2( _recoilDirection * Mathf.Cos( angle ), Mathf.Sin( angle ) ) * velocity;
         }
 
-        public override IActorState Update()
+        public override IActorState<PlayerActor> Update()
         {
             var mob = Actor.Mobile;
             

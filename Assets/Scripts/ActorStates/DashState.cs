@@ -6,7 +6,7 @@ namespace ActorStates
     {
         private bool _initiatedGrounded;
 
-        public DashState( Actor actor ) : base( actor )
+        public DashState( PlayerActor actor ) : base( actor )
         {
         }
 
@@ -32,7 +32,7 @@ namespace ActorStates
             _initiatedGrounded = Actor.Mobile.CheckGround();
         }
 
-        public override IActorState Update()
+        public override IActorState<PlayerActor> Update()
         {
             ApplyHorizontalMovement();
 

@@ -1,11 +1,8 @@
-﻿using System;
-using ActorStates;
-using Controllers;
+﻿using ActorStates;
 using Gamelogic.Extensions;
 using UnityEngine;
 
-[ SelectionBase ]
-public class Actor : GLMonoBehaviour
+public class PlayerActor : ActorBase<PlayerActor>
 {
     [ Header( "Inputs" ) ]
     [ ReadOnly ]
@@ -19,13 +16,8 @@ public class Actor : GLMonoBehaviour
 
     [ ReadOnly ]
     public bool DesiredDash;
-
+    
     [ Header( "State" ) ]
-    [ ReadOnly ]
-    public string StateName;
-
-    public event Action<IActorState, IActorState> StateChangeEvent;
-
     [ ReadOnly ]
     [ SerializeField ]
     private int _dashCount = 1;
@@ -40,11 +32,6 @@ public class Actor : GLMonoBehaviour
     [ SerializeField ]
     [ ReadOnly ]
     private float _attackCount = 1;
-
-    [ Header( "Setup" ) ]
-    public ActorControllerBase Controller;
-
-    private IActorState _currentState;
 
     private PlayerSettings _playerSettings;
 
@@ -98,7 +85,12 @@ public class Actor : GLMonoBehaviour
         return DesiredAttack && ( isCombo || AttackCooldown <= 0 && _attackCount > 0 );
     }
 
-    private void ResetInputs()
+    protected override IActorState<PlayerActor> CreateInitialState()
+    {
+        return new FallState( this );
+    }
+
+    protected override void ResetIntent()
     {
         DesiredMovement = 0;
         DesiredJump = false;
@@ -106,12 +98,6 @@ public class Actor : GLMonoBehaviour
         DesiredDash = false;
     }
 
-    private void OnStateChangeEvent( IActorState previousState, IActorState nextState )
-    {
-        var handler = StateChangeEvent;
-        if ( handler != null ) handler( previousState, nextState );
-    }
-   
     #region UNITY MESSAGES
 
     private void Awake()
@@ -124,47 +110,12 @@ public class Actor : GLMonoBehaviour
         Mobile.WallStickiness = _playerSettings.WallStickiness;
 
         Health = GetRequiredComponent<ActorHealth>();
-        Health.TotalHitCount = _playerSettings.InitialHitCount;
+        Health.TotalHitCount = _playerSettings.InitialHitCount;        
     }
 
-    private void Start()
-    {        
-        _currentState = new FallState( this );
-        _currentState.OnEnter();
-        StateName = _currentState.Name;
-    }
-
-    private void Update()
+    protected override void Update()
     {
-        // update inputs
-        if ( Controller == null )
-        {
-            Debug.LogError( "Actor has no controller", this );
-        }
-        else
-        {
-            Controller.UpdateActorIntent( this );
-        }
-
-        if ( _currentState == null )
-        {
-            Debug.LogError( "Actor has no current state", this );
-        }
-        else
-        {
-            var nextState = _currentState.Update();
-            if ( nextState != null )
-            {
-                Debug.Log( string.Format( "Going from {0} to {1}", _currentState.Name, nextState.Name ) );
-                _currentState.OnExit();
-                OnStateChangeEvent( _currentState, nextState );
-                nextState.OnEnter();
-                _currentState = nextState;
-                StateName = _currentState.Name;
-            }
-        }
-
-        ResetInputs();
+        base.Update();
         if ( AttackCooldown > 0 )
         {
             AttackCooldown = Mathf.Max( 0, AttackCooldown - Time.deltaTime );

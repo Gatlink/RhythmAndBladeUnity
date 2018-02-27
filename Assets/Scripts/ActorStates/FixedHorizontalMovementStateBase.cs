@@ -10,7 +10,7 @@ namespace ActorStates
         private Vector2 _lastTangent;
         protected bool CurrentlyGrounded;
 
-        protected FixedHorizontalMovementStateBase( Actor actor ) : base( actor )
+        protected FixedHorizontalMovementStateBase( PlayerActor actor ) : base( actor )
         {
         }
 

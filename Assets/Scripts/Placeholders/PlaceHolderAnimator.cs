@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlaceHolderAnimator : GLMonoBehaviour
 {
-    private Actor _actor;
+    private PlayerActor _actor;
     private Transform _muzzle;
     private Vector3 _initialScale;
     private CircleCollider2D _hitbox;
@@ -26,7 +26,7 @@ public class PlaceHolderAnimator : GLMonoBehaviour
 
     private void Start()
     {
-        _actor = GetComponentInParent<Actor>();
+        _actor = GetComponentInParent<PlayerActor>();
         _actor.StateChangeEvent += StateChangeHandler;
 
         _muzzle = transform.Find( "View/Ball/Muzzle" );
@@ -41,7 +41,7 @@ public class PlaceHolderAnimator : GLMonoBehaviour
         Hitbox.offset = _initialOffset.WithX( _initialOffset.x * _actor.Mobile.Direction );
     }
 
-    private void StateChangeHandler( IActorState previous, IActorState next )
+    private void StateChangeHandler( IActorState<PlayerActor> previous, IActorState<PlayerActor> next )
     {
         var attackState = next as AttackState;
         if ( attackState != null )

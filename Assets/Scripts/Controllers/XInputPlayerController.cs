@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Gamelogic.Extensions;
+using UnityEngine;
 using XInputDotNetPure;
 
 namespace Controllers
 {
-    public class XInputController : ActorControllerBase
+    public class XInputPlayerController : GLMonoBehaviour, IActorController<PlayerActor>
     {
         private bool _playerIndexSet = false;
         private PlayerIndex _playerIndex;
@@ -20,7 +21,7 @@ namespace Controllers
 
         public bool Step = true;
 
-        public override void UpdateActorIntent( Actor actor )
+        public void UpdateActorIntent( PlayerActor actor )
         {
             _prevState = _state;
 

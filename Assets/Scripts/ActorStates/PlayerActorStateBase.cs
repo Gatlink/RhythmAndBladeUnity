@@ -1,11 +1,12 @@
 ﻿namespace ActorStates
 {
-    public abstract class ActorStateBase : IActorState
+    public abstract class PlayerActorStateBase : IActorState<PlayerActor>
     {
-        protected readonly Actor Actor;
+        protected readonly PlayerActor Actor;
+        
         protected readonly PlayerSettings PlayerSettings;
 
-        protected ActorStateBase( Actor actor )
+        protected PlayerActorStateBase( PlayerActor actor )
         {
             Actor = actor;
             PlayerSettings = PlayerSettings.Instance;
@@ -19,7 +20,7 @@
         {
         }
 
-        public abstract IActorState Update();
+        public abstract IActorState<PlayerActor> Update();
 
         public string Name
         {

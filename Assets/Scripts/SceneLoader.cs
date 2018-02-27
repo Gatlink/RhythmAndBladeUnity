@@ -4,12 +4,12 @@ using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
     private bool _sceneLoadPending;
-    private Actor _player;
+    private PlayerActor _player;
     private LayerMask _levelTriggerLayer;
 
     private void Start()
     {
-        _player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Actor>();
+        _player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<PlayerActor>();
         _levelTriggerLayer = 1 << LayerMask.NameToLayer( Layers.LevelTrigger );
     }
 

@@ -2,13 +2,13 @@
 
 namespace ActorStates
 {
-    public class FallState : ActorStateBase
+    public class FallState : PlayerActorStateBase
     {
-        public FallState( Actor actor ) : base( actor )
+        public FallState( PlayerActor actor ) : base( actor )
         {
         }
 
-        public override IActorState Update()
+        public override IActorState<PlayerActor> Update()
         {
             var desiredVelocity = Actor.DesiredMovement * PlayerSettings.FallMovementSpeed;
 

@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace ActorStates
 {
-    public class WallSlideState : ActorStateBase
+    public class WallSlideState : PlayerActorStateBase
     {
         private readonly Vector2 _wallDirection;
         private float _unstickInhibition;
 
-        public WallSlideState( Actor actor, Vector2 wallNormal ) : base( actor )
+        public WallSlideState( PlayerActor actor, Vector2 wallNormal ) : base( actor )
         {
             _wallDirection = wallNormal;
         }
@@ -23,7 +23,7 @@ namespace ActorStates
             Actor.ResetAttack();
         }
 
-        public override IActorState Update()
+        public override IActorState<PlayerActor> Update()
         {
             var mob = Actor.Mobile;
             

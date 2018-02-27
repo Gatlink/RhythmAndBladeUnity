@@ -18,11 +18,11 @@ namespace ActorStates
 
         private AttackSetting _setting;
         
-        public AttackState( Actor actor ) : this( actor, 0 )
+        public AttackState( PlayerActor actor ) : this( actor, 0 )
         {
         }
 
-        private AttackState( Actor actor, int comboCount ) : base( actor )
+        private AttackState( PlayerActor actor, int comboCount ) : base( actor )
         {
             ComboCount = comboCount;
             switch ( ComboCount )
@@ -73,7 +73,7 @@ namespace ActorStates
 
         private readonly ContactFilter2D _hitContactFilter2D;
 
-        public override IActorState Update()
+        public override IActorState<PlayerActor> Update()
         {
             ApplyHorizontalMovement();
 

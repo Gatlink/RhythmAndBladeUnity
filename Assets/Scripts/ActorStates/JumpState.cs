@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ActorStates
 {
-    public class JumpState : ActorStateBase
+    public class JumpState : PlayerActorStateBase
     {
         // normalized time before wich ground is not checked yet
         private const float GroundCheckInhibitionTime = 1f;
@@ -57,7 +57,7 @@ namespace ActorStates
             get { return 1 - _jumpTimeRemaining / JumpDuration; }
         }
 
-        public JumpState( Actor actor, JumpSetting setting ) : base( actor )
+        public JumpState( PlayerActor actor, JumpSetting setting ) : base( actor )
         {
             _setting = setting;
         }
@@ -81,7 +81,7 @@ namespace ActorStates
             Actor.Mobile.CurrentVelocity = Actor.Mobile.CurrentVelocity.WithX( GetHorizontalVelocity() );
         }
 
-        public override IActorState Update()
+        public override IActorState<PlayerActor> Update()
         {
             var mob = Actor.Mobile;
             var desiredVelocity = GetHorizontalVelocity();
