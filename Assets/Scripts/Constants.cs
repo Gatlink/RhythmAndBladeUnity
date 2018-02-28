@@ -15,4 +15,5 @@ public static class Tags
     public const string Hurtbox = "Hurtbox";
     public const string Player = "Player";
     public const string Hitbox = "Hitbox";
+    public const string Collisionbox = "Collisionbox";
 }

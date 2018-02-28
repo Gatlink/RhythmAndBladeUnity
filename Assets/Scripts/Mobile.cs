@@ -94,7 +94,8 @@ public class Mobile : MonoBehaviour, IMoving
     private int _obstacleLayerMask;
     private ContactFilter2D _wallCollisionContactFilter2D;
     private readonly Collider2D[] _wallColliders = new Collider2D[ 1 ];
-
+    private Collider2D _collisionCheckCollider;
+    
     #endregion
 
     #region MOVE METHODS
@@ -126,10 +127,9 @@ public class Mobile : MonoBehaviour, IMoving
 
     private void CheckWallCollisions()
     {
-        var thisCollider = GetComponent<Collider2D>();
-        if ( thisCollider.OverlapCollider( _wallCollisionContactFilter2D, _wallColliders ) > 0 )
+        if ( _collisionCheckCollider.OverlapCollider( _wallCollisionContactFilter2D, _wallColliders ) > 0 )
         {
-            var distance2D = thisCollider.Distance( _wallColliders[ 0 ] );
+            var distance2D = _collisionCheckCollider.Distance( _wallColliders[ 0 ] );
             if ( distance2D.distance > 0 )
             {
 //                Debug.LogError( "Should not be > 0" );
@@ -254,6 +254,9 @@ public class Mobile : MonoBehaviour, IMoving
         _wallCollisionContactFilter2D.NoFilter();
         _wallCollisionContactFilter2D.SetLayerMask( _wallLayerMask |
                                                     _obstacleLayerMask );
+
+        _collisionCheckCollider = GetComponentsInChildren<Collider2D>()
+            .First( col => col.CompareTag( Tags.Collisionbox ) );
     }
 
     #endregion
