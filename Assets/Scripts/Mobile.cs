@@ -7,6 +7,10 @@ public class Mobile : MonoBehaviour, IMoving
 {
     private const float RayCastEpsilon = 0.01f;
 
+    public Vector2 BodySize = Vector2.one;
+
+    public Vector2 BodyOffset = Vector2.zero;
+
     [ HideInInspector ]
     public float BodyRadius = 1;
 
@@ -52,6 +56,12 @@ public class Mobile : MonoBehaviour, IMoving
         _currentAcceleration = _currentAcceleration = Vector2.zero;
     }
 
+    public void CancelMovementAlongAxis( Vector2 axis )
+    {
+        CurrentVelocity -= CurrentVelocity.Dot( axis ) * axis;
+        CurrentAcceleration -= CurrentAcceleration.Dot( axis ) * axis;
+    }
+
     public void SetVerticalVelocity( float velocity )
     {
         _currentVelocity.y = velocity;
@@ -95,7 +105,7 @@ public class Mobile : MonoBehaviour, IMoving
     private ContactFilter2D _wallCollisionContactFilter2D;
     private readonly Collider2D[] _wallColliders = new Collider2D[ 1 ];
     private Collider2D _collisionCheckCollider;
-    
+
     #endregion
 
     #region MOVE METHODS
@@ -112,15 +122,21 @@ public class Mobile : MonoBehaviour, IMoving
         var length = amount.magnitude;
 
         var direction = amount.normalized;
-        var hit = Physics2D.Raycast( transform.position, direction, length + BodyRadius, _moveBlockingLayerMask );
+
+        var hit = Physics2D.CapsuleCast( BodyPosition, 0.6f * BodySize, CapsuleDirection2D.Vertical, 0, direction,
+            length,
+            _moveBlockingLayerMask );
+
         if ( hit.collider != null )
         {
-            length = hit.distance - BodyRadius;
+            DebugExtension.DebugPoint( hit.point, 0.1f, 1 );
+            BodyPosition = hit.centroid;
             CancelHorizontalMovement();
-            //CurrentVelocity = Vector3.zero;
         }
-
-        transform.Translate( direction * length );
+        else
+        {
+            transform.Translate( direction * length );
+        }
 
         CheckWallCollisions();
     }
@@ -162,10 +178,17 @@ public class Mobile : MonoBehaviour, IMoving
 
     public bool CheckGround( out Collider2D col, out Vector2 normal, bool snap = true )
     {
-        var frontHit = Physics2D.Raycast( transform.position, Vector2.down, BodyRadius + RailStickiness,
-            _groundLayerMask );
-        var backHit = Physics2D.Raycast( transform.position - 0.5f * BodyRadius * Direction * Vector3.right,
-            Vector2.down, BodyRadius + RailStickiness, _groundLayerMask );
+        var frontHit = Physics2D.Raycast( BodyPosition + 0.25f * BodySize.x * Direction * Vector2.right, Vector2.down,
+            0.5f * BodySize.y + RailStickiness, _groundLayerMask );
+        var backHit = Physics2D.Raycast( BodyPosition - 0.25f * BodySize.x * Direction * Vector2.right, Vector2.down,
+            0.5f * BodySize.y + RailStickiness, _groundLayerMask );
+
+        if ( backHit.collider == null && frontHit.collider == null )
+        {
+            col = null;
+            normal = Vector2.zero;
+            return false;
+        }
 
         var selectedHit = backHit;
         if ( frontHit.collider != null )
@@ -173,16 +196,27 @@ public class Mobile : MonoBehaviour, IMoving
             selectedHit = frontHit;
         }
 
-        var grounded = selectedHit.collider != null;
-        if ( snap && grounded )
-        {
-            transform.position = transform.position.WithY( selectedHit.point.y + BodyRadius );
-            CancelVerticalMovement();
-        }
+        DebugExtension.DebugPoint( selectedHit.point, 0.1f, 1 );
 
         normal = selectedHit.normal;
         col = selectedHit.collider;
-        return grounded;
+
+        if ( snap )
+        {
+            var tangent = normal.Perp();
+
+            var distance = Mathf.Abs( tangent.PerpDot( BodyPosition - selectedHit.point ) );
+            BodyPosition = BodyPosition - normal * ( distance - 0.5f * BodySize.y );
+            CancelMovementAlongAxis( normal );
+        }
+
+        return true;
+    }
+
+    private Vector2 BodyPosition
+    {
+        get { return (Vector2) transform.position + BodyOffset; }
+        set { transform.position = value - BodyOffset; }
     }
 
     public bool CheckCeiling()
@@ -193,10 +227,11 @@ public class Mobile : MonoBehaviour, IMoving
 
     public bool CheckCeiling( out Vector2 normal )
     {
-        var hit = Physics2D.Raycast( transform.position, Vector2.up, BodyRadius + RayCastEpsilon, _groundLayerMask );
+        var hit = Physics2D.Raycast( BodyPosition, Vector2.up, 0.5f * BodySize.y + RayCastEpsilon, _groundLayerMask );
         normal = hit.normal;
         if ( hit.collider != null )
         {
+            DebugExtension.DebugPoint( hit.point, 0.1f, 1 );
             CancelVerticalMovement();
             return true;
         }
@@ -219,12 +254,13 @@ public class Mobile : MonoBehaviour, IMoving
 
     public bool CheckWallProximity( float direction, out Vector2 normal, out Collider2D col )
     {
-        var hit = Physics2D.Raycast( transform.position, Vector2.right * direction, BodyRadius + WallStickiness,
+        var hit = Physics2D.Raycast( BodyPosition, Vector2.right * direction, 0.5f * BodySize.x + WallStickiness,
             _wallLayerMask );
         if ( hit.collider != null )
         {
+            DebugExtension.DebugPoint( hit.point, 0.1f, 1 );
             // snap to wall
-            transform.position = hit.point + hit.normal * BodyRadius;
+            BodyPosition = hit.point + hit.normal * 0.5f * BodySize.x;
             CancelHorizontalMovement();
             normal = hit.normal;
             col = hit.collider;
@@ -253,6 +289,7 @@ public class Mobile : MonoBehaviour, IMoving
         _wallCollisionContactFilter2D = new ContactFilter2D();
         _wallCollisionContactFilter2D.NoFilter();
         _wallCollisionContactFilter2D.SetLayerMask( _wallLayerMask |
+                                                    _groundLayerMask |
                                                     _obstacleLayerMask );
 
         _collisionCheckCollider = GetComponentsInChildren<Collider2D>()
@@ -284,7 +321,26 @@ public class Mobile : MonoBehaviour, IMoving
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere( transform.position, PlayerSettings.Instance.BodyRadius );
+        DebugExtension.DrawCapsule( (Vector3) BodyPosition + 0.5f * BodySize.y * Vector3.down,
+            (Vector3) BodyPosition + 0.5f * BodySize.y * Vector3.up, Gizmos.color, 0.5f * BodySize.x );
+
+        var top = BodyPosition + Vector2.up * ( 0.5f * BodySize.y + RayCastEpsilon );
+        Gizmos.DrawLine( BodyPosition, top );
+        Gizmos.DrawLine( top + 0.1f * Vector2.left, top + 0.1f * Vector2.right );
+
+        var front = BodyPosition + Vector2.right * Direction * ( 0.5f * BodySize.x + WallStickiness );
+        Gizmos.DrawLine( BodyPosition, front );
+        Gizmos.DrawLine( front + 0.1f * Vector2.up, front + 0.1f * Vector2.down );
+        Gizmos.DrawLine( front + 0.1f * Vector2.up, front + 0.1f * Vector2.down );
+
+        var backBottom = BodyPosition - 0.25f * BodySize.x * Direction * Vector2.right;
+        var frontBottom = BodyPosition + 0.25f * BodySize.x * Direction * Vector2.right;
+        var down = Vector2.down * ( 0.5f * BodySize.y + RailStickiness );
+        Gizmos.DrawLine( backBottom, backBottom + down );
+        Gizmos.DrawLine( frontBottom, frontBottom + down );
+        Gizmos.DrawLine( backBottom + down + 0.1f * Vector2.left, backBottom + down + 0.1f * Vector2.right );
+        Gizmos.DrawLine( frontBottom + down + 0.1f * Vector2.left, frontBottom + down + 0.1f * Vector2.right );
+
         if ( _previousPositions.Count > 1 )
         {
             var prev = _previousPositions.Peek();

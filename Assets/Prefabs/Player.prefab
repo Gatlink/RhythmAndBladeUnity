@@ -74,7 +74,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1232260079121612
 GameObject:
   m_ObjectHideFlags: 1
@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1336954960344560
 GameObject:
   m_ObjectHideFlags: 1
@@ -397,7 +397,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1963247483546628}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.95, y: 1.26, z: 0}
+  m_LocalPosition: {x: 56.9, y: 15.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4272248732145132}
@@ -478,7 +478,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 1}
   serializedVersion: 2
-  m_Radius: 0.95
+  m_Radius: 0.9
 --- !u!58 &58993198116627378
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -666,6 +666,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c5c3c24457f442abc3b9622826bd484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BodySize: {x: 2, y: 2}
+  BodyOffset: {x: 0, y: 0}
   BodyRadius: 1
   RailStickiness: 0.2
   WallStickiness: 0.2
