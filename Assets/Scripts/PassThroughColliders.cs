@@ -5,10 +5,10 @@ public class PassThroughColliders : MonoBehaviour
     public float Threshold = 0;
 
     private Collider2D[] _colliders;
-    private Transform _player;
+    private Mobile _player;
     private PlayerSettings _playerSettings;
 
-    private Transform Player
+    private Mobile Player
     {
         get
         {
@@ -17,7 +17,7 @@ public class PassThroughColliders : MonoBehaviour
                 var playerObject = GameObject.FindGameObjectWithTag( Tags.Player );
                 if ( playerObject != null )
                 {
-                    _player = playerObject.transform;
+                    _player = playerObject.GetComponent<Mobile>();
                 }
 
                 return _player;
@@ -30,7 +30,6 @@ public class PassThroughColliders : MonoBehaviour
     private void Start()
     {
         _colliders = GetComponentsInChildren<Collider2D>();
-        _playerSettings = PlayerSettings.Instance;
     }
 
     private void Update()
@@ -40,11 +39,11 @@ public class PassThroughColliders : MonoBehaviour
         foreach ( var col in _colliders )
         {
             var threshold = col.enabled
-                ? -_playerSettings.BodyRadius - Threshold
-                : _playerSettings.BodyRadius + Threshold;
+                ? -0.5f * Player.BodySize.y - Threshold
+                : 0.5f * Player.BodySize.y + Threshold;
 
             col.enabled = true; // must be enabled to check bounds
-            var toPlayer = Player.position - col.bounds.center;
+            var toPlayer = Player.BodyPosition - (Vector2)col.bounds.center;
 
             col.enabled = toPlayer.y > threshold;
         }

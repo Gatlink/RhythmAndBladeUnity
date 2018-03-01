@@ -41,6 +41,12 @@ public class Mobile : MonoBehaviour, IMoving
         set { _currentAcceleration = value; }
     }
 
+    public Vector2 BodyPosition
+    {
+        get { return (Vector2) transform.position + BodyOffset; }
+        set { transform.position = value - BodyOffset; }
+    }
+
     public void CancelHorizontalMovement()
     {
         _currentVelocity.x = _currentAcceleration.x = 0;
@@ -211,12 +217,6 @@ public class Mobile : MonoBehaviour, IMoving
         }
 
         return true;
-    }
-
-    private Vector2 BodyPosition
-    {
-        get { return (Vector2) transform.position + BodyOffset; }
-        set { transform.position = value - BodyOffset; }
     }
 
     public bool CheckCeiling()
