@@ -20,10 +20,7 @@ public class PlayerSettings : ScriptableObject
         }
     }
 
-    [ Header( "General" ) ]
-    [ FormerlySerializedAs( "_bodyRadius" ) ]
-    public float BodyRadius = 1;
-
+    [ Header( "General" ) ]    
     [ FormerlySerializedAs( "_railStickiness" ) ]
     public float RailStickiness = 0.2f;
 

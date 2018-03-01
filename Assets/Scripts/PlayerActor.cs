@@ -105,7 +105,6 @@ public class PlayerActor : ActorBase<PlayerActor>
         _playerSettings = PlayerSettings.Instance;
         
         Mobile = GetRequiredComponent<Mobile>();
-        Mobile.BodyRadius = _playerSettings.BodyRadius;
         Mobile.RailStickiness = _playerSettings.RailStickiness;
         Mobile.WallStickiness = _playerSettings.WallStickiness;
 
