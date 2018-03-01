@@ -41,7 +41,7 @@ public class PlaceHolderAnimator : GLMonoBehaviour
         Hitbox.offset = _initialOffset.WithX( _initialOffset.x * _actor.Mobile.Direction );
     }
 
-    private void StateChangeHandler( IActorState<PlayerActor> previous, IActorState<PlayerActor> next )
+    private void StateChangeHandler( IActorState previous, IActorState next )
     {
         var attackState = next as AttackState;
         if ( attackState != null )

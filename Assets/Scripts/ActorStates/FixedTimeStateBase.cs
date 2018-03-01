@@ -2,13 +2,9 @@
 
 namespace ActorStates
 {
-    public abstract class FixedTimeStateBase : PlayerActorStateBase
+    public abstract class FixedTimeStateBase : ActorStateBase
     {
         private float _timeRemaining;
-
-        protected FixedTimeStateBase( PlayerActor actor ) : base( actor )
-        {
-        }
 
         protected abstract float TotalDuration { get; }
 
@@ -26,23 +22,18 @@ namespace ActorStates
         {
             _timeRemaining = TotalDuration;
         }
-
-        protected IActorState<PlayerActor> ChangeStateOnFinish()
+        
+        public override IActorState Update()
         {
             _timeRemaining -= Time.deltaTime;
             if ( _timeRemaining <= 0 )
             {
-                if ( Actor.Mobile.CheckGround() )
-                {
-                    return new GroundedState( Actor );
-                }
-                else
-                {
-                    return new FallState( Actor );
-                }
+                return GetNextState();
             }
 
             return null;
         }
+
+        protected abstract IActorState GetNextState();
     }
 }

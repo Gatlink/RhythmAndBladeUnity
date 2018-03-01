@@ -73,6 +73,11 @@ public class Mobile : MonoBehaviour, IMoving
         _currentVelocity.y = velocity;
     }
 
+    public void SetHorizontalVelocity( float velocity )
+    {
+        _currentVelocity.x = velocity;
+    }
+
     public void ChangeHorizontalVelocity( float desiredVelocity, float inertia )
     {
         _currentVelocity.x =

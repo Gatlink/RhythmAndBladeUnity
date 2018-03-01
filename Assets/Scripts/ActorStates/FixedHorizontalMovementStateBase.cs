@@ -5,13 +5,15 @@ namespace ActorStates
 {
     public abstract class FixedHorizontalMovementStateBase : FixedTimeStateBase
     {
+        protected readonly Mobile Mobile;
         private float _direction;
         private float _lastNormalizedTime;
         private Vector2 _lastTangent;
         protected bool CurrentlyGrounded;
 
-        protected FixedHorizontalMovementStateBase( PlayerActor actor ) : base( actor )
+        protected FixedHorizontalMovementStateBase( Mobile mobile )
         {
+            Mobile = mobile;
         }
 
         protected abstract float MovementLength { get; }
@@ -21,13 +23,13 @@ namespace ActorStates
         public override void OnEnter()
         {
             base.OnEnter();
-            _direction = Actor.Mobile.Direction;
+            _direction = Mobile.Direction;
             _lastNormalizedTime = 0;
         }
 
         protected void ApplyHorizontalMovement()
         {
-            var mob = Actor.Mobile;
+            var mob = Mobile;
 
             // apply tangencial velocity curve
             var deltaU = _direction * MovementLength *

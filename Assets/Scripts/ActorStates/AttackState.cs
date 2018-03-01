@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ActorStates
 {
-    public class AttackState : FixedHorizontalMovementStateBase
+    public class AttackState : PlayerFixedHorizontalMovementState
     {
         private const int MaxComboCount = 3;
         private uint _hitID;
@@ -73,7 +73,7 @@ namespace ActorStates
 
         private readonly ContactFilter2D _hitContactFilter2D;
 
-        public override IActorState<PlayerActor> Update()
+        public override IActorState Update()
         {
             ApplyHorizontalMovement();
 
@@ -145,7 +145,7 @@ namespace ActorStates
                 }
             }
 
-            return ChangeStateOnFinish();
+            return base.Update();
         }
     }
 }

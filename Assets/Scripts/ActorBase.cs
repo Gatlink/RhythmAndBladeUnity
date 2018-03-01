@@ -10,17 +10,17 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
     [ ReadOnly ]
     public string StateName;
 
-    public event Action<IActorState<TActor>, IActorState<TActor>> StateChangeEvent;
+    public event Action<IActorState, IActorState> StateChangeEvent;
 
-    private IActorState<TActor> _currentState;
+    private IActorState _currentState;
 
     private IActorController<TActor> _controller;
 
-    protected abstract IActorState<TActor> CreateInitialState();
+    protected abstract IActorState CreateInitialState();
 
     protected abstract void ResetIntent();
 
-    private void OnStateChangeEvent( IActorState<TActor> previousState, IActorState<TActor> nextState )
+    private void OnStateChangeEvent( IActorState previousState, IActorState nextState )
     {
         var handler = StateChangeEvent;
         if ( handler != null ) handler( previousState, nextState );

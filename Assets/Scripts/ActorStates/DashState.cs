@@ -2,55 +2,57 @@
 
 namespace ActorStates
 {
-    public class DashState : FixedHorizontalMovementStateBase
+    public class DashState : PlayerFixedHorizontalMovementState
     {
         private bool _initiatedGrounded;
+        private readonly PlayerSettings _playerSettings;
 
         public DashState( PlayerActor actor ) : base( actor )
         {
+            _playerSettings = PlayerSettings.Instance;            
         }
 
         protected override float TotalDuration
         {
-            get { return PlayerSettings.DashDuration; }
+            get { return _playerSettings.DashDuration; }
         }
 
         protected override float MovementLength
         {
-            get { return PlayerSettings.DashLength; }
+            get { return _playerSettings.DashLength; }
         }
 
         protected override AnimationCurve MovementCurve
         {
-            get { return PlayerSettings.DashPositionCurve; }
+            get { return _playerSettings.DashPositionCurve; }
         }
 
         public override void OnEnter()
         {
             base.OnEnter();
             Actor.ConsumeDash();
-            _initiatedGrounded = Actor.Mobile.CheckGround();
+            _initiatedGrounded = Mobile.CheckGround();
         }
 
-        public override IActorState<PlayerActor> Update()
+        public override IActorState Update()
         {
             ApplyHorizontalMovement();
 
             Vector2 wallNormal;
-            if ( !CurrentlyGrounded && Actor.Mobile.CheckWallProximity( Actor.Mobile.Direction, out wallNormal ) )
+            if ( !CurrentlyGrounded && Mobile.CheckWallProximity( Mobile.Direction, out wallNormal ) )
             {
                 return new WallSlideState( Actor, wallNormal );
             }
 
             if ( _initiatedGrounded
-                 && NormalizedTime >= PlayerSettings.DashJumpTiming
+                 && NormalizedTime >= _playerSettings.DashJumpTiming
                  && Actor.CheckJump() )
             {
                 Actor.ResetDash();
-                return new JumpState( Actor, PlayerSettings.DashJump );
+                return new JumpState( Actor, _playerSettings.DashJump );
             }
 
-            return ChangeStateOnFinish();
+            return base.Update();
         }
     }
 }

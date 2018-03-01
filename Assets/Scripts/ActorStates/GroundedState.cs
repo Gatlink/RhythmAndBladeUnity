@@ -16,7 +16,7 @@ namespace ActorStates
             Actor.ResetAttack();
         }
 
-        public override IActorState<PlayerActor> Update()
+        public override IActorState Update()
         {
             var mob = Actor.Mobile;
             

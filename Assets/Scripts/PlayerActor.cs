@@ -85,7 +85,7 @@ public class PlayerActor : ActorBase<PlayerActor>
         return DesiredAttack && ( isCombo || AttackCooldown <= 0 && _attackCount > 0 );
     }
 
-    protected override IActorState<PlayerActor> CreateInitialState()
+    protected override IActorState CreateInitialState()
     {
         return new FallState( this );
     }

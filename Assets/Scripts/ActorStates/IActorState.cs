@@ -1,12 +1,12 @@
 ﻿namespace ActorStates
 {
-    public interface IActorState<out TActor>
+    public interface IActorState
     {
         void OnEnter();
 
         void OnExit();
 
-        IActorState<TActor> Update();
+        IActorState Update();
         
         string Name { get; }
     }

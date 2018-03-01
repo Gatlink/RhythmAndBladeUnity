@@ -8,7 +8,7 @@ namespace ActorStates
         {
         }
 
-        public override IActorState<PlayerActor> Update()
+        public override IActorState Update()
         {
             var desiredVelocity = Actor.DesiredMovement * PlayerSettings.FallMovementSpeed;
 

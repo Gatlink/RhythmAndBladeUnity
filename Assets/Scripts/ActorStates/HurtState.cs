@@ -5,6 +5,8 @@ namespace ActorStates
 {
     public class HurtState : FixedTimeStateBase
     {
+        private PlayerActor Actor;
+        private PlayerSettings PlayerSettings;
         private readonly float _recoilDirection;
         private readonly float _recoilStrength;
         private readonly int _damage;
@@ -19,8 +21,10 @@ namespace ActorStates
             get { return PlayerSettings.HurtRecoilDistance * _recoilStrength; }
         }
 
-        public HurtState( PlayerActor actor, Collider2D source ) : base( actor )
+        public HurtState( PlayerActor actor, Collider2D source )
         {
+            Actor = actor;
+            PlayerSettings = PlayerSettings.Instance;            
             _recoilDirection = Mathf.Sign( Actor.transform.position.x - source.transform.position.x );
 
             var harmfull = source.GetInterfaceComponent<IHarmfull>();
@@ -37,7 +41,7 @@ namespace ActorStates
             Actor.Mobile.CurrentVelocity = new Vector2( _recoilDirection * Mathf.Cos( angle ), Mathf.Sin( angle ) ) * velocity;
         }
 
-        public override IActorState<PlayerActor> Update()
+        public override IActorState Update()
         {
             var mob = Actor.Mobile;
             
@@ -49,7 +53,14 @@ namespace ActorStates
             // default move
             mob.Move();
 
-            return ChangeStateOnFinish();
+            return base.Update();
+        }
+
+        protected override IActorState GetNextState()
+        {
+            return Actor.Mobile.CheckGround() 
+                ? (IActorState)new GroundedState( Actor ) 
+                : new FallState( Actor );
         }
     }
 }

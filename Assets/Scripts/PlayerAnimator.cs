@@ -40,7 +40,7 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
-    private void StateChangeHandler( IActorState<PlayerActor> previous, IActorState<PlayerActor> next )
+    private void StateChangeHandler( IActorState previous, IActorState next )
     {
         if ( next is JumpState )
         {

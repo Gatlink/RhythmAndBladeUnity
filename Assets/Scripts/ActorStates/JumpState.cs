@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ActorStates
 {
-    public class JumpState : PlayerActorStateBase
+    public class JumpState : PlayerFixedVerticalMovementState
     {
         // normalized time before wich ground is not checked yet
         private const float GroundCheckInhibitionTime = 1f;
@@ -11,16 +11,9 @@ namespace ActorStates
         // normalized time after wich ceiling is not checked any more
         private const float CeilingCheckInhibitionTime = 0.8f;
 
-        private float _jumpTimeRemaining;
-        private float _jumpStartPositionY;
         private float _jumpDirection;
 
         private JumpSetting _setting;
-
-        private float JumpDuration
-        {
-            get { return _setting.Duration; }
-        }
 
         private float JumpMovementSpeed
         {
@@ -30,16 +23,6 @@ namespace ActorStates
         private float JumpMoveInertia
         {
             get { return _setting.HorizontalMovementInertia; }
-        }
-
-        private AnimationCurve JumpHeightCurve
-        {
-            get { return _setting.HeightCurve; }
-        }
-
-        private float JumpHeight
-        {
-            get { return _setting.Height; }
         }
 
         private float AirControlTiming
@@ -52,9 +35,19 @@ namespace ActorStates
             get { return _setting.InitialMovementSpeed; }
         }
 
-        private float NormalizedTime
+        protected override float TotalDuration
         {
-            get { return 1 - _jumpTimeRemaining / JumpDuration; }
+            get { return _setting.Duration; }
+        }
+
+        protected override float MovementLength
+        {
+            get { return _setting.Height; }
+        }
+
+        protected override AnimationCurve MovementCurve
+        {
+            get { return _setting.HeightCurve; }
         }
 
         public JumpState( PlayerActor actor, JumpSetting setting ) : base( actor )
@@ -74,63 +67,56 @@ namespace ActorStates
 
         public override void OnEnter()
         {
-            _jumpTimeRemaining = JumpDuration;
-            _jumpStartPositionY = Actor.transform.position.y;
-            _jumpDirection = Actor.Mobile.Direction;
+            base.OnEnter();
+            _jumpDirection = Mobile.Direction;
             Actor.ConsumeJump();
-            Actor.Mobile.CurrentVelocity = Actor.Mobile.CurrentVelocity.WithX( GetHorizontalVelocity() );
+            Mobile.SetHorizontalVelocity( GetHorizontalVelocity() );            
         }
 
-        public override IActorState<PlayerActor> Update()
+        public override IActorState Update()
         {
-            var mob = Actor.Mobile;
+            var mob = Mobile;
+            var actor = Actor;
+            
             var desiredVelocity = GetHorizontalVelocity();
 
             mob.UpdateDirection( desiredVelocity );
 
             // update current horizontal velocity accounting inertia
             mob.ChangeHorizontalVelocity( desiredVelocity, JumpMoveInertia );
-            
-            // apply jump vertical velocity curve
-            var targetPositionY = _jumpStartPositionY + JumpHeightCurve.Evaluate( NormalizedTime ) * JumpHeight;
-            mob.SetVerticalVelocity( ( targetPositionY - Actor.transform.position.y ) / Time.deltaTime );
-            
+
+            ApplyVerticalMovement();
+
             // default move
             mob.Move();
 
-            var harmfull = Actor.Health.CheckDamages();
+            var harmfull = actor.Health.CheckDamages();
             if ( harmfull != null )
             {
-                return new HurtState( Actor, harmfull );
+                return new HurtState( actor, harmfull );
             }
 
             if ( NormalizedTime < CeilingCheckInhibitionTime && mob.CheckCeiling() )
             {
-                return new FallState( Actor );
+                return new FallState( actor );
             }
 
             if ( NormalizedTime > GroundCheckInhibitionTime && mob.CheckGround() )
             {
-                return new GroundedState( Actor );
+                return new GroundedState( actor );
             }
 
-            if ( Actor.CheckDash() )
+            if ( actor.CheckDash() )
             {
-                return new DashState( Actor );
+                return new DashState( actor );
             }
 
-            if ( Actor.CheckAttack() )
+            if ( actor.CheckAttack() )
             {
-                return new AttackState( Actor );
+                return new AttackState( actor );
             }
 
-            _jumpTimeRemaining -= Time.deltaTime;
-            if ( _jumpTimeRemaining <= 0 )
-            {
-                return new FallState( Actor );
-            }
-
-            return null;
+            return base.Update();
         }
     }
 }
