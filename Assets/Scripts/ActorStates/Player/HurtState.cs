@@ -27,7 +27,7 @@ namespace ActorStates.Player
             PlayerSettings = PlayerSettings.Instance;            
             _recoilDirection = Mathf.Sign( Actor.transform.position.x - source.transform.position.x );
 
-            var harmfull = source.GetInterfaceComponent<IHarmfull>();
+            var harmfull = source.GetInterfaceComponentInParent<IHarmfull>();
             _recoilStrength = harmfull.Recoil;
             _damage = harmfull.Damage;
         }
