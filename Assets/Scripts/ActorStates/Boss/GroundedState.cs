@@ -1,19 +1,12 @@
 ﻿using Gamelogic.Extensions;
 using UnityEngine;
 
-namespace ActorStates
+namespace ActorStates.Boss
 {
-    public class GroundedState : PlayerActorStateBase
+    public class GroundedState : BossActorStateBase
     {
-        public GroundedState( PlayerActor actor ) : base( actor )
+        public GroundedState( BossActor actor ) : base( actor )
         {
-        }
-
-        public override void OnEnter()
-        {
-            Actor.ResetDash();
-            Actor.ResetJump();
-            Actor.ResetAttack();
         }
 
         public override IActorState Update()
@@ -28,14 +21,14 @@ namespace ActorStates
                 return new FallState( Actor );
             }
 
-            var desiredVelocity = Actor.DesiredMovement * PlayerSettings.GroundedMovementSpeed;
+            var desiredVelocity = Actor.DesiredMovement * Settings.GroundedMovementSpeed;
             mob.UpdateDirection( desiredVelocity );
 
             // move along rail
             var tangent = normal.Rotate270();
 
             // update current velocity accounting inertia
-            mob.ChangeVelocity( tangent * desiredVelocity, PlayerSettings.GroundedMoveInertia );
+            mob.ChangeVelocity( tangent * desiredVelocity, Settings.GroundedMoveInertia );
 
             // add ground movement if there is any
             var groundMovement = Vector2.zero;
@@ -54,29 +47,12 @@ namespace ActorStates
 
             // default move
             mob.Move( groundMovement );
-
-            // check damages
-            var harmfull = Actor.Health.CheckDamages();
-            if ( harmfull != null )
-            {
-                return new HurtState( Actor, harmfull );
-            }
-
+            
             if ( !mob.CheckGround() )
             {
                 return new FallState( Actor );
             }
-
-            if ( Actor.CheckJump() )
-            {
-                return new JumpState( Actor, PlayerSettings.NormalJump );
-            }
-
-            if ( Actor.CheckDash() )
-            {
-                return new DashState( Actor );
-            }
-
+            
             if ( Actor.CheckAttack() )
             {
                 return new AttackState( Actor );

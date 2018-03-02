@@ -2,7 +2,7 @@
 using Gamelogic.Extensions;
 using UnityEngine;
 
-namespace ActorStates
+namespace ActorStates.Player
 {
     public class AttackState : PlayerFixedHorizontalMovementState
     {
@@ -16,7 +16,7 @@ namespace ActorStates
             get { return _setting.HitDuration; }
         }
 
-        private AttackSetting _setting;
+        private PlayerSettings.AttackSetting _setting;
         
         public AttackState( PlayerActor actor ) : this( actor, 0 )
         {
@@ -69,7 +69,6 @@ namespace ActorStates
         }
 
         private readonly Collider2D[] _colliderBuffer = new Collider2D[ 5 ];
-
 
         private readonly ContactFilter2D _hitContactFilter2D;
 

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
+
 [ CreateAssetMenu ]
 public class PlayerSettings : ScriptableObject
 {
@@ -91,6 +92,28 @@ public class PlayerSettings : ScriptableObject
     public AttackSetting Attack2;
 
     public AttackSetting Attack3;
+    
+    [ Serializable ]
+    public struct AttackSetting
+    {
+        [ Tooltip( "Hit phase (active hitbox phase) duration" ) ]
+        public float HitDuration;
+
+        [ Tooltip( "Combo phase (combo is possible) duration" ) ]
+        public float ComboDuration;
+
+        [ Tooltip( "Recovery phase duration (animation end)" ) ]
+        public float RecoveryDuration;
+
+        [ Tooltip( "Horizontal distance traveled during whole attack" ) ]
+        public float HorizontalMovementLength;
+
+        [ Tooltip( "Horizontal (X) trajectory from t=0 to t=Hit+Combo+Recovery" ) ]
+        public AnimationCurve MovementCurve;
+
+        [ Tooltip( "Cannot trigger another attack during cooldown" ) ]
+        public float Cooldown;
+    }
 }
 
 [ Serializable ]
@@ -118,26 +141,4 @@ public struct JumpSetting
 
     [ Tooltip( "Movement speed before air control is enabled" ) ]
     public float InitialMovementSpeed;
-}
-
-[ Serializable ]
-public struct AttackSetting
-{
-    [ Tooltip( "Hit phase (active hitbox phase) duration" ) ]
-    public float HitDuration;
-
-    [ Tooltip( "Combo phase (combo is possible) duration" ) ]
-    public float ComboDuration;
-
-    [ Tooltip( "Recovery phase duration (animation end)" ) ]
-    public float RecoveryDuration;
-
-    [ Tooltip( "Horizontal distance traveled during whole attack" ) ]
-    public float HorizontalMovementLength;
-
-    [ Tooltip( "Horizontal (X) trajectory from t=0 to t=Hit+Combo+Recovery" ) ]
-    public AnimationCurve MovementCurve;
-
-    [ Tooltip( "Cannot trigger another attack during cooldown" ) ]
-    public float Cooldown;
 }

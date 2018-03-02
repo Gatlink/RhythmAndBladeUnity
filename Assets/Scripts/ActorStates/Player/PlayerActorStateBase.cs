@@ -1,4 +1,4 @@
-﻿namespace ActorStates
+﻿namespace ActorStates.Player
 {
     public abstract class PlayerActorStateBase : ActorStateBase
     {

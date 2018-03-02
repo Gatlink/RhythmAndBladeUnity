@@ -1,7 +1,6 @@
-﻿using Gamelogic.Extensions;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace ActorStates
+namespace ActorStates.Player
 {
     public class JumpState : PlayerFixedVerticalMovementState
     {

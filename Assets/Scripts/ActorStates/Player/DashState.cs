@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ActorStates
+namespace ActorStates.Player
 {
     public class DashState : PlayerFixedHorizontalMovementState
     {

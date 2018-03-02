@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ActorHealth : MonoBehaviour
 {
-    [ ReadOnly ]
     public int TotalHitCount = 3;
 
     [ ReadOnly ]

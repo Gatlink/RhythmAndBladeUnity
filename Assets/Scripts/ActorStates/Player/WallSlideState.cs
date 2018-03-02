@@ -1,7 +1,7 @@
 ﻿using Gamelogic.Extensions;
 using UnityEngine;
 
-namespace ActorStates
+namespace ActorStates.Player
 {
     public class WallSlideState : PlayerActorStateBase
     {

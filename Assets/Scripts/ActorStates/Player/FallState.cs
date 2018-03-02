@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ActorStates
+namespace ActorStates.Player
 {
     public class FallState : PlayerActorStateBase
     {
@@ -24,7 +24,7 @@ namespace ActorStates
             mob.SetVerticalVelocity( verticalVelocity  );
 
             // default move
-            Actor.Mobile.Move();
+            mob.Move();
 
             var harmfull = Actor.Health.CheckDamages();
             if ( harmfull != null )

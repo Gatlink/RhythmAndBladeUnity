@@ -1,11 +1,11 @@
-﻿namespace ActorStates
+﻿namespace ActorStates.Player
 {
-    public abstract class PlayerFixedVerticalMovementState : FixedVerticalMovementStateBase
+    public abstract class PlayerFixedHorizontalMovementState : FixedHorizontalMovementStateBase
     {
         protected readonly PlayerActor Actor;
         protected readonly PlayerSettings PlayerSettings;
 
-        public PlayerFixedVerticalMovementState( PlayerActor actor ) : base( actor.Mobile )
+        public PlayerFixedHorizontalMovementState( PlayerActor actor ) : base( actor.Mobile )
         {
             Actor = actor;
             PlayerSettings = PlayerSettings.Instance;
