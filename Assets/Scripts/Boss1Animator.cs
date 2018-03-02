@@ -12,16 +12,21 @@ public class Boss1Animator : ActorAnimator<BossActor>
         else if ( next is GroundedState )
         {
             Animator.SetTrigger( "Ground" );
-        } 
+        }
         else if ( next is JumpAttackState )
         {
-            Animator.SetTrigger( "JumpAttack" );            
+            Animator.SetTrigger( "JumpAttack" );
         }
         else if ( next is AttackState )
         {
             var attackState = (AttackState) next;
             Animator.SetInteger( "Combo", attackState.ComboCount );
             Animator.SetTrigger( "Attack" );
-        }        
+        }
+    }
+
+    public void TriggetScreenShake()
+    {
+        CameraShake.ScreenShake( 1, 0.7f );
     }
 }
