@@ -59,7 +59,7 @@ public class Mobile : MonoBehaviour, IMoving
 
     public void CancelMovement()
     {
-        _currentAcceleration = _currentAcceleration = Vector2.zero;
+        _currentAcceleration = _currentVelocity = Vector2.zero;
     }
 
     public void CancelMovementAlongAxis( Vector2 axis )

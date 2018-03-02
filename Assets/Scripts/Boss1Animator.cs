@@ -12,6 +12,10 @@ public class Boss1Animator : ActorAnimator<BossActor>
         else if ( next is GroundedState )
         {
             Animator.SetTrigger( "Ground" );
+        } 
+        else if ( next is JumpAttackState )
+        {
+            Animator.SetTrigger( "JumpAttack" );            
         }
         else if ( next is AttackState )
         {

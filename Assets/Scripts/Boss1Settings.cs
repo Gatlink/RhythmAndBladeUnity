@@ -18,18 +18,28 @@ public class Boss1Settings : ScriptableObject
             return _instance;
         }
     }
-    
+
     [ Header( "Grounded" ) ]
-    public float GroundedMovementSpeed = 10;
+    public float GroundedMovementSpeed = 5;
+
 
     public float GroundedMoveInertia = 0.1f;
 
+    [ Header( "JumpAttack" ) ]
+    [ Tooltip( "Total duration" ) ]
+    public float JumpAttackDuration = 1.5f;
+
+    [ Tooltip( "Jump height (max Y)" ) ]
+    public float JumpAttackHeight = 8;
+
+    [ Tooltip( "Height (Y) trajectory from t=0 to t=Duration" ) ]
+    public AnimationCurve JumpAttackHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+
     [ Header( "Attacks" ) ]
     public AttackSetting Attack1;
-    
+
     public AttackSetting Attack2;
-    
-    
+
     [ Serializable ]
     public struct AttackSetting
     {
@@ -43,6 +53,7 @@ public class Boss1Settings : ScriptableObject
         public AnimationCurve MovementCurve;
 
         public float ComboWindowStartTime;
-        
+
         public float ComboWindowEndTime;
-    }}
+    }
+}

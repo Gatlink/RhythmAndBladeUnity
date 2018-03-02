@@ -340,6 +340,7 @@ MonoBehaviour:
   StateName: 
   DesiredMovement: 0
   DesiredAttack: 0
+  DesiredJumpAttack: 0
 --- !u!114 &114500015476263518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -398,7 +399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   __messageText: 
   AutoFindPlayer: 0
-  PlayerIndex: 1
+  PlayerIndex: 0
   DeadZone: 0.3
   Step: 1
 --- !u!212 &212236192487580474

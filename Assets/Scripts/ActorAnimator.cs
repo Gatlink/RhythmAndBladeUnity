@@ -8,7 +8,6 @@ public abstract class ActorAnimator<TActor> : MonoBehaviour where TActor : Actor
     private ActorBase<TActor> _actor;
     private Mobile _mobile;
     protected Animator Animator;
-    private SpriteRenderer _spriteRenderer;
 
     private void Start()
     {
@@ -16,7 +15,6 @@ public abstract class ActorAnimator<TActor> : MonoBehaviour where TActor : Actor
         _actor.StateChangeEvent += StateChangeHandler;
         _mobile = GetComponentInParent<Mobile>();
         Animator = GetComponent<Animator>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void LateUpdate()

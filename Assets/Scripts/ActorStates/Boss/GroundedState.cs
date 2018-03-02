@@ -52,6 +52,11 @@ namespace ActorStates.Boss
             {
                 return new FallState( Actor );
             }
+
+            if ( Actor.CheckJumpAttack() )
+            {
+                return new JumpAttackState( Actor ); 
+            }
             
             if ( Actor.CheckAttack() )
             {

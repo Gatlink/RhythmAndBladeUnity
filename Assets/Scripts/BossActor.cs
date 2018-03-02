@@ -12,6 +12,9 @@ public class BossActor : ActorBase<BossActor>
     [ ReadOnly ]
     public bool DesiredAttack;
 
+    [ ReadOnly ]
+    public bool DesiredJumpAttack;
+
     public Mobile Mobile { get; private set; }
     
     public ActorHealth Health { get; private set; }
@@ -20,11 +23,17 @@ public class BossActor : ActorBase<BossActor>
     {
         return DesiredAttack;
     }
-    
+
+    public bool CheckJumpAttack()
+    {
+        return DesiredJumpAttack;
+    }
+
     protected override void ResetIntent()
     {
         DesiredMovement = 0;
         DesiredAttack = false;
+        DesiredJumpAttack = false;
     }
 
     protected override IActorState CreateInitialState()

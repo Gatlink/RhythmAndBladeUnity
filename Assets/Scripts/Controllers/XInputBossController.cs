@@ -30,6 +30,8 @@ namespace Controllers
 
             actor.DesiredMovement = direction * amplitude;
             
+            actor.DesiredJumpAttack = State.Buttons.A == ButtonState.Pressed && PrevState.Buttons.A == ButtonState.Released;
+
             actor.DesiredAttack =
                 State.Buttons.X == ButtonState.Pressed && PrevState.Buttons.X == ButtonState.Released;
         }
