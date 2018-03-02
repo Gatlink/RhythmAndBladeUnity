@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4464805834657108}
   - component: {fileID: 70777960128528760}
-  - component: {fileID: 114103990748881450}
+  - component: {fileID: 114701656492917764}
   m_Layer: 10
   m_Name: Hurtbox
   m_TagString: Untagged
@@ -312,20 +312,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114103990748881450
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1358439425370666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc4ca11277ad5c448bc078a279f8cb65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Root: {fileID: 4818911658601620}
-  HitCount: 10
-  _hitRemaining: 0
 --- !u!114 &114166970997549666
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -337,7 +323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a843a0aafa2492d9ba64352e592a7a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TotalHitCount: 3
+  TotalHitCount: 10
   CurrentHitCount: 3
 --- !u!114 &114210730153343898
 MonoBehaviour:
@@ -388,6 +374,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HorizontalSpeedThreshold: 0.1
+--- !u!114 &114701656492917764
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1358439425370666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e294d598a9fb4df490068257819970e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114883488299908312
 MonoBehaviour:
   m_ObjectHideFlags: 1

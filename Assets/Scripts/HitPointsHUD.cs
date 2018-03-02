@@ -4,21 +4,30 @@ using UnityEngine.UI;
 public class HitPointsHUD : MonoBehaviour
 {
     public ActorHealth Target;
+    public string TargetTag;
     private GameObject _hitPointPrefab;
 
     private void Start()
     {
-        if ( Target == null )
-        {
-            Target = GameObject.FindGameObjectWithTag( Tags.Player )
-                .GetComponent<ActorHealth>();
-        }
-
         _hitPointPrefab = transform.GetChild( 0 ).gameObject;
         _hitPointPrefab.transform.SetParent( null );
 
-        InitializeHitPoints();
+        if ( Target == null )
+        {
+            var targetObject = GameObject.FindGameObjectWithTag( TargetTag );
+            if ( targetObject != null )
+            {
+                Target = targetObject.GetComponent<ActorHealth>();                              
+            }
+        }
 
+        if ( Target == null )
+        {
+            enabled = false;
+            return;
+        }
+
+        InitializeHitPoints();
         Target.HitEvent += OnTargetHit;
     }
 

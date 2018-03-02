@@ -5,11 +5,14 @@
 
 public struct HitInfo
 {
-    public uint Id;
+    public readonly uint Id;
 
-    public HitInfo( uint id )
+    public readonly int Damage;
+
+    public HitInfo( uint id, int damage = 1 )
     {
         Id = id;
+        Damage = damage;
     }
 
     private static uint _nextId = 1;

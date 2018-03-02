@@ -26,7 +26,7 @@ public abstract class ActorAnimator<TActor> : MonoBehaviour where TActor : Actor
         Animator.SetFloat( "HorizontalAcceleration",
             _mobile.CurrentAcceleration.x * Mathf.Sign( _mobile.CurrentVelocity.x ) );
 
-        _spriteRenderer.flipX = _mobile.Direction < 0;
+        transform.localScale = new Vector3( _mobile.Direction, 1, 1 );
 
         Vector2 normal;
         var grounded = _mobile.CheckGround( out normal, snap: false );

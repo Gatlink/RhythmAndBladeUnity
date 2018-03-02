@@ -21,7 +21,7 @@ public class DestroyWhenHit : MonoBehaviour, IDestructible
     {
         if ( _hits.Contains( hitInfo.Id ) ) return;
         
-        _hitRemaining = Mathf.Max( 0, _hitRemaining - 1 );
+        _hitRemaining = Mathf.Max( 0, _hitRemaining - hitInfo.Damage );
         _hits.Add( hitInfo.Id );
         
         if ( _hitRemaining <= 0 )
