@@ -7,6 +7,7 @@
     public const string Obstacle = "Obstacle";
     public const string LevelTrigger = "LevelTrigger";
     public const string CameraConstraint = "CameraConstraint";
+    public const string PassThrough = "PassThrough";
 }
 
 public static class Tags

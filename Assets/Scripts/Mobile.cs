@@ -106,6 +106,7 @@ public class Mobile : MonoBehaviour, IMoving
 
     private int _moveBlockingLayerMask;
     private int _groundLayerMask;
+    private int _passThroughLayerMask;
     private int _wallLayerMask;
     private int _obstacleLayerMask;
     private ContactFilter2D _wallCollisionContactFilter2D;
@@ -187,10 +188,11 @@ public class Mobile : MonoBehaviour, IMoving
 
     public bool CheckGround( out Collider2D col, out Vector2 normal, bool snap = true )
     {
+        var layerMask = _groundLayerMask | _passThroughLayerMask;
         var frontHit = Physics2D.Raycast( BodyPosition + 0.25f * BodySize.x * Direction * Vector2.right, Vector2.down,
-            0.5f * BodySize.y + RailStickiness, _groundLayerMask );
+            0.5f * BodySize.y + RailStickiness, layerMask );
         var backHit = Physics2D.Raycast( BodyPosition - 0.25f * BodySize.x * Direction * Vector2.right, Vector2.down,
-            0.5f * BodySize.y + RailStickiness, _groundLayerMask );
+            0.5f * BodySize.y + RailStickiness, layerMask );
 
         if ( backHit.collider == null && frontHit.collider == null )
         {
@@ -231,6 +233,7 @@ public class Mobile : MonoBehaviour, IMoving
     public bool CheckCeiling( out Vector2 normal )
     {
         var hit = Physics2D.Raycast( BodyPosition, Vector2.up, 0.5f * BodySize.y + RayCastEpsilon, _groundLayerMask );
+
         normal = hit.normal;
         if ( hit.collider != null )
         {
@@ -284,6 +287,7 @@ public class Mobile : MonoBehaviour, IMoving
         _groundLayerMask = 1 << LayerMask.NameToLayer( Layers.Ground );
         _wallLayerMask = 1 << LayerMask.NameToLayer( Layers.Wall );
         _obstacleLayerMask = 1 << LayerMask.NameToLayer( Layers.Obstacle );
+        _passThroughLayerMask = 1 << LayerMask.NameToLayer( Layers.PassThrough );
 
         _moveBlockingLayerMask = _groundLayerMask |
                                  _wallLayerMask |
