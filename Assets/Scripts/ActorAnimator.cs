@@ -5,19 +5,19 @@ public abstract class ActorAnimator<TActor> : MonoBehaviour where TActor : Actor
 {
     public float HorizontalSpeedThreshold = 0.1f;
 
-    private ActorBase<TActor> _actor;
+    protected ActorBase<TActor> Actor;
     private Mobile _mobile;
     protected Animator Animator;
 
     private void Start()
     {
-        _actor = GetComponentInParent<TActor>();
-        _actor.StateChangeEvent += StateChangeHandler;
+        Actor = GetComponentInParent<TActor>();
+        Actor.StateChangeEvent += StateChangeHandler;
         _mobile = GetComponentInParent<Mobile>();
         Animator = GetComponent<Animator>();
     }
 
-    private void LateUpdate()
+    protected virtual void LateUpdate()
     {
         var horizontalSpeed = Mathf.Max( 0, Mathf.Abs( _mobile.CurrentVelocity.x ) - HorizontalSpeedThreshold );
         Animator.SetFloat( "HorizontalSpeed", horizontalSpeed );
