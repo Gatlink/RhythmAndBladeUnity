@@ -397,7 +397,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1963247483546628}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.95, y: 1.36, z: 0}
+  m_LocalPosition: {x: 196.9, y: 23.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4272248732145132}
@@ -448,7 +448,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 1}
   serializedVersion: 2
-  m_Radius: 0.95
+  m_Radius: 0.9
 --- !u!58 &58196197219234178
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -670,8 +670,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BodySize: {x: 2, y: 2}
   BodyOffset: {x: 0, y: 0}
-  BodyRadius: 1
-  RailStickiness: 0.2
+  RailStickiness: 0.3
   WallStickiness: 0.2
   Direction: 1
   _currentVelocity: {x: 0, y: 0}

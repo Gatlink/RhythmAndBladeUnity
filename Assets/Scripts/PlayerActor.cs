@@ -18,7 +18,7 @@ public class PlayerActor : ActorBase<PlayerActor>
 
     [ ReadOnly ]
     public bool DesiredDash;
-    
+
     [ Header( "State" ) ]
     [ ReadOnly ]
     [ SerializeField ]
@@ -38,7 +38,7 @@ public class PlayerActor : ActorBase<PlayerActor>
     private PlayerSettings _playerSettings;
 
     public Mobile Mobile { get; private set; }
-    
+
     public ActorHealth Health { get; private set; }
 
     public bool CheckJump()
@@ -105,13 +105,11 @@ public class PlayerActor : ActorBase<PlayerActor>
     private void Awake()
     {
         _playerSettings = PlayerSettings.Instance;
-        
+
         Mobile = GetRequiredComponent<Mobile>();
-        Mobile.RailStickiness = _playerSettings.RailStickiness;
-        Mobile.WallStickiness = _playerSettings.WallStickiness;
 
         Health = GetRequiredComponent<ActorHealth>();
-        Health.TotalHitCount = _playerSettings.InitialHitCount;        
+        Health.TotalHitCount = _playerSettings.InitialHitCount;
     }
 
     protected override void Update()

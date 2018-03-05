@@ -11,13 +11,8 @@ public class Mobile : MonoBehaviour, IMoving
 
     public Vector2 BodyOffset = Vector2.zero;
 
-    [ HideInInspector ]
-    public float BodyRadius = 1;
+    public float RailStickiness = 0.3f;
 
-    [ HideInInspector ]
-    public float RailStickiness = 0.2f;
-
-    [ HideInInspector ]
     public float WallStickiness = 0.2f;
 
     [ ReadOnly ]
@@ -128,6 +123,8 @@ public class Mobile : MonoBehaviour, IMoving
 
     public void Move( Vector2 velocityBias )
     {
+//        DebugExtension.DebugArrow( BodyPosition, velocityBias, Color.blue );
+//        DebugExtension.DebugArrow( BodyPosition, CurrentVelocity, Color.red );
         var amount = ( CurrentVelocity + velocityBias ) * Time.deltaTime;
 
         var length = amount.magnitude;
@@ -140,7 +137,7 @@ public class Mobile : MonoBehaviour, IMoving
 
         if ( hit.collider != null )
         {
-            DebugExtension.DebugPoint( hit.point, 0.1f, 1 );
+            DebugExtension.DebugPoint( hit.point, Color.yellow, 0.1f, 1 );
             BodyPosition = hit.centroid;
             CancelHorizontalMovement();
         }
@@ -157,6 +154,7 @@ public class Mobile : MonoBehaviour, IMoving
         if ( _collisionCheckCollider.OverlapCollider( _wallCollisionContactFilter2D, _wallColliders ) > 0 )
         {
             var distance2D = _collisionCheckCollider.Distance( _wallColliders[ 0 ] );
+            DebugExtension.DebugPoint( distance2D.pointA, Color.red, 0.1f, 1 );
             if ( distance2D.distance > 0 )
             {
 //                Debug.LogError( "Should not be > 0" );
