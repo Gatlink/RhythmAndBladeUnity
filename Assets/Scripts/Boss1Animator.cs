@@ -27,6 +27,10 @@ public class Boss1Animator : ActorAnimator<BossActor>
         {
             Animator.SetTrigger( "Hurt" );
         }
+        else if ( next is DeathState )
+        {
+            Animator.SetTrigger( "Death" );
+        }
     }
 
     public void TriggetScreenShake()

@@ -5,7 +5,7 @@ namespace ActorStates.Boss
     public class HurtState : BossFixedHorizontalMovementBase
     {
         private readonly float _direction;
-
+        
         public HurtState( BossActor actor, float direction ) : base( actor )
         {
             _direction = direction;
@@ -31,6 +31,15 @@ namespace ActorStates.Boss
             ApplyHorizontalMovement();
 
             return base.Update();
+        }
+
+        protected override IActorState GetNextState()
+        {
+            if ( Actor.GetComponent<ActorHealth>().CurrentHitCount <= 0 )
+            {
+                return new DeathState( Actor );
+            }
+            return base.GetNextState();
         }
     }
 }
