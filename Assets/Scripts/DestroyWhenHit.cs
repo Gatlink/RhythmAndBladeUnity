@@ -12,6 +12,9 @@ public class DestroyWhenHit : MonoBehaviour, IDestructible
 
     private readonly HashSet<uint> _hits = new HashSet<uint>();
 
+    public delegate void HitEventHandler();
+    public event HitEventHandler HitEvent;
+
     private void Start()
     {
         _hitRemaining = HitCount;
@@ -27,6 +30,10 @@ public class DestroyWhenHit : MonoBehaviour, IDestructible
         if ( _hitRemaining <= 0 )
         {
             DestroyTarget();
+        }
+        else if ( HitEvent != null )
+        {
+            HitEvent();
         }
     }
 
