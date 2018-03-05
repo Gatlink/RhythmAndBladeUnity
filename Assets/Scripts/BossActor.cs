@@ -23,6 +23,7 @@ public class BossActor : ActorBase<BossActor>
     public ActorHealth Health { get; private set; }
 
     private bool _hurtThisFrame;
+    private bool _canTransitionToHurt;
     private float _hurtDirection;
 
     public bool CheckAttack()
@@ -42,7 +43,12 @@ public class BossActor : ActorBase<BossActor>
 
     public bool CheckHurt()
     {
-        return _hurtThisFrame;
+        return _hurtThisFrame && _canTransitionToHurt;
+    }
+
+    public void SetCanTransitionToHurt( bool state )
+    {
+        _canTransitionToHurt = state;
     }
 
     private void HitHandler( ActorHealth health, GameObject source )

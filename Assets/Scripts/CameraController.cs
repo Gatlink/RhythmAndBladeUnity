@@ -30,7 +30,7 @@ public class CameraController : GLMonoBehaviour
     public float DirectionChangeInertia;
 
     public float ZoomInertia;
-    
+
     private Vector2 _currentVelocity;
 
     private Vector2 _currentOffset;
@@ -53,6 +53,8 @@ public class CameraController : GLMonoBehaviour
         _cameraConstraintsLayer = 1 << LayerMask.NameToLayer( Layers.CameraConstraint );
         _camera = GetComponentInChildren<Camera>();
         _baseCameraZoom = _camera.orthographicSize;
+        _currentOffset = Offset;
+        _currentZoom = 1;
     }
 
     public void LateUpdate()
@@ -76,10 +78,10 @@ public class CameraController : GLMonoBehaviour
             {
                 targetZoom =
                     _cameraZoomConstraint.GetZoom( _currentConstraint.EvaluateNormalizedPosition( desiredPosition ) );
-                
+
             }
         }
-        
+
         var pos = transform.position;
         var inertia = GetTrackingInertia( Vector2.Distance( pos, desiredPosition ) );
         pos.x = Mathf.SmoothDamp( pos.x, desiredPosition.x, ref _currentVelocity.x, inertia.x );
@@ -87,7 +89,7 @@ public class CameraController : GLMonoBehaviour
 
         _currentZoom = Mathf.SmoothDamp( _currentZoom, targetZoom, ref _currentZoomVelocity, ZoomInertia );
         _camera.orthographicSize = _baseCameraZoom * _currentZoom;
-        
+
         transform.position = pos;
     }
 
@@ -112,7 +114,7 @@ public class CameraController : GLMonoBehaviour
         var player = GameObject.FindGameObjectWithTag( Tags.Player ).transform;
         Offset = transform.position - player.position;
     }
-   
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

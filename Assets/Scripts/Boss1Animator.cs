@@ -3,6 +3,8 @@ using ActorStates.Boss;
 
 public class Boss1Animator : ActorAnimator<BossActor>
 {
+    public bool CanActorTransitionToHurt;
+
     protected override void StateChangeHandler( IActorState previous, IActorState next )
     {
         if ( next is FallState )
@@ -33,8 +35,14 @@ public class Boss1Animator : ActorAnimator<BossActor>
         }
     }
 
-    public void TriggetScreenShake()
+    public void TriggerScreenShake()
     {
         CameraShake.ScreenShake( 1, 0.7f );
+    }
+
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
+        ((BossActor) Actor).SetCanTransitionToHurt( CanActorTransitionToHurt );
     }
 }
