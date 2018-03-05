@@ -141,4 +141,7 @@ public struct JumpSetting
 
     [ Tooltip( "Movement speed before air control is enabled" ) ]
     public float InitialMovementSpeed;
+
+    [Tooltip("Can transition to wall slide state during jump")]
+    public bool CheckWallSlide;
 }

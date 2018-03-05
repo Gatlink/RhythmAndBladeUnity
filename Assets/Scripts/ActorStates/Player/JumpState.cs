@@ -34,6 +34,11 @@ namespace ActorStates.Player
             get { return _setting.InitialMovementSpeed; }
         }
 
+        private bool WallSlideCheck
+        {
+            get { return _setting.CheckWallSlide; }
+        }
+        
         protected override float TotalDuration
         {
             get { return _setting.Duration; }
@@ -95,6 +100,12 @@ namespace ActorStates.Player
                 return new HurtState( actor, harmfull );
             }
 
+            Vector2 normal;
+            if ( WallSlideCheck && mob.CheckWallProximity( mob.Direction, out normal ) )
+            {
+                return new WallSlideState( Actor, normal );
+            }
+            
             if ( NormalizedTime < CeilingCheckInhibitionTime && mob.CheckCeiling() )
             {
                 return new FallState( actor );

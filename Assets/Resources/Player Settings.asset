@@ -71,6 +71,7 @@ MonoBehaviour:
     HorizontalMovementInertia: 0.2
     AirControlTiming: 0
     InitialMovementSpeed: 10
+    CheckWallSlide: 0
   WallJump:
     Duration: 0.3
     Height: 5
@@ -96,6 +97,7 @@ MonoBehaviour:
     HorizontalMovementInertia: 0.2
     AirControlTiming: 0.33
     InitialMovementSpeed: 10
+    CheckWallSlide: 0
   DashJump:
     Duration: 0.6
     Height: 3
@@ -121,6 +123,7 @@ MonoBehaviour:
     HorizontalMovementInertia: 0.2
     AirControlTiming: 0.66
     InitialMovementSpeed: 25
+    CheckWallSlide: 1
   Attack1:
     HitDuration: 0.1
     ComboDuration: 0.2
