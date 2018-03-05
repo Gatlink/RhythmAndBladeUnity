@@ -31,7 +31,7 @@ public class HitPointsHUD : MonoBehaviour
         Target.HitEvent += OnTargetHit;
     }
 
-    private void OnTargetHit( ActorHealth actor )
+    private void OnTargetHit( ActorHealth actor, GameObject source )
     {
         var container = transform;
         var total = actor.TotalHitCount;

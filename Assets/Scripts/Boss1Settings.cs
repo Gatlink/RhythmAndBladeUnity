@@ -42,6 +42,13 @@ public class Boss1Settings : ScriptableObject
 
     public AttackSetting AttackCharge;
 
+    [ Header( "Hurt" ) ]
+    public float HurtDuration;
+
+    public float HurtDriftLength;
+    
+    public AnimationCurve HurtDriftMovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+
     [ Serializable ]
     public struct AttackSetting
     {

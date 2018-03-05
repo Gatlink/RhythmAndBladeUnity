@@ -3,6 +3,7 @@ using ActorStates.Player;
 using Gamelogic.Extensions;
 using UnityEngine;
 
+[ DefaultExecutionOrder( 101 ) ]
 public class PlayerActor : ActorBase<PlayerActor>
 {
     [ Header( "Inputs" ) ]

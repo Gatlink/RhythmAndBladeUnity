@@ -9,7 +9,7 @@ public class ActorHealth : MonoBehaviour
     [ ReadOnly ]
     public int CurrentHitCount = 3;
 
-    public delegate void ActorHitHandler( ActorHealth actor );
+    public delegate void ActorHitHandler( ActorHealth actor, GameObject source );
 
     public event ActorHitHandler HitEvent;
     
@@ -32,10 +32,10 @@ public class ActorHealth : MonoBehaviour
         return null;
     }
 
-    public void AccountDamages( int amount )
+    public void AccountDamages( int amount, GameObject source )
     {
         CurrentHitCount = Mathf.Max( 0, CurrentHitCount - amount );
-        OnHitEvent( this );
+        OnHitEvent( this, source );
     }
 
     
@@ -51,9 +51,9 @@ public class ActorHealth : MonoBehaviour
         CurrentHitCount = TotalHitCount;
     }
 
-    private void OnHitEvent( ActorHealth actor )
+    private void OnHitEvent( ActorHealth actor, GameObject source )
     {
         var handler = HitEvent;
-        if ( handler != null ) handler( actor );
+        if ( handler != null ) handler( actor, source );
     }
 }

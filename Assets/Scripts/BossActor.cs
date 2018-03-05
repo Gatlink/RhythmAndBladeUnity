@@ -22,6 +22,9 @@ public class BossActor : ActorBase<BossActor>
 
     public ActorHealth Health { get; private set; }
 
+    private bool _hurtThisFrame;
+    private float _hurtDirection;
+
     public bool CheckAttack()
     {
         return DesiredAttack;
@@ -37,12 +40,25 @@ public class BossActor : ActorBase<BossActor>
         return DesiredCharge;
     }
 
+    public bool CheckHurt()
+    {
+        return _hurtThisFrame;
+    }
+
+    private void HitHandler( ActorHealth health, GameObject source )
+    {
+        _hurtThisFrame = true;
+        _hurtDirection = Mathf.Sign( source.transform.position.x - Mobile.transform.position.x );
+    }
+
     protected override void ResetIntent()
     {
         DesiredMovement = 0;
         DesiredAttack = false;
         DesiredJumpAttack = false;
         DesiredCharge = false;
+
+        _hurtThisFrame = false;
     }
 
     protected override IActorState CreateInitialState()
@@ -59,5 +75,14 @@ public class BossActor : ActorBase<BossActor>
         Mobile.WallStickiness = settings.WallStickiness;
 
         Health = GetRequiredComponent<ActorHealth>();
+        Health.HitEvent += HitHandler;
+    }
+
+    private void LateUpdate()
+    {
+        if ( CheckHurt() )
+        {
+            TransitionToState( new HurtState( this, -_hurtDirection ) );
+        }
     }
 }

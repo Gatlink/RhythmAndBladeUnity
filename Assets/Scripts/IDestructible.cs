@@ -1,4 +1,6 @@
-﻿public interface IDestructible
+﻿using UnityEngine;
+
+public interface IDestructible
 {
     void Hit( HitInfo hitInfo );
 }
@@ -9,9 +11,12 @@ public struct HitInfo
 
     public readonly int Damage;
 
-    public HitInfo( uint id, int damage = 1 )
+    public readonly GameObject Source;
+
+    public HitInfo( uint id, GameObject source, int damage = 1 )
     {
         Id = id;
+        Source = source;
         Damage = damage;
     }
 

@@ -414,7 +414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   __messageText: 
   AutoFindPlayer: 0
-  PlayerIndex: 0
+  PlayerIndex: 1
   DeadZone: 0.3
   Step: 1
 --- !u!212 &212236192487580474

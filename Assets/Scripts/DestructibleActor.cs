@@ -18,6 +18,6 @@ public class DestructibleActor : MonoBehaviour, IDestructible
         
         _hits.Add( hitInfo.Id );
         
-        _health.AccountDamages( hitInfo.Damage );
+        _health.AccountDamages( hitInfo.Damage, hitInfo.Source );
     }
 }

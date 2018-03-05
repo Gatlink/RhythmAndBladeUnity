@@ -36,7 +36,9 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
 
     protected virtual void Update()
     {
-        // update inputs
+        // update intents
+        ResetIntent();
+        
         if ( _controller == null )
         {
             Debug.LogError( "Actor has no controller", this );
@@ -55,15 +57,18 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
             var nextState = _currentState.Update();
             if ( nextState != null )
             {
-                Debug.Log( string.Format( "{0} Going from {1} to {2}", this, _currentState.Name, nextState.Name ), this );
-                _currentState.OnExit();
-                OnStateChangeEvent( _currentState, nextState );
-                nextState.OnEnter();
-                _currentState = nextState;
-                StateName = _currentState.Name;
+                TransitionToState( nextState );
             }
         }
+    }
 
-        ResetIntent();
+    protected void TransitionToState( IActorState nextState )
+    {
+        Debug.Log( string.Format( "{0} Going from {1} to {2}", this, _currentState.Name, nextState.Name ), this );
+        _currentState.OnExit();
+        OnStateChangeEvent( _currentState, nextState );
+        nextState.OnEnter();
+        _currentState = nextState;
+        StateName = _currentState.Name;
     }
 }

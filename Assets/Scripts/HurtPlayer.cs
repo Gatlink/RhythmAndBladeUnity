@@ -17,4 +17,9 @@ public class HurtPlayer : MonoBehaviour, IHarmfull
     {
         get { return _recoil; }
     }
+
+    public GameObject GameObject
+    {
+        get { return gameObject; }
+    }
 }

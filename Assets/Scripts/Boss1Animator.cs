@@ -23,6 +23,10 @@ public class Boss1Animator : ActorAnimator<BossActor>
             Animator.SetInteger( "Combo", attackState.ComboCount );
             Animator.SetTrigger( "Attack" );
         }
+        else if ( next is HurtState )
+        {
+            Animator.SetTrigger( "Hurt" );
+        }
     }
 
     public void TriggetScreenShake()

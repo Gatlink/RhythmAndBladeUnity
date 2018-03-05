@@ -10,6 +10,7 @@ namespace ActorStates.Player
         private readonly float _recoilDirection;
         private readonly float _recoilStrength;
         private readonly int _damage;
+        private readonly GameObject _source;
 
         protected override float TotalDuration
         {
@@ -30,12 +31,13 @@ namespace ActorStates.Player
             var harmfull = source.GetInterfaceComponentInParent<IHarmfull>();
             _recoilStrength = harmfull.Recoil;
             _damage = harmfull.Damage;
+            _source = harmfull.GameObject;
         }
 
         public override void OnEnter()
         {
             base.OnEnter();
-            Actor.Health.AccountDamages( _damage );
+            Actor.Health.AccountDamages( _damage, _source );
             var angle = Mathf.Atan( TotalDuration * TotalDuration * PlayerSettings.Gravity / 2 / RecoilLength );
             var velocity = TotalDuration * PlayerSettings.Gravity / 2 / Mathf.Sin( angle );
             Actor.Mobile.CurrentVelocity = new Vector2( _recoilDirection * Mathf.Cos( angle ), Mathf.Sin( angle ) ) * velocity;

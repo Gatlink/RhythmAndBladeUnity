@@ -108,3 +108,23 @@ MonoBehaviour:
       m_RotationOrder: 0
     ComboWindowStartTime: 0
     ComboWindowEndTime: 0
+  HurtDuration: 0.25
+  HurtDriftLength: 0.6
+  HurtDriftMovementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 2.1562495
+      outSlope: 2.1562495
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0.37500045
+      outSlope: 0.37500045
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
