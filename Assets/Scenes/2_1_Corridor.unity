@@ -113,71 +113,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &371480058
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 371480060}
-  - component: {fileID: 371480059}
-  m_Layer: 0
-  m_Name: Preview Camera
-  m_TagString: PreviewCamera
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!20 &371480059
-Camera:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 371480058}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.073948, g: 0.082782395, b: 0.266, a: 1}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 1
-  orthographic size: 8.909718
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
---- !u!4 &371480060
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 371480058}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 150.78638, y: 3.13, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &400473286
 Prefab:
   m_ObjectHideFlags: 0
@@ -187,11 +122,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4855078756398926, guid: 47367d681c234da46a7d9eb18be52df1, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 123.3
+      value: 2.1
       objectReference: {fileID: 0}
     - target: {fileID: 4855078756398926, guid: 47367d681c234da46a7d9eb18be52df1, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -0.7
+      value: -0.03
       objectReference: {fileID: 0}
     - target: {fileID: 4855078756398926, guid: 47367d681c234da46a7d9eb18be52df1, type: 2}
       propertyPath: m_LocalPosition.z
@@ -371,11 +306,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4384545200202446, guid: 4f198a2343d9f434aa75ba535d367d69, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 131.3
+      value: -17.7
       objectReference: {fileID: 0}
     - target: {fileID: 4384545200202446, guid: 4f198a2343d9f434aa75ba535d367d69, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 3.1000001
+      value: 2.7
       objectReference: {fileID: 0}
     - target: {fileID: 4384545200202446, guid: 4f198a2343d9f434aa75ba535d367d69, type: 2}
       propertyPath: m_LocalPosition.z

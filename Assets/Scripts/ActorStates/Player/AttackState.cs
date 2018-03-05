@@ -90,7 +90,7 @@ namespace ActorStates.Player
                         for ( int i = 0; i < hitCount; i++ )
                         {
                             var colliderHit = _colliderBuffer[ i ];
-                            var destructible = colliderHit.GetInterfaceComponent<IDestructible>();
+                            var destructible = colliderHit.GetInterfaceComponentInParent<IDestructible>();
                             if ( destructible != null )
                             {
                                 destructible.Hit( new HitInfo( _hitID, Actor.gameObject ) );
