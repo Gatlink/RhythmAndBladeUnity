@@ -58,6 +58,11 @@ namespace ActorStates.Boss
                 return new JumpAttackState( Actor ); 
             }
             
+            if ( Actor.CheckCharge() )
+            {
+                return new AttackState( Actor, AttackState.ChargeAttackComboIndex ); 
+            }
+            
             if ( Actor.CheckAttack() )
             {
                 return new AttackState( Actor );

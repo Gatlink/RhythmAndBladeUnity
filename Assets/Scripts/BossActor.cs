@@ -5,18 +5,21 @@ using UnityEngine;
 
 public class BossActor : ActorBase<BossActor>
 {
-    [Header("Inputs")]
-    [ReadOnly]
+    [ Header( "Inputs" ) ]
+    [ ReadOnly ]
     public float DesiredMovement;
-    
+
     [ ReadOnly ]
     public bool DesiredAttack;
 
     [ ReadOnly ]
     public bool DesiredJumpAttack;
 
+    [ ReadOnly ]
+    public bool DesiredCharge;
+
     public Mobile Mobile { get; private set; }
-    
+
     public ActorHealth Health { get; private set; }
 
     public bool CheckAttack()
@@ -29,11 +32,17 @@ public class BossActor : ActorBase<BossActor>
         return DesiredJumpAttack;
     }
 
+    public bool CheckCharge()
+    {
+        return DesiredCharge;
+    }
+
     protected override void ResetIntent()
     {
         DesiredMovement = 0;
         DesiredAttack = false;
         DesiredJumpAttack = false;
+        DesiredCharge = false;
     }
 
     protected override IActorState CreateInitialState()

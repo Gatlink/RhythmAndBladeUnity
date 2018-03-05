@@ -40,6 +40,8 @@ public class Boss1Settings : ScriptableObject
 
     public AttackSetting Attack2;
 
+    public AttackSetting AttackCharge;
+
     [ Serializable ]
     public struct AttackSetting
     {
