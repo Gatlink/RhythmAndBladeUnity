@@ -121,6 +121,39 @@ public class Rail : GLMonoBehaviour
         return Points[ Points.Count - 1 ] + (Vector2) transform.position;
     }
 
+    public float EvaluateNormalizedPosition( Vector2 positionOnRail )
+    {
+        var pos = positionOnRail - (Vector2)transform.position;
+
+        var points = Points;
+        
+        // find containing segment
+        var minDistance = GeometryUtils.SqrDistanceToSegment( pos, points[ 0 ], points[ 1 ] );
+        var minDistanceSegmentIndex = 0;
+        for ( var i = 2; i < points.Count; ++i )
+        {
+            var line = GeometryUtils.SqrDistanceToSegment( pos, points[ i - 1 ], points[ i ] );
+            if ( line < minDistance )
+            {
+                minDistance = line;
+                minDistanceSegmentIndex = i - 1;
+            }
+        }
+
+        var lengthBeforeSegment = 0f;
+        for ( int i = 0; i < minDistanceSegmentIndex; i++ )
+        {
+            lengthBeforeSegment += Vector2.Distance( points[ i + 1 ], points[ i ] );
+        }
+        var totalLength = lengthBeforeSegment;
+        for ( int i = minDistanceSegmentIndex; i < points.Count - 1; i++ )
+        {
+            totalLength += Vector2.Distance( points[ i + 1 ], points[ i ] );
+        }
+
+        return ( lengthBeforeSegment + Vector2.Distance( points[ minDistanceSegmentIndex ], pos ) ) / totalLength;
+    }
+
     public struct Segment
     {
         public Vector2 From;

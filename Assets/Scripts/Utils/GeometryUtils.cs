@@ -17,6 +17,11 @@ public static class GeometryUtils
         return a + t * ( b - a );
     }
 
+    public static float SqrDistanceToSegment( Vector2 p, Vector2 a, Vector2 b )
+    {
+        return ( ProjectPointToSegment( p, a, b ) - p ).sqrMagnitude;
+    }
+
     public static float DistanceToSegment( Vector2 p, Vector2 a, Vector2 b )
     {
         return ( ProjectPointToSegment( p, a, b ) - p ).magnitude;
@@ -29,11 +34,11 @@ public static class GeometryUtils
             return vertices[ 0 ];
         }
 
-        var minDistance = DistanceToSegment( p, vertices[ 0 ], vertices[ 1 ] );
+        var minDistance = SqrDistanceToSegment( p, vertices[ 0 ], vertices[ 1 ] );
         var minDistanceSegmentIndex = 0;
         for ( var i = 2; i < vertices.Count; ++i )
         {
-            var line = DistanceToSegment( p, vertices[ i - 1 ], vertices[ i ] );
+            var line = SqrDistanceToSegment( p, vertices[ i - 1 ], vertices[ i ] );
             if ( line < minDistance )
             {
                 minDistance = line;

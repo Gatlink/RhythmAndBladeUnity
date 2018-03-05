@@ -37,6 +37,7 @@ public class CameraPreview : EditorWindow
     private bool _displayOnGameView;
 
     private RenderTexture _renderTexture;
+    private CameraZoomConstraint _zoomConstraint;
 
     [ MenuItem( "Camera/Preview Camera Constraint" ) ]
     private static void Init()
@@ -69,6 +70,12 @@ public class CameraPreview : EditorWindow
 
             cam.depth += _displayOnGameView ? 1 : -1;
             cam.transform.position = _cameraConstraint.EvaluatePosition( _railPosition ).To3DXY( -10 );
+
+            if ( _zoomConstraint != null )
+            {
+                cam.orthographicSize *= _zoomConstraint.GetZoom( _railPosition );
+            }
+            
             cam.renderingPath = RenderingPath.UsePlayerSettings;
             cam.targetTexture = _renderTexture;
             cam.Render();
@@ -97,6 +104,8 @@ public class CameraPreview : EditorWindow
             CleanUp();
             return;
         }
+
+        _zoomConstraint = obj.GetComponent<CameraZoomConstraint>();
     }
 
     private void CleanUp()

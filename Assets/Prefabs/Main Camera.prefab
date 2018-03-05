@@ -198,6 +198,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   DirectionChangeInertia: 0.4
+  ZoomInertia: 0.2
 --- !u!114 &114869657539334838
 MonoBehaviour:
   m_ObjectHideFlags: 1
