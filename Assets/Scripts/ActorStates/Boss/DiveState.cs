@@ -8,6 +8,12 @@ namespace ActorStates.Boss
         {
         }
 
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            Actor.Mobile.CancelHorizontalMovement();
+        }
+
         public override IActorState Update()
         {
             var mob = Actor.Mobile;

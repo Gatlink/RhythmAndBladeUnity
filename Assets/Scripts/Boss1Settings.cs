@@ -25,14 +25,23 @@ public class Boss1Settings : ScriptableObject
     public float GroundedMoveInertia = 0.1f;
 
     [ Header( "JumpAttack" ) ]
-    [ Tooltip( "Total duration" ) ]
+    [ Tooltip( "Duration of jump preparation" ) ]
+    public float PrepareJumpDuration;
+
+    [ Tooltip( "Actual jump duration" ) ]
     public float JumpAttackDuration = 1.5f;
 
-    [ Tooltip( "Jump height (max Y)" ) ]
-    public float DefaultJumpAttackHeight = 10;
+    [ Tooltip( "Jump max height (max Y)" ) ]
+    public float MaxJumpAttackHeight = 10;
 
     [ Tooltip( "Height (Y) trajectory from t=0 to t=Duration" ) ]
     public AnimationCurve JumpAttackHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+
+    [ Tooltip( "Max horizontal movement allowed during jump" ) ]
+    public float MaxJumpAttackMovementLength = 10;
+
+    [ Tooltip( "Height (Y) trajectory from t=0 to t=Duration" ) ]
+    public AnimationCurve JumpAttackMovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
 
     [ Header( "Dive" ) ]
     public float DiveGravity;

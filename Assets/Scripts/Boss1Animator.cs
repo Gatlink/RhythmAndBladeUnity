@@ -42,6 +42,10 @@ public class Boss1Animator : ActorAnimator<BossActor>
             Animator.SetTrigger( "StrikeGround" );
             CameraShake.ScreenShake( 1, 0.7f );
         }
+        else if ( next is PrepareJump )
+        {
+            Animator.SetTrigger( "PrepareJump" );
+        }
     }
 
     protected override void LateUpdate()

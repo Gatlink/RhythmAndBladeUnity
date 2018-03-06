@@ -55,15 +55,7 @@ namespace ActorStates.Boss
 
             if ( Actor.CheckJumpAttack() )
             {
-                // check ceiling                
-                float distance,
-                    jumpHeight = Settings.DefaultJumpAttackHeight;
-                if ( mob.ProbeCeiling( out distance, Settings.DefaultJumpAttackHeight + 2 ) )
-                {
-                    jumpHeight = distance - 2;
-                }
-
-                return new JumpAttackState( Actor, jumpHeight );
+                return new PrepareJump( Actor );
             }
 
             if ( Actor.CheckCharge() )

@@ -6,6 +6,12 @@
         {
         }
 
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            Actor.Mobile.CancelMovement();
+        }
+
         protected override float TotalDuration
         {
             get { return Settings.StrikeGroundDuration; }

@@ -5,7 +5,7 @@
         protected readonly BossActor Actor;
         protected readonly Boss1Settings Settings;
 
-        public BossFixedTimeStateBase( BossActor actor )
+        protected BossFixedTimeStateBase( BossActor actor )
         {
             Actor = actor;
             Settings = Boss1Settings.Instance;
