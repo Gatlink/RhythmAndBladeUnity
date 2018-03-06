@@ -4,11 +4,11 @@ namespace ActorStates.Boss
 {
     public class JumpAttackState : BossFixedVerticalMovementStateBase
     {
-        // normalized time before wich ground is not checked yet
-        private const float GroundCheckInhibitionTime = 1f;
+        private readonly float _jumpHeight;
 
-        public JumpAttackState( BossActor actor ) : base( actor )
-        {            
+        public JumpAttackState( BossActor actor, float height ) : base( actor )
+        {
+            _jumpHeight = height;
         }
 
         public override void OnEnter()
@@ -29,7 +29,7 @@ namespace ActorStates.Boss
 
         protected override float MovementLength
         {
-            get { return Settings.JumpAttackHeight; }
+            get { return _jumpHeight; }
         }
 
         public override IActorState Update()
@@ -39,12 +39,12 @@ namespace ActorStates.Boss
             // default move
             Mobile.Move();
 
-            if ( NormalizedTime > GroundCheckInhibitionTime && Mobile.CheckGround() )
-            {
-                return new GroundedState( Actor );
-            }
-
             return base.Update();
+        }
+
+        protected override IActorState GetNextState()
+        {
+            return new DiveState( Actor );
         }
     }
 }

@@ -22,7 +22,6 @@ public class Boss1Settings : ScriptableObject
     [ Header( "Grounded" ) ]
     public float GroundedMovementSpeed = 5;
 
-
     public float GroundedMoveInertia = 0.1f;
 
     [ Header( "JumpAttack" ) ]
@@ -30,10 +29,18 @@ public class Boss1Settings : ScriptableObject
     public float JumpAttackDuration = 1.5f;
 
     [ Tooltip( "Jump height (max Y)" ) ]
-    public float JumpAttackHeight = 8;
+    public float DefaultJumpAttackHeight = 10;
 
     [ Tooltip( "Height (Y) trajectory from t=0 to t=Duration" ) ]
     public AnimationCurve JumpAttackHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+
+    [ Header( "Dive" ) ]
+    public float DiveGravity;
+
+    public float DiveMaxFallVelocity;
+
+    [ Header( "Strike Ground" ) ]
+    public float StrikeGroundDuration;
 
     [ Header( "Attacks" ) ]
     public AttackSetting Attack1;
@@ -46,7 +53,7 @@ public class Boss1Settings : ScriptableObject
     public float HurtDuration;
 
     public float HurtDriftLength;
-    
+
     public AnimationCurve HurtDriftMovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
 
     [ Serializable ]

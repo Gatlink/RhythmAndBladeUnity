@@ -13,32 +13,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GroundedMovementSpeed: 5
   GroundedMoveInertia: 0.1
-  JumpAttackDuration: 1.36
-  JumpAttackHeight: 10
+  JumpAttackDuration: 0.8
+  DefaultJumpAttackHeight: 10
   JumpAttackHeightCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
-      time: 0.24
+      time: 0.375
       value: 0
-      inSlope: 13.6546545
-      outSlope: 13.6546545
+      inSlope: 4.4140134
+      outSlope: 4.4140134
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.39999998
+      time: 1
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - serializedVersion: 2
-      time: 0.74
-      value: 0.000002861023
-      inSlope: -8.652759
-      outSlope: -8.652759
-      tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  DiveGravity: 140
+  DiveMaxFallVelocity: 60
+  StrikeGroundDuration: 0.33
   Attack1:
     Duration: 0.75
     HorizontalMovementLength: 0

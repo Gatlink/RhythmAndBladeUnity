@@ -33,11 +33,15 @@ public class Boss1Animator : ActorAnimator<BossActor>
         {
             Animator.SetTrigger( "Death" );
         }
-    }
-
-    public void TriggerScreenShake()
-    {
-        CameraShake.ScreenShake( 1, 0.7f );
+        else if ( next is DiveState )
+        {
+            Animator.SetTrigger( "Dive" );
+        }
+        else if ( next is StrikeGroundState )
+        {
+            Animator.SetTrigger( "StrikeGround" );
+            CameraShake.ScreenShake( 1, 0.7f );
+        }
     }
 
     protected override void LateUpdate()

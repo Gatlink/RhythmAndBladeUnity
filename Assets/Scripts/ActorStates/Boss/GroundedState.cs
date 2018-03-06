@@ -12,7 +12,7 @@ namespace ActorStates.Boss
         public override IActorState Update()
         {
             var mob = Actor.Mobile;
-            
+
             Vector2 normal;
             Collider2D collider;
             if ( !mob.CheckGround( out collider, out normal ) )
@@ -47,7 +47,7 @@ namespace ActorStates.Boss
 
             // default move
             mob.Move( groundMovement );
-            
+
             if ( !mob.CheckGround() )
             {
                 return new FallState( Actor );
@@ -55,14 +55,22 @@ namespace ActorStates.Boss
 
             if ( Actor.CheckJumpAttack() )
             {
-                return new JumpAttackState( Actor ); 
+                // check ceiling                
+                float distance,
+                    jumpHeight = Settings.DefaultJumpAttackHeight;
+                if ( mob.ProbeCeiling( out distance, Settings.DefaultJumpAttackHeight + 2 ) )
+                {
+                    jumpHeight = distance - 2;
+                }
+
+                return new JumpAttackState( Actor, jumpHeight );
             }
-            
+
             if ( Actor.CheckCharge() )
             {
-                return new AttackState( Actor, AttackState.ChargeAttackComboIndex ); 
+                return new AttackState( Actor, AttackState.ChargeAttackComboIndex );
             }
-            
+
             if ( Actor.CheckAttack() )
             {
                 return new AttackState( Actor );
