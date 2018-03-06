@@ -54,7 +54,6 @@ GameObject:
   - component: {fileID: 114348711588289006}
   - component: {fileID: 114262498981570008}
   - component: {fileID: 114501158233967216}
-  - component: {fileID: 114978994861278664}
   - component: {fileID: 114201463467304734}
   m_Layer: 0
   m_Name: MovingPlatform
@@ -267,7 +266,6 @@ GameObject:
   - component: {fileID: 4608962224562170}
   - component: {fileID: 114412582944833822}
   - component: {fileID: 114908366652284566}
-  - component: {fileID: 114281935088848634}
   - component: {fileID: 114021014767349174}
   m_Layer: 0
   m_Name: Platform
@@ -790,6 +788,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
+  OverrideLayer: 15
 --- !u!114 &114034153200785096
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -886,6 +885,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
+  OverrideLayer: 0
 --- !u!114 &114201463467304734
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -898,6 +898,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
+  OverrideLayer: 15
 --- !u!114 &114262498981570008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -911,18 +912,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   __messageText: 
   Width: 0.3
---- !u!114 &114281935088848634
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1725007923471070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab630a9f8d1d48ddac8e6c7cd2aa136e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Threshold: 0
 --- !u!114 &114348711588289006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1036,6 +1025,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
+  OverrideLayer: 0
 --- !u!114 &114908366652284566
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1062,18 +1052,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 1
   _recoil: 2
---- !u!114 &114978994861278664
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1121834378364064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab630a9f8d1d48ddac8e6c7cd2aa136e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Threshold: 0
 --- !u!212 &212110005389059180
 SpriteRenderer:
   m_ObjectHideFlags: 1
