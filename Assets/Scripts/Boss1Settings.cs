@@ -63,6 +63,8 @@ public class Boss1Settings : ScriptableObject
 
     public AttackSetting Attack2;
 
+    public AttackSetting Attack3;
+
     [ Header( "Hurt" ) ]
     public float HurtDuration;
 
