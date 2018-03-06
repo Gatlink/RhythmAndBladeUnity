@@ -2,11 +2,11 @@
 
 namespace ActorStates.Boss
 {
-    public class PrepareJump : BossFixedTimeStateBase
+    public class PrepareJumpState : BossFixedTimeStateBase
     {
         private readonly Mobile _mobile;
 
-        public PrepareJump( BossActor actor ) : base( actor )
+        public PrepareJumpState( BossActor actor ) : base( actor )
         {
             _mobile = actor.Mobile;
         }

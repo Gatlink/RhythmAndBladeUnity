@@ -55,12 +55,13 @@ namespace ActorStates.Boss
 
             if ( Actor.CheckJumpAttack() )
             {
-                return new PrepareJump( Actor );
+                return new PrepareJumpState( Actor );
             }
 
             if ( Actor.CheckCharge() )
             {
-                return new AttackState( Actor, AttackState.ChargeAttackComboIndex );
+                // todo cumpute good distance
+                return new ChargeAttackState( Actor, Settings.MaxChargeMovementLength );
             }
 
             if ( Actor.CheckAttack() )

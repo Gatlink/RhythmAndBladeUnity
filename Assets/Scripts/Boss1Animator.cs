@@ -42,9 +42,13 @@ public class Boss1Animator : ActorAnimator<BossActor>
             Animator.SetTrigger( "StrikeGround" );
             CameraShake.ScreenShake( 1, 0.7f );
         }
-        else if ( next is PrepareJump )
+        else if ( next is PrepareJumpState )
         {
             Animator.SetTrigger( "PrepareJump" );
+        }
+        else if ( next is ChargeAttackState )
+        {
+            Animator.SetTrigger( "Charge" );
         }
     }
 

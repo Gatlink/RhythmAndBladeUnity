@@ -4,7 +4,6 @@ namespace ActorStates.Boss
 {
     public class AttackState : BossFixedHorizontalMovementBase
     {
-        public const int ChargeAttackComboIndex = 2;
         private const int MaxComboCount = 2;
 
         public readonly int ComboCount;
@@ -16,9 +15,6 @@ namespace ActorStates.Boss
             ComboCount = comboCount;
             switch ( ComboCount )
             {
-                case ChargeAttackComboIndex: 
-                    _setting = Settings.AttackCharge;
-                    break;
                 case 1:
                     _setting = Settings.Attack2;
                     break;

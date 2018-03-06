@@ -51,12 +51,17 @@ public class Boss1Settings : ScriptableObject
     [ Header( "Strike Ground" ) ]
     public float StrikeGroundDuration;
 
+    [ Header( "Charge" ) ]
+    public float ChargeDuration = 0.75f;
+    
+    public AnimationCurve ChargeMovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+
+    public float MaxChargeMovementLength = 8;
+    
     [ Header( "Attacks" ) ]
     public AttackSetting Attack1;
 
     public AttackSetting Attack2;
-
-    public AttackSetting AttackCharge;
 
     [ Header( "Hurt" ) ]
     public float HurtDuration;
