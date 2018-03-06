@@ -21,10 +21,7 @@ public class PlayerSettings : ScriptableObject
         }
     }
 
-    [ Header( "General" ) ]    
-    [ FormerlySerializedAs( "_railStickiness" ) ]
-    public float RailStickiness = 0.2f;
-
+    [ Header( "General" ) ]
     public int InitialHitCount = 5;
 
     [ Header( "Hurt Recoil" ) ]
@@ -53,9 +50,6 @@ public class PlayerSettings : ScriptableObject
     public float MaxFallVelocity = 60;
 
     [ Header( "Wall Slide" ) ]
-    [ FormerlySerializedAs( "_wallStickiness" ) ]
-    public float WallStickiness = 0.2f;
-
     [ FormerlySerializedAs( "_wallSlideGravity" ) ]
     public float WallSlideGravity = 100;
 
@@ -92,7 +86,7 @@ public class PlayerSettings : ScriptableObject
     public AttackSetting Attack2;
 
     public AttackSetting Attack3;
-    
+
     [ Serializable ]
     public struct AttackSetting
     {

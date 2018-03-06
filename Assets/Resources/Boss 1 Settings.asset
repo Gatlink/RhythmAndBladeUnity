@@ -13,32 +13,69 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GroundedMovementSpeed: 5
   GroundedMoveInertia: 0.1
-  JumpAttackDuration: 1.36
-  JumpAttackHeight: 10
+  PrepareJumpDuration: 0.3
+  JumpAttackDuration: 0.5
+  MaxJumpAttackHeight: 10
   JumpAttackHeightCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
-      time: 0.24
+      time: 0
       value: 0
-      inSlope: 13.6546545
-      outSlope: 13.6546545
+      inSlope: 2.8392856
+      outSlope: 2.8392856
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.39999998
+      time: 1
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  MaxJumpAttackMovementLength: 10
+  JumpAttackMovementCurve:
+    serializedVersion: 2
+    m_Curve:
     - serializedVersion: 2
-      time: 0.74
-      value: 0.000002861023
-      inSlope: -8.652759
-      outSlope: -8.652759
+      time: 0
+      value: 0
+      inSlope: 2.8392856
+      outSlope: 2.8392856
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  DiveGravity: 140
+  DiveMaxFallVelocity: 60
+  StrikeGroundDuration: 0.33
+  ChargeDuration: 0.75
+  ChargeMovementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0.22
+      value: 0
+      inSlope: 2.1562495
+      outSlope: 2.1562495
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.88
+      value: 1
+      inSlope: 0.37500045
+      outSlope: 0.37500045
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  MaxChargeMovementLength: 8
   Attack1:
     Duration: 0.75
     HorizontalMovementLength: 0
@@ -83,22 +120,22 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
-    ComboWindowStartTime: 0
-    ComboWindowEndTime: 0
-  AttackCharge:
-    Duration: 0.75
-    HorizontalMovementLength: 8
+    ComboWindowStartTime: 0.76
+    ComboWindowEndTime: 0.92
+  Attack3:
+    Duration: 0.67
+    HorizontalMovementLength: 2
     MovementCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
-        time: 0.16
+        time: 0
         value: 0
         inSlope: 2.1562495
         outSlope: 2.1562495
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.91999996
+        time: 1
         value: 1
         inSlope: 0.37500045
         outSlope: 0.37500045
@@ -106,8 +143,8 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
-    ComboWindowStartTime: 0
-    ComboWindowEndTime: 0
+    ComboWindowStartTime: 0.5
+    ComboWindowEndTime: 0.67
   HurtDuration: 0.25
   HurtDriftLength: 0.6
   HurtDriftMovementCurve:

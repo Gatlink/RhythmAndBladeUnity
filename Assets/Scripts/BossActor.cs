@@ -77,8 +77,6 @@ public class BossActor : ActorBase<BossActor>
         var settings = PlayerSettings.Instance;
 
         Mobile = GetRequiredComponent<Mobile>();
-        Mobile.RailStickiness = settings.RailStickiness;
-        Mobile.WallStickiness = settings.WallStickiness;
 
         Health = GetRequiredComponent<ActorHealth>();
         Health.HitEvent += HitHandler;

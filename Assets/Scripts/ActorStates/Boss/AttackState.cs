@@ -4,9 +4,6 @@ namespace ActorStates.Boss
 {
     public class AttackState : BossFixedHorizontalMovementBase
     {
-        public const int ChargeAttackComboIndex = 2;
-        private const int MaxComboCount = 2;
-
         public readonly int ComboCount;
 
         private Boss1Settings.AttackSetting _setting;
@@ -16,15 +13,14 @@ namespace ActorStates.Boss
             ComboCount = comboCount;
             switch ( ComboCount )
             {
-                case ChargeAttackComboIndex: 
-                    _setting = Settings.AttackCharge;
+                case 0:
+                    _setting = Settings.Attack1;
                     break;
                 case 1:
                     _setting = Settings.Attack2;
                     break;
-                // case 0:
                 default:
-                    _setting = Settings.Attack1;
+                    _setting = Settings.Attack3;
                     break;
             }
         }
@@ -52,7 +48,7 @@ namespace ActorStates.Boss
 
             if ( time > _setting.ComboWindowStartTime && time <= _setting.ComboWindowEndTime )
             {
-                if ( ComboCount + 1 < MaxComboCount && Actor.CheckAttack() )
+                if ( Actor.CheckAttack() )
                 {
                     return new AttackState( Actor, ComboCount + 1 );
                 }

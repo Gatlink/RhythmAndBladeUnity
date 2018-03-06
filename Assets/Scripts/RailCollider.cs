@@ -5,6 +5,9 @@ using UnityEngine;
 [ RequireComponent( typeof( Rail ) ) ]
 public class RailCollider : GLMonoBehaviour
 {
+    [ Layer ]
+    public int OverrideLayer;
+
     private Rail _rail;
 
     private void Awake()
@@ -18,7 +21,15 @@ public class RailCollider : GLMonoBehaviour
         var edgeCollider = new GameObject( first.IsWall() ? "Wall" : "Rail Part", typeof( EdgeCollider2D ) )
             .GetComponent<EdgeCollider2D>();
         edgeCollider.transform.SetParent( transform, false );
-        edgeCollider.gameObject.layer = LayerMask.NameToLayer( first.IsWall() ? Layers.Wall : Layers.Ground );
+        if ( OverrideLayer != 0 )
+        {
+            edgeCollider.gameObject.layer = OverrideLayer;
+        }
+        else
+        {
+            edgeCollider.gameObject.layer = LayerMask.NameToLayer( first.IsWall() ? Layers.Wall : Layers.Ground );
+        }
+
         if ( this.GetInterfaceComponent<IMoving>() != null )
         {
             edgeCollider.gameObject.tag = Tags.Moving;

@@ -123,10 +123,10 @@ public class Rail : GLMonoBehaviour
 
     public float EvaluateNormalizedPosition( Vector2 positionOnRail )
     {
-        var pos = positionOnRail - (Vector2)transform.position;
+        var pos = positionOnRail - (Vector2) transform.position;
 
         var points = Points;
-        
+
         // find containing segment
         var minDistance = GeometryUtils.SqrDistanceToSegment( pos, points[ 0 ], points[ 1 ] );
         var minDistanceSegmentIndex = 0;
@@ -145,6 +145,7 @@ public class Rail : GLMonoBehaviour
         {
             lengthBeforeSegment += Vector2.Distance( points[ i + 1 ], points[ i ] );
         }
+
         var totalLength = lengthBeforeSegment;
         for ( int i = minDistanceSegmentIndex; i < points.Count - 1; i++ )
         {
@@ -153,6 +154,30 @@ public class Rail : GLMonoBehaviour
 
         return ( lengthBeforeSegment + Vector2.Distance( points[ minDistanceSegmentIndex ], pos ) ) / totalLength;
     }
+
+    public Segment GetNearestSegment( Vector2 point )
+    {
+        var root = (Vector2) transform.position;
+        var points = Points;
+        point -= root;
+
+        // find containing segment
+        var minDistance = GeometryUtils.SqrDistanceToSegment( point, points[ 0 ], points[ 1 ] );
+        var minDistanceSegmentIndex = 0;
+        for ( var i = 2; i < points.Count; ++i )
+        {
+            var line = GeometryUtils.SqrDistanceToSegment( point, points[ i - 1 ], points[ i ] );
+            if ( line < minDistance )
+            {
+                minDistance = line;
+                minDistanceSegmentIndex = i - 1;
+            }
+        }
+
+        return new Segment( points[ minDistanceSegmentIndex ] + root, points[ minDistanceSegmentIndex + 1 ] + root,
+            minDistanceSegmentIndex );
+    }
+
 
     public struct Segment
     {

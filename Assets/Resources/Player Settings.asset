@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7ec06ea86b74f879e2e91413754382e, type: 3}
   m_Name: Player Settings
   m_EditorClassIdentifier: 
-  RailStickiness: 0.2
+  RailStickiness: 0.3
   InitialHitCount: 5
   HurtRecoilDuration: 0.25
   HurtRecoilDistance: 3

@@ -152,9 +152,9 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
-    - target: {fileID: 114606754072423226, guid: 5a98adfc416e1ed4492d0cccc5322176,
+    - target: {fileID: 58303439740018988, guid: 5a98adfc416e1ed4492d0cccc5322176,
         type: 2}
-      propertyPath: CanActorTransitionToHurt
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -270,12 +270,12 @@ Prefab:
     - target: {fileID: 224141969868511990, guid: 19970bf900810684aa24b0204acaa1a0,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0000047683716
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224141969868511990, guid: 19970bf900810684aa24b0204acaa1a0,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224610135797424248, guid: 19970bf900810684aa24b0204acaa1a0,
         type: 2}
@@ -295,12 +295,12 @@ Prefab:
     - target: {fileID: 224357789756289968, guid: 19970bf900810684aa24b0204acaa1a0,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0000047683716
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224357789756289968, guid: 19970bf900810684aa24b0204acaa1a0,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224211550365192662, guid: 19970bf900810684aa24b0204acaa1a0,
         type: 2}

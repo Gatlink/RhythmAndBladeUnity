@@ -33,8 +33,7 @@ namespace Controllers
             actor.DesiredJumpAttack = State.Buttons.A == ButtonState.Pressed &&
                                       PrevState.Buttons.A == ButtonState.Released;
 
-            actor.DesiredAttack = State.Buttons.X == ButtonState.Pressed &&
-                                  PrevState.Buttons.X == ButtonState.Released;
+            actor.DesiredAttack = State.Buttons.X == ButtonState.Pressed;
 
             actor.DesiredCharge = State.Buttons.B == ButtonState.Pressed &&
                                   PrevState.Buttons.B == ButtonState.Released;

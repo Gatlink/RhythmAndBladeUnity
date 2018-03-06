@@ -5,6 +5,7 @@ using UnityEditor;
 
 #endif
 
+[DefaultExecutionOrder(-101)]
 public class MovingObject : MonoBehaviour, IMoving
 {
     public Vector2 Displacement = Vector2.up;

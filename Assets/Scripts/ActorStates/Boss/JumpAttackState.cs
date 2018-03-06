@@ -1,20 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Xml;
+using UnityEngine;
 
 namespace ActorStates.Boss
 {
     public class JumpAttackState : BossFixedVerticalMovementStateBase
     {
-        // normalized time before wich ground is not checked yet
-        private const float GroundCheckInhibitionTime = 1f;
+        private readonly float _jumpHeight;
+        private readonly float _horizontalDistance;
+        private float _lastNormalizedTime;
+        private float _direction;
 
-        public JumpAttackState( BossActor actor ) : base( actor )
-        {            
-        }
-
-        public override void OnEnter()
+        public JumpAttackState( BossActor actor, float height, float distance ) : base( actor )
         {
-            base.OnEnter();
-            Mobile.CancelHorizontalMovement();
+            _jumpHeight = height;
+            _horizontalDistance = distance;
         }
 
         protected override float TotalDuration
@@ -29,22 +28,45 @@ namespace ActorStates.Boss
 
         protected override float MovementLength
         {
-            get { return Settings.JumpAttackHeight; }
+            get { return _jumpHeight; }
+        }
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            _direction = Mobile.Direction;
+            _lastNormalizedTime = 0;
         }
 
         public override IActorState Update()
         {
             ApplyVerticalMovement();
 
+            ApplyHorizontalMovement();
+
             // default move
             Mobile.Move();
 
-            if ( NormalizedTime > GroundCheckInhibitionTime && Mobile.CheckGround() )
-            {
-                return new GroundedState( Actor );
-            }
-
             return base.Update();
+        }
+
+        protected override IActorState GetNextState()
+        {
+            return new DiveState( Actor );
+        }
+
+        private void ApplyHorizontalMovement()
+        {
+            var mob = Mobile;
+            var curve = Settings.JumpAttackMovementCurve;
+
+            // apply tangencial velocity curve
+            var delta = _horizontalDistance *
+                         ( curve.Evaluate( NormalizedTime ) - curve.Evaluate( _lastNormalizedTime ) );
+
+            _lastNormalizedTime = NormalizedTime;
+
+            mob.SetHorizontalVelocity( _direction * delta / Time.deltaTime );
         }
     }
 }
