@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4039888117174612}
   - component: {fileID: 114204071879260378}
   - component: {fileID: 114111574567364926}
-  - component: {fileID: 114925577033947742}
   - component: {fileID: 114678213090184594}
   m_Layer: 0
   m_Name: Platform1
@@ -74,7 +73,6 @@ GameObject:
   - component: {fileID: 4913504953356036}
   - component: {fileID: 114277486829107884}
   - component: {fileID: 114269305255537190}
-  - component: {fileID: 114728461564059314}
   - component: {fileID: 114980329915899334}
   m_Layer: 0
   m_Name: Platform2
@@ -313,6 +311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
+  OverrideLayer: 0
 --- !u!114 &114259118889914218
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -370,6 +369,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
+  OverrideLayer: 0
 --- !u!114 &114481222486118512
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -382,6 +382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
+  OverrideLayer: 0
 --- !u!114 &114510403002001428
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -442,18 +443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
---- !u!114 &114728461564059314
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1428680275462562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab630a9f8d1d48ddac8e6c7cd2aa136e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Threshold: 0
+  OverrideLayer: 15
 --- !u!114 &114741148608843356
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -467,18 +457,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   __messageText: 
   Width: 0.3
---- !u!114 &114925577033947742
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1138218678171228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab630a9f8d1d48ddac8e6c7cd2aa136e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Threshold: 0
 --- !u!114 &114980329915899334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -491,3 +469,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
+  OverrideLayer: 15

@@ -369,8 +369,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BodySize: {x: 2, y: 3}
   BodyOffset: {x: 0, y: 0.5}
-  BodyRadius: 1
-  RailStickiness: 0.2
+  RailStickiness: 0.3
   WallStickiness: 0.2
   Direction: 1
   _currentVelocity: {x: 0, y: 0}
@@ -390,6 +389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HorizontalSpeedThreshold: 0.1
+  CanActorTransitionToHurt: 0
 --- !u!114 &114701656492917764
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -414,7 +414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   __messageText: 
   AutoFindPlayer: 0
-  PlayerIndex: 1
+  PlayerIndex: 0
   DeadZone: 0.3
   Step: 1
 --- !u!212 &212236192487580474
