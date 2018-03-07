@@ -35,5 +35,9 @@ public class PlayerAnimator : ActorAnimator<PlayerActor>
         {
             Animator.SetTrigger( "Hurt" );
         }
+        else if ( next is DeathState )
+        {
+            Animator.SetTrigger( "Death" );
+        }
     }
 }

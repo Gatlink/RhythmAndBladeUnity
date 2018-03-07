@@ -129,6 +129,10 @@ public class PlayerActor : ActorBase<PlayerActor>
                 var recoilStrength = harmfull.Recoil;
                 return new HurtState( this, source, recoilStrength );
             }
+            else if (!Health.IsAlive)
+            {
+                return new DeathState( this );
+            }
         }
 
         return null;
