@@ -29,7 +29,7 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
 
     protected virtual void Start()
     {
-        _controller = this.GetInterfaceComponents<IActorController<TActor>>().First( controller => controller.Enabled );
+        _controller = this.GetInterfaceComponents<IActorController<TActor>>().FirstOrDefault( controller => controller.Enabled );
         _currentState = CreateInitialState();
         _currentState.OnEnter();
         StateName = _currentState.Name;
