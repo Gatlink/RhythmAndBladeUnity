@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Gamelogic.Extensions;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -37,29 +39,32 @@ public class CameraController : GLMonoBehaviour
 
     private Vector2 _currentOffsetVelocity;
 
-    private Rail _currentConstraint;
+//    private Rail _currentConstraint;
 
-    private LayerMask _cameraConstraintsLayer;
-    private CameraZoomConstraint _cameraZoomConstraint;
+//    private LayerMask _cameraConstraintsLayer;
+//    private CameraZoomConstraint _cameraZoomConstraint;
 
     private float _baseCameraZoom;
     private float _currentZoomVelocity;
     private float _currentZoom;
     private Camera _camera;
 
+    private CameraConstraintManager _constraintsManager;
+
     public void Start()
     {
         _target = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>();
-        _cameraConstraintsLayer = 1 << LayerMask.NameToLayer( Layers.CameraConstraint );
+//        _cameraConstraintsLayer = 1 << LayerMask.NameToLayer( Layers.CameraConstraint );
         _camera = GetComponentInChildren<Camera>();
         _baseCameraZoom = _camera.orthographicSize;
         _currentOffset = Offset;
         _currentZoom = 1;
+        _constraintsManager = new CameraConstraintManager();
     }
 
     public void LateUpdate()
     {
-        CheckConstraints();
+        _constraintsManager.Update( _target.transform.position );
 
         var targetOffset = Offset;
         targetOffset.x *= _target.Direction;
@@ -71,14 +76,14 @@ public class CameraController : GLMonoBehaviour
         var desiredPosition = (Vector2) _target.transform.position + _currentOffset;
         var targetZoom = 1f;
 
-        if ( _currentConstraint != null )
+        if ( _constraintsManager.HasConstraint )
         {
-            desiredPosition = _currentConstraint.GetNearestPoint( desiredPosition );
-            if ( _cameraZoomConstraint != null )
+            var constraint = _constraintsManager.CurrentConstraint;
+            desiredPosition = constraint.GetNearestPoint( desiredPosition );
+            var zoom = _constraintsManager.CurrentZoomConstraint;
+            if ( zoom != null )
             {
-                targetZoom =
-                    _cameraZoomConstraint.GetZoom( _currentConstraint.EvaluateNormalizedPosition( desiredPosition ) );
-
+                targetZoom = zoom.GetZoom( constraint.EvaluateNormalizedPosition( desiredPosition ) );
             }
         }
 
@@ -100,13 +105,13 @@ public class CameraController : GLMonoBehaviour
         return Vector2.Lerp( MinTrackingInertia, MaxTrackingInertia, t );
     }
 
-    private void CheckConstraints()
-    {
-        var constraint = Physics2D.OverlapPoint( _target.transform.position, _cameraConstraintsLayer );
-        _currentConstraint = constraint != null ? constraint.GetComponentInParent<Rail>() : null;
-        _cameraZoomConstraint =
-            _currentConstraint != null ? _currentConstraint.GetComponent<CameraZoomConstraint>() : null;
-    }
+//    private void CheckConstraints()
+//    {
+//        var constraint = Physics2D.OverlapPoint( _target.transform.position, _cameraConstraintsLayer );
+//        _currentConstraint = constraint != null ? constraint.GetComponentInParent<Rail>() : null;
+//        _cameraZoomConstraint =
+//            _currentConstraint != null ? _currentConstraint.GetComponent<CameraZoomConstraint>() : null;
+//    }
 
     [ InspectorButton ]
     public void SetPlayerOffset()
@@ -136,4 +141,58 @@ public class CameraController : GLMonoBehaviour
         }
     }
 #endif
+
+    class CameraConstraintManager
+    {
+        private readonly List<Rail> _orderedConstraints = new List<Rail>();
+        private readonly HashSet<Rail> _currentConstraints = new HashSet<Rail>();
+
+        private readonly int _cameraConstraintsLayer = 1 << LayerMask.NameToLayer( Layers.CameraConstraint );
+
+        public bool HasConstraint
+        {
+            get { return _orderedConstraints.Count > 0; }
+        }
+
+        public Rail CurrentConstraint
+        {
+            get { return _orderedConstraints[ _orderedConstraints.Count - 1 ]; }
+        }
+
+        public CameraZoomConstraint CurrentZoomConstraint
+        {
+            get { return CurrentConstraint.GetComponent<CameraZoomConstraint>(); }
+        }
+
+        private readonly Collider2D[] _buffer = new Collider2D[ 5 ];
+
+        public void Update( Vector3 position )
+        {
+            // currently seen constraints
+            _currentConstraints.Clear();
+            var count = Physics2D.OverlapPointNonAlloc( position, _buffer, _cameraConstraintsLayer );
+            for ( var i = 0; i < count; i++ )
+            {
+                _currentConstraints.Add( _buffer[ i ].GetComponentInParent<Rail>() );
+            }
+
+            // add new constraints
+            foreach ( var rail in _currentConstraints )
+            {
+                if ( !_orderedConstraints.Contains( rail ) )
+                {
+                    _orderedConstraints.Add( rail );
+                }
+            }
+
+            // remove old constraints
+            for ( var i = _orderedConstraints.Count - 1; i >= 0; i-- )
+            {
+                if ( !_currentConstraints.Contains( _orderedConstraints[ i ] ) )
+                {
+                    _orderedConstraints.RemoveAt( i );
+                }
+            }
+        }
+    }
 }
