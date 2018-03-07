@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Gamelogic.Extensions;
+using UnityEngine;
 
-public class DefaultCoroutineHost : MonoBehaviour
+public class DefaultCoroutineHost : GLMonoBehaviour
 {
     private static DefaultCoroutineHost _instance;
 

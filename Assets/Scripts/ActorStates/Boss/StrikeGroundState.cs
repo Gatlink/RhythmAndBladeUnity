@@ -36,7 +36,7 @@ namespace ActorStates.Boss
             var wave = Object.Instantiate( Resources.Load<GameObject>( "Shock Wave" ), pos, Quaternion.identity )
                 .transform;
 
-            Actor.Tween( 0, Settings.ShockWaveDistance * direction, Settings.ShockWaveDuration,
+            DefaultCoroutineHost.Instance.Tween( 0, Settings.ShockWaveDistance * direction, Settings.ShockWaveDuration,
                 EasingFunction.EaseOutQuad, v => wave.position = pos + Vector3.right * v )
                 .Then( () => Object.Destroy( wave.gameObject ) );
         }

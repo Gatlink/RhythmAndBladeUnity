@@ -19,11 +19,11 @@ public static class ComponentExtensions
 
         return found;
     }
-    
+
     public static TInterface[] GetInterfaceComponents<TInterface>( this Component thisComponent )
         where TInterface : class
     {
-        return thisComponent.GetComponents(typeof(TInterface)).Cast<TInterface>().ToArray();
+        return thisComponent.GetComponents( typeof( TInterface ) ).Cast<TInterface>().ToArray();
     }
 
     public static Coroutine Then( this Coroutine self, Action action )
@@ -34,6 +34,12 @@ public static class ComponentExtensions
     public static Coroutine Then( this Coroutine self, Coroutine coroutine )
     {
         return DefaultCoroutineHost.Instance.StartCoroutine( ChainWithCoroutine( self, coroutine ) );
+    }
+
+    public static Coroutine Then( this Coroutine self, IEnumerator coroutine )
+    {
+        return DefaultCoroutineHost.Instance.StartCoroutine( ChainWithCoroutine( self,
+            DefaultCoroutineHost.Instance.StartCoroutine( coroutine ) ) );
     }
 
     private static IEnumerator ChainWithCoroutine( Coroutine first, Coroutine second )

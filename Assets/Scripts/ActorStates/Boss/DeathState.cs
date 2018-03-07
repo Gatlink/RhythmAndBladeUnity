@@ -1,4 +1,6 @@
-﻿namespace ActorStates.Boss
+﻿using UnityEngine;
+
+namespace ActorStates.Boss
 {
     public class DeathState : BossActorStateBase
     {
@@ -8,6 +10,20 @@
 
         public override IActorState Update()
         {
+            var mob = Actor.Mobile;
+            if ( !mob.CheckGround() )
+            {
+                var settings = PlayerSettings.Instance;
+
+                // apply gravity
+                var verticalVelocity = mob.CurrentVelocity.y - settings.Gravity * Time.deltaTime;
+                verticalVelocity = Mathf.Max( verticalVelocity, -settings.MaxFallVelocity );
+                mob.SetVerticalVelocity( verticalVelocity );
+
+                // default move
+                mob.Move();
+            }
+
             return null;
         }
     }
