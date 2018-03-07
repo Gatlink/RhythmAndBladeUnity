@@ -15,7 +15,8 @@ namespace ActorStates.Player
         }
 
         private PlayerSettings.AttackSetting _setting;
-        
+        private bool _startedGrounded;
+
         public AttackState( PlayerActor actor ) : this( actor, 0 )
         {
         }
@@ -56,13 +57,25 @@ namespace ActorStates.Player
         public override void OnEnter()
         {
             base.OnEnter();
-            Actor.ConsumeAttack( _setting.Cooldown );
             _hitId = HitInfo.GenerateId();
+            
+            _startedGrounded = Actor.Mobile.CheckGround( snap: false );
+            if ( _startedGrounded )
+            {
+                Actor.ConsumeAttack( _setting.Cooldown );
+            }
+            else
+            {
+                Actor.AddAttackCooldown( _setting.Cooldown );
+            }
         }
 
         public override IActorState Update()
         {
-            ApplyHorizontalMovement();
+            if ( _startedGrounded )
+            {
+                ApplyHorizontalMovement();
+            }
 
             var time = ElapsedTime;
 

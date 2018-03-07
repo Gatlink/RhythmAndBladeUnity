@@ -79,6 +79,11 @@ public class PlayerActor : ActorBase<PlayerActor>
         AttackCooldown = cooldown;
     }
 
+    public void AddAttackCooldown( float cooldown )
+    {
+        AttackCooldown = cooldown;        
+    }
+    
     public void ResetAttack()
     {
         _attackCount = 1;
