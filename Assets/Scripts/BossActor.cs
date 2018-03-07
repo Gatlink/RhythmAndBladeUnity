@@ -43,7 +43,7 @@ public class BossActor : ActorBase<BossActor>
 
     public bool CheckHurt()
     {
-        return _hurtThisFrame && _canTransitionToHurt;
+        return _hurtThisFrame && ( _canTransitionToHurt || !Health.IsAlive );
     }
 
     public void SetCanTransitionToHurt( bool state )

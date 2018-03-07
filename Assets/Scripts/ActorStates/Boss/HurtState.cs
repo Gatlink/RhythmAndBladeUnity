@@ -35,7 +35,7 @@ namespace ActorStates.Boss
 
         protected override IActorState GetNextState()
         {
-            if ( Actor.GetComponent<ActorHealth>().CurrentHitCount <= 0 )
+            if ( !Actor.GetComponent<ActorHealth>().IsAlive )
             {
                 return new DeathState( Actor );
             }

@@ -12,7 +12,12 @@ public class ActorHealth : MonoBehaviour
     public delegate void ActorHitHandler( ActorHealth actor, GameObject source );
 
     public event ActorHitHandler HitEvent;
-    
+
+    public bool IsAlive
+    {
+        get { return CurrentHitCount > 0; }
+    }
+
     private readonly Collider2D[] _colliderBuffer = new Collider2D[ 5 ];
 
     private ContactFilter2D _hurtContactFilter2D;
@@ -38,7 +43,7 @@ public class ActorHealth : MonoBehaviour
         OnHitEvent( this, source );
     }
 
-    
+
     private void Awake()
     {
         _hurtContactFilter2D = new ContactFilter2D();

@@ -331,7 +331,7 @@ public class Mobile : MonoBehaviour, IMoving
     {
         if ( TrackPositions.UseValue )
         {
-            _previousPositions.Enqueue( transform.position );
+            _previousPositions.Enqueue( BodyPosition );
             while ( _previousPositions.Count > TrackPositions.Value )
             {
                 _previousPositions.Dequeue();
