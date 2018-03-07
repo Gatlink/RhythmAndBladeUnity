@@ -37,12 +37,6 @@ namespace ActorStates.Player
                     _setting = PlayerSettings.Attack1;
                     break;
             }
-
-            _hitContactFilter2D = new ContactFilter2D();
-            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
-            _hitContactFilter2D.NoFilter();
-            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
-            _hitContactFilter2D.SetLayerMask( 1 << LayerMask.NameToLayer( Layers.Destructible ) );
         }
 
         protected override float TotalDuration
@@ -67,10 +61,6 @@ namespace ActorStates.Player
             _hitId = HitInfo.GenerateId();
         }
 
-        private readonly Collider2D[] _colliderBuffer = new Collider2D[ 5 ];
-
-        private readonly ContactFilter2D _hitContactFilter2D;
-
         public override IActorState Update()
         {
             ApplyHorizontalMovement();
@@ -80,23 +70,7 @@ namespace ActorStates.Player
             if ( time <= HitDuration )
             {
                 // hit phase
-                foreach ( var hitbox in Actor.GetComponentsInChildren<Collider2D>()
-                    .Where( collider => collider.CompareTag( Tags.Hitbox ) && collider.enabled ) )
-                {
-                    var hitCount = hitbox.OverlapCollider( _hitContactFilter2D, _colliderBuffer );
-                    if ( hitCount > 0 )
-                    {
-                        for ( int i = 0; i < hitCount; i++ )
-                        {
-                            var colliderHit = _colliderBuffer[ i ];
-                            var destructible = colliderHit.GetInterfaceComponentInParent<IDestructible>();
-                            if ( destructible != null )
-                            {
-                                destructible.Hit( new HitInfo( _hitId, Actor.gameObject ) );
-                            }
-                        }
-                    }
-                }
+                Actor.DealDamage( _hitId );
             }
             else if ( time > HitDuration && time <= HitDuration + _setting.ComboDuration )
             {

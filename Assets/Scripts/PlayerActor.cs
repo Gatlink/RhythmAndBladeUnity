@@ -129,6 +129,28 @@ public class PlayerActor : ActorBase<PlayerActor>
         return null;
     }
 
+    private ContactFilter2D _hitContactFilter2D;
+
+    public void DealDamage( uint hitId )
+    {
+        foreach ( var hitbox in GetComponentsInChildren<Collider2D>()
+            .Where( col => col.CompareTag( Tags.Hitbox ) && col.enabled ) )
+        {
+            var hitCount = hitbox.OverlapCollider( _hitContactFilter2D, _colliderBuffer );
+            if ( hitCount > 0 )
+            {
+                for ( int i = 0; i < hitCount; i++ )
+                {
+                    var colliderHit = _colliderBuffer[ i ];
+                    var destructible = colliderHit.GetInterfaceComponentInParent<IDestructible>();
+                    if ( destructible != null )
+                    {
+                        destructible.Hit( new HitInfo( hitId, gameObject ) );
+                    }
+                }
+            }
+        }
+    }
 
     protected override void ResetIntent()
     {
@@ -152,6 +174,10 @@ public class PlayerActor : ActorBase<PlayerActor>
         _hurtContactFilter2D = new ContactFilter2D();
         _hurtContactFilter2D.NoFilter();
         _hurtContactFilter2D.SetLayerMask( 1 << LayerMask.NameToLayer( Layers.Harmfull ) );
+
+        _hitContactFilter2D = new ContactFilter2D();
+        _hitContactFilter2D.NoFilter();
+        _hitContactFilter2D.SetLayerMask( 1 << LayerMask.NameToLayer( Layers.Destructible ) );
     }
 
     protected override void Update()
