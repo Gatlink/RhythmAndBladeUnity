@@ -204,6 +204,12 @@ AnimationClip:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+      - serializedVersion: 2
         time: 0.5833333
         value: 1
         inSlope: Infinity
@@ -528,6 +534,12 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
       - serializedVersion: 2
         time: 0.5833333
         value: 1
