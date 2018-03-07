@@ -60,8 +60,15 @@ namespace ActorStates.Boss
 
             if ( Actor.CheckCharge() )
             {
-                // todo cumpute good distance
-                return new ChargeAttackState( Actor, Settings.MaxChargeMovementLength );
+                var playerPosition =
+                    GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>().BodyPosition;
+                var delta = playerPosition.x - mob.BodyPosition.x;
+
+                mob.UpdateDirection( Mathf.Sign( delta ) );
+
+                var dashDistance = Mathf.Abs( delta ) + 2;
+
+                return new ChargeAttackState( Actor, Mathf.Min( dashDistance, Settings.MaxChargeMovementLength ) );
             }
 
             if ( Actor.CheckAttack() )

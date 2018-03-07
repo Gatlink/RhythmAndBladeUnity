@@ -37,9 +37,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4818911658601620}
   - component: {fileID: 114500015476263518}
+  - component: {fileID: 114179763777175788}
+  - component: {fileID: 114360097638799396}
   - component: {fileID: 114166970997549666}
   - component: {fileID: 114210730153343898}
-  - component: {fileID: 114883488299908312}
   - component: {fileID: 114366331282936172}
   m_Layer: 0
   m_Name: Boss
@@ -326,6 +327,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TotalHitCount: 10
   CurrentHitCount: 3
+--- !u!114 &114179763777175788
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1493278349051608}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5d6b825ec884908823d3c5f73ef4805, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  CloseRangeThreshold: 4
+  FarRangeThreshold: 8
 --- !u!114 &114210730153343898
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -343,6 +358,22 @@ MonoBehaviour:
   DesiredAttack: 0
   DesiredJumpAttack: 0
   DesiredCharge: 0
+--- !u!114 &114360097638799396
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1493278349051608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fb3074bb20a4de694eb76898ea670cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  AutoFindPlayer: 0
+  PlayerIndex: 0
+  DeadZone: 0.3
+  Step: 1
 --- !u!114 &114366331282936172
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -401,22 +432,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e294d598a9fb4df490068257819970e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114883488299908312
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fb3074bb20a4de694eb76898ea670cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  AutoFindPlayer: 0
-  PlayerIndex: 0
-  DeadZone: 0.3
-  Step: 1
 --- !u!212 &212236192487580474
 SpriteRenderer:
   m_ObjectHideFlags: 1

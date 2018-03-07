@@ -11,7 +11,12 @@ namespace Controllers
         public bool Step = true;
 
         public OptionalFloat DebugAxis;
-    
+
+        public bool Enabled
+        {
+            get { return enabled; }
+        }
+
         public void UpdateActorIntent( PlayerActor actor )
         {
             var rawAxis = Input.GetAxis( "Horizontal" );

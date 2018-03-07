@@ -1,4 +1,7 @@
-﻿namespace ActorStates.Boss
+﻿using Gamelogic.Extensions.Algorithms;
+using UnityEngine;
+
+namespace ActorStates.Boss
 {
     public class StrikeGroundState : BossFixedTimeStateBase
     {
@@ -10,6 +13,9 @@
         {
             base.OnEnter();
             Actor.Mobile.CancelMovement();
+
+            SpawnWave( -1 );
+            SpawnWave( 1 );
         }
 
         protected override float TotalDuration
@@ -22,6 +28,17 @@
             return Actor.Mobile.CheckGround()
                 ? (IActorState) new GroundedState( Actor )
                 : new FallState( Actor );
+        }
+
+        private void SpawnWave( float direction )
+        {
+            var pos = Actor.transform.position;
+            var wave = Object.Instantiate( Resources.Load<GameObject>( "Shock Wave" ), pos, Quaternion.identity )
+                .transform;
+
+            Actor.Tween( 0, Settings.ShockWaveDistance * direction, Settings.ShockWaveDuration,
+                EasingFunction.EaseOutQuad, v => wave.position = pos + Vector3.right * v )
+                .Then( () => Object.Destroy( wave.gameObject ) );
         }
     }
 }

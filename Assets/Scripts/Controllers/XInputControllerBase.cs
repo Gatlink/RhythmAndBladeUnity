@@ -38,6 +38,11 @@ namespace Controllers
             }
         }
 
+        public bool Enabled
+        {
+            get { return enabled; }
+        }
+
         public virtual void UpdateActorIntent( TActor actor )
         {
             PrevState = State;

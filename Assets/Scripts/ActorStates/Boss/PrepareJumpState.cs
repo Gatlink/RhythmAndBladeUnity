@@ -32,7 +32,12 @@ namespace ActorStates.Boss
                 jumpHeight = distance - 2;
             }
 
-            var jumpDistance = 5; // todo compute good target
+            var playerPosition = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>().BodyPosition;
+            var delta = playerPosition.x - _mobile.BodyPosition.x;
+            
+            _mobile.UpdateDirection( Mathf.Sign( delta ) );
+            
+            var jumpDistance = Mathf.Abs( delta );
 
             return new JumpAttackState( Actor, jumpHeight,
                 Mathf.Min( jumpDistance, Settings.MaxJumpAttackMovementLength ) );

@@ -5,6 +5,10 @@ namespace Controllers
 {
     public class XInputBossController : XInputControllerBase<BossActor>
     {
+        private void Start()
+        {            
+        }
+
         public override void UpdateActorIntent( BossActor actor )
         {
             base.UpdateActorIntent( actor );

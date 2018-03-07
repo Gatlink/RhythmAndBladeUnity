@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ActorStates;
 using Controllers;
 using Gamelogic.Extensions;
@@ -28,7 +29,7 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
 
     protected virtual void Start()
     {
-        _controller = this.GetInterfaceComponent<IActorController<TActor>>();
+        _controller = this.GetInterfaceComponents<IActorController<TActor>>().First( controller => controller.Enabled );
         _currentState = CreateInitialState();
         _currentState.OnEnter();
         StateName = _currentState.Name;
@@ -38,7 +39,7 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
     {
         // update intents
         ResetIntent();
-        
+
         if ( _controller == null )
         {
             Debug.LogError( "Actor has no controller", this );
