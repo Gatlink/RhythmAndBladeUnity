@@ -31,5 +31,9 @@ public class PlayerAnimator : ActorAnimator<PlayerActor>
             Animator.SetInteger( "Combo", attackState.ComboCount );
             Animator.SetTrigger( "Attack" );
         }
+        else if ( next is HurtState )
+        {
+            Animator.SetTrigger( "Hurt" );
+        }
     }
 }
