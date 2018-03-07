@@ -74,8 +74,6 @@ public class BossActor : ActorBase<BossActor>
 
     private void Awake()
     {
-        var settings = PlayerSettings.Instance;
-
         Mobile = GetRequiredComponent<Mobile>();
 
         Health = GetRequiredComponent<ActorHealth>();

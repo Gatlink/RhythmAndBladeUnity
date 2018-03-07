@@ -6,6 +6,7 @@ public static class GeometryUtils
     public static Vector2 ProjectPointToSegment( Vector2 p, Vector2 a, Vector2 b )
     {
         var sqrMagnitude = ( b - a ).sqrMagnitude;
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
         if ( sqrMagnitude == 0.0 )
             return a;
         var t = Vector2.Dot( p - a, b - a ) / sqrMagnitude;

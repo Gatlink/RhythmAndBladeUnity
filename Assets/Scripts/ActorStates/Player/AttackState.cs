@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Gamelogic.Extensions;
 using UnityEngine;
 
 namespace ActorStates.Player
@@ -7,7 +6,7 @@ namespace ActorStates.Player
     public class AttackState : PlayerFixedHorizontalMovementState
     {
         private const int MaxComboCount = 3;
-        private uint _hitID;
+        private uint _hitId;
 
         public readonly int ComboCount;
 
@@ -65,7 +64,7 @@ namespace ActorStates.Player
         {
             base.OnEnter();
             Actor.ConsumeAttack( _setting.Cooldown );
-            _hitID = HitInfo.GenerateId();
+            _hitId = HitInfo.GenerateId();
         }
 
         private readonly Collider2D[] _colliderBuffer = new Collider2D[ 5 ];
@@ -93,7 +92,7 @@ namespace ActorStates.Player
                             var destructible = colliderHit.GetInterfaceComponentInParent<IDestructible>();
                             if ( destructible != null )
                             {
-                                destructible.Hit( new HitInfo( _hitID, Actor.gameObject ) );
+                                destructible.Hit( new HitInfo( _hitId, Actor.gameObject ) );
                             }
                         }
                     }

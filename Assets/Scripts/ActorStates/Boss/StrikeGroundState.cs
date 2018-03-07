@@ -1,5 +1,4 @@
-﻿using Gamelogic.Extensions.Algorithms;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ActorStates.Boss
 {

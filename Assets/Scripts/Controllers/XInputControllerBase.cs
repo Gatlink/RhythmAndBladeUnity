@@ -6,9 +6,9 @@ namespace Controllers
 {
     public abstract class XInputControllerBase<TActor> : GLMonoBehaviour, IActorController<TActor>
     {
-        public bool AutoFindPlayer = false;
+        public bool AutoFindPlayer;
         public PlayerIndex PlayerIndex;
-        private bool _playerIndexSet = false;
+        private bool _playerIndexSet;
         protected GamePadState State;
         protected GamePadState PrevState;
 

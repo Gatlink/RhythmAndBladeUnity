@@ -10,7 +10,7 @@ public class MovingObject : MonoBehaviour, IMoving
 {
     public Vector2 Displacement = Vector2.up;
     public float Period = 1f;
-    public float Phase = 0f;
+    public float Phase;
     private Vector2 _initialPosition;
 
     public Vector2 CurrentVelocity

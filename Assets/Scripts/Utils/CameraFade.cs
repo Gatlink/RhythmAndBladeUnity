@@ -19,7 +19,7 @@ public class CameraFade : Singleton<CameraFade>
 
     private Color _currentColor = Color.clear;
     private Color _targetColor = Color.clear;
-    private float _timeRemaining = 0;
+    private float _timeRemaining;
     private Action _completeAction;
 
     private Texture2D _fadeTexture;
@@ -71,6 +71,7 @@ public class CameraFade : Singleton<CameraFade>
             Instance._completeAction = null;
         }
 
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
         if ( fadeDuration == 0 )
         {
             Instance._targetColor = Instance._currentColor = Instance.FadeColor;
@@ -105,6 +106,7 @@ public class CameraFade : Singleton<CameraFade>
             Instance._completeAction = null;
         }
 
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
         if ( fadeDuration == 0 )
         {
             Instance._targetColor = Instance._currentColor;

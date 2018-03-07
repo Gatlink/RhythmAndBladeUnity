@@ -1,12 +1,11 @@
-﻿using Gamelogic.Extensions;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ActorStates.Player
 {
     public class HurtState : FixedTimeStateBase
     {
-        private PlayerActor Actor;
-        private PlayerSettings PlayerSettings;
+        private readonly PlayerActor _actor;
+        private readonly PlayerSettings _playerSettings;
         private readonly float _recoilDirection;
         private readonly float _recoilStrength;
         private readonly int _damage;
@@ -14,19 +13,19 @@ namespace ActorStates.Player
 
         protected override float TotalDuration
         {
-            get { return PlayerSettings.HurtRecoilDuration; }
+            get { return _playerSettings.HurtRecoilDuration; }
         }
 
         private float RecoilLength
         {
-            get { return PlayerSettings.HurtRecoilDistance * _recoilStrength; }
+            get { return _playerSettings.HurtRecoilDistance * _recoilStrength; }
         }
 
         public HurtState( PlayerActor actor, Collider2D source )
         {
-            Actor = actor;
-            PlayerSettings = PlayerSettings.Instance;            
-            _recoilDirection = Mathf.Sign( Actor.transform.position.x - source.transform.position.x );
+            _actor = actor;
+            _playerSettings = PlayerSettings.Instance;            
+            _recoilDirection = Mathf.Sign( _actor.transform.position.x - source.transform.position.x );
 
             var harmfull = source.GetInterfaceComponentInParent<IHarmfull>();
             _recoilStrength = harmfull.Recoil;
@@ -37,19 +36,19 @@ namespace ActorStates.Player
         public override void OnEnter()
         {
             base.OnEnter();
-            Actor.Health.AccountDamages( _damage, _source );
-            var angle = Mathf.Atan( TotalDuration * TotalDuration * PlayerSettings.Gravity / 2 / RecoilLength );
-            var velocity = TotalDuration * PlayerSettings.Gravity / 2 / Mathf.Sin( angle );
-            Actor.Mobile.CurrentVelocity = new Vector2( _recoilDirection * Mathf.Cos( angle ), Mathf.Sin( angle ) ) * velocity;
+            _actor.Health.AccountDamages( _damage, _source );
+            var angle = Mathf.Atan( TotalDuration * TotalDuration * _playerSettings.Gravity / 2 / RecoilLength );
+            var velocity = TotalDuration * _playerSettings.Gravity / 2 / Mathf.Sin( angle );
+            _actor.Mobile.CurrentVelocity = new Vector2( _recoilDirection * Mathf.Cos( angle ), Mathf.Sin( angle ) ) * velocity;
         }
 
         public override IActorState Update()
         {
-            var mob = Actor.Mobile;
+            var mob = _actor.Mobile;
             
             // apply gravity
-            var verticalVelocity = mob.CurrentVelocity.y - PlayerSettings.Gravity * Time.deltaTime;
-            verticalVelocity = Mathf.Max( verticalVelocity, -PlayerSettings.MaxFallVelocity );
+            var verticalVelocity = mob.CurrentVelocity.y - _playerSettings.Gravity * Time.deltaTime;
+            verticalVelocity = Mathf.Max( verticalVelocity, -_playerSettings.MaxFallVelocity );
             mob.SetVerticalVelocity( verticalVelocity  );
             
             // default move
@@ -60,9 +59,9 @@ namespace ActorStates.Player
 
         protected override IActorState GetNextState()
         {
-            return Actor.Mobile.CheckGround() 
-                ? (IActorState)new GroundedState( Actor ) 
-                : new FallState( Actor );
+            return _actor.Mobile.CheckGround() 
+                ? (IActorState)new GroundedState( _actor ) 
+                : new FallState( _actor );
         }
     }
 }

@@ -17,7 +17,7 @@ public class CameraController : GLMonoBehaviour
     [ FormerlySerializedAs( "TrackingInertia" ) ]
     public Vector2 MinTrackingInertia;
 
-    public float MinTrackingDistance = 0;
+    public float MinTrackingDistance;
 
     public Vector2 MaxTrackingInertia;
 

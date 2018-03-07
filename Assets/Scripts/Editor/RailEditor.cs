@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Gamelogic.Extensions.Editor.Internal;
 using UnityEditor;
@@ -12,7 +13,6 @@ public class RailEditor : GLEditor<Rail>
     private const float GizmoRadius = 0.15f;
     private const int DottedLinesSpace = 3;
 
-    private static readonly Color GUIColor = new Color( 0.9f, 0.9f, 0.9f );
     private static readonly Color HandleColor = new Color( 0.4f, 0.5f, 0.7f );
     private static readonly Color GroundColor = new Color( 0.5f, 0.8f, 1f );
     private static readonly Color WallColor = new Color( 0.7f, 0.7f, 0.4f );
@@ -25,9 +25,9 @@ public class RailEditor : GLEditor<Rail>
 
     private BoxBoundsHandle _multiSelectionHandle;
 
-    private readonly int MovePointHandleHint = "MovePointHandleHint".GetHashCode();
-    private readonly int MultiSelectionHandleHint = "MultiSelectionHandleHint".GetHashCode();
-    private readonly int NewPointHandleHint = "NewPointHandleHint".GetHashCode();
+    private readonly int _movePointHandleHint = "MovePointHandleHint".GetHashCode();
+    private readonly int _multiSelectionHandleHint = "MultiSelectionHandleHint".GetHashCode();
+    private readonly int _newPointHandleHint = "NewPointHandleHint".GetHashCode();
 
     private static float _snapValue = 0.5f;
 
@@ -156,6 +156,7 @@ public class RailEditor : GLEditor<Rail>
         DrawNotice();
     }
 
+    [ SuppressMessage( "ReSharper", "BitwiseOperatorOnEnumWithoutFlags" ) ]
     [ DrawGizmo( GizmoType.NonSelected | GizmoType.Pickable | GizmoType.Selected ) ]
     private static void NonSelectedSceneView( Rail rail, GizmoType gizmoType )
     {
@@ -176,7 +177,7 @@ public class RailEditor : GLEditor<Rail>
             {
                 var point = points[ index ];
                 var worldPosition = root + point;
-                var cid = GUIUtility.GetControlID( MovePointHandleHint, FocusType.Passive );
+                var cid = GUIUtility.GetControlID( _movePointHandleHint, FocusType.Passive );
                 EditorGUI.BeginChangeCheck();
                 worldPosition = Handles.FreeMoveHandle( cid, worldPosition, Quaternion.identity,
                     GizmoRadius * HandleUtility.GetHandleSize( worldPosition ), Vector3.zero,
@@ -212,7 +213,7 @@ public class RailEditor : GLEditor<Rail>
         {
             if ( Event.current.type == EventType.Layout )
             {
-                HandleUtility.AddDefaultControl( GUIUtility.GetControlID( NewPointHandleHint, FocusType.Passive ) );
+                HandleUtility.AddDefaultControl( GUIUtility.GetControlID( _newPointHandleHint, FocusType.Passive ) );
             }
 
             Vector2 newPosition = mouseRay.origin;
@@ -306,7 +307,7 @@ public class RailEditor : GLEditor<Rail>
         var multiSelectionAnchorInitial = multiSelectionAnchor;
 
         EditorGUI.BeginChangeCheck();
-        multiSelectionAnchor = Handles.FreeMoveHandle( MultiSelectionHandleHint, multiSelectionAnchor,
+        multiSelectionAnchor = Handles.FreeMoveHandle( _multiSelectionHandleHint, multiSelectionAnchor,
             Quaternion.identity, GizmoRadius * HandleUtility.GetHandleSize( multiSelectionAnchor ), Vector3.zero,
             Handles.DotHandleCap );
         if ( EditorGUI.EndChangeCheck() )
@@ -324,6 +325,7 @@ public class RailEditor : GLEditor<Rail>
             }
 
             // move selectionBounds
+            // ReSharper disable once RedundantCast
             _multiSelectionHandle.center += (Vector3) delta;
 
             if ( currentEvent.control )
@@ -434,6 +436,7 @@ public class RailEditor : GLEditor<Rail>
             var segmentCenter = rail.EnumerateSegments().First().Center;
             if ( minDistance * minDistance < HandleUtility.GetHandleSize( segmentCenter ) * GizmoRadius )
             {
+                // ReSharper disable once DelegateSubtraction
                 EditorApplication.update -= _setSelected;
                 EditorApplication.update += _setSelected;
                 _desiredSelection = rail.gameObject;
@@ -462,6 +465,7 @@ public class RailEditor : GLEditor<Rail>
             Selection.activeGameObject = _desiredSelection;
             _desiredSelection = null;
             // prevent unecessary null checks
+            // ReSharper disable once DelegateSubtraction
             EditorApplication.update -= _setSelected;
         }
     }

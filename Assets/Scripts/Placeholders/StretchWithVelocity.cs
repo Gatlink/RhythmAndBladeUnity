@@ -20,9 +20,12 @@ public class StretchWithVelocity : MonoBehaviour
 
     private Vector2 _currentDirection;
 
+#if UNITY_EDITOR
+    // just for debugging purposes
     [ SerializeField, ReadOnly ]
+#pragma warning disable 0414 // private field assigned but not used.    
     private Vector2 _percievedVelocity;
-
+#endif
     private void Awake()
     {
         _childTransform = transform.GetChild( 0 );
@@ -60,8 +63,9 @@ public class StretchWithVelocity : MonoBehaviour
         {
             _currentDirection = Vector2.right;
         }
-
+#if UNITY_EDITOR
         _percievedVelocity = velocity;
+#endif
         _lastPosition = position;
 
         _targetStretch = 1 + Mathf.Lerp( 0, MaxSpeedStretch, Mathf.Clamp01( velocity.magnitude / MaxVelocity ) );

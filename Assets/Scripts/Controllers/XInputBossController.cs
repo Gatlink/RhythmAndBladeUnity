@@ -5,6 +5,8 @@ namespace Controllers
 {
     public class XInputBossController : XInputControllerBase<BossActor>
     {
+        // ReSharper disable once Unity.RedundantEventFunction
+        // adds "enable" check box in inspector
         private void Start()
         {            
         }

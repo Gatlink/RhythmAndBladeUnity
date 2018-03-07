@@ -36,6 +36,8 @@ public class Rail : GLMonoBehaviour
         get
         {
             var pos = (Vector2) transform.position;
+            
+            // ReSharper disable once RedundantTypeArgumentsOfMethod
             return Points.Aggregate<Vector2, Bounds>( new Bounds( Points[ 0 ] + pos, Vector2.zero ),
                 ( b, p ) =>
                 {
@@ -67,6 +69,7 @@ public class Rail : GLMonoBehaviour
 
     private void MoveTransform( Vector2 delta )
     {
+        // ReSharper disable once RedundantCast
         transform.position += (Vector3) delta;
         for ( var i = 0; i < Points.Count; i++ )
         {

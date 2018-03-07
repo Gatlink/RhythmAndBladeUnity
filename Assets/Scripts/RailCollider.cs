@@ -35,6 +35,7 @@ public class RailCollider : GLMonoBehaviour
             edgeCollider.gameObject.tag = Tags.Moving;
         }
 
+        // ReSharper disable once RedundantExplicitArrayCreation
         edgeCollider.points = new Vector2[]
             { first.From - (Vector2) transform.position, first.To - (Vector2) transform.position };
         return edgeCollider;

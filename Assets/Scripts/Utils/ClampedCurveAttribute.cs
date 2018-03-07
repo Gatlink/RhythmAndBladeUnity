@@ -2,13 +2,13 @@
 
 public class ClampedCurveAttribute : PropertyAttribute
 {
-    public float MinX = 0;
+    public readonly float MinX;
 
-    public float MaxX = 1;
+    public readonly float MaxX;
 
-    public float MinY = 0;
+    public readonly float MinY;
 
-    public float MaxY = 1;
+    public readonly float MaxY;
 
     public ClampedCurveAttribute( float minX, float maxX, float minY, float maxY )
     {
