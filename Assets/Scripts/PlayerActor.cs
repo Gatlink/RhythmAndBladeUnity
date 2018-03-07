@@ -136,6 +136,9 @@ public class PlayerActor : ActorBase<PlayerActor>
         foreach ( var hitbox in GetComponentsInChildren<Collider2D>()
             .Where( col => col.CompareTag( Tags.Hitbox ) && col.enabled ) )
         {
+#if UNITY_EDITOR
+            DebugDrawCollider( hitbox );
+#endif
             var hitCount = hitbox.OverlapCollider( _hitContactFilter2D, _colliderBuffer );
             if ( hitCount > 0 )
             {
@@ -190,4 +193,24 @@ public class PlayerActor : ActorBase<PlayerActor>
     }
 
     #endregion UNITY MESSAGES
+
+#if UNITY_EDITOR
+    private void DebugDrawCollider( Collider2D hitbox )
+    {
+        var circleCollider2D = hitbox as CircleCollider2D;
+        if ( circleCollider2D != null )
+        {
+            var matrix = circleCollider2D.transform.localToWorldMatrix;
+            DebugExtension.DebugCircle( matrix.MultiplyPoint3x4(circleCollider2D.offset), Vector3.forward, circleCollider2D.radius );
+            return;
+        }
+
+        var boxCollider2D = hitbox as BoxCollider2D;
+        if ( boxCollider2D != null )
+        {
+            DebugExtension.DebugLocalCube( boxCollider2D.transform, boxCollider2D.size, boxCollider2D.offset );
+            return;
+        }
+    }
+#endif
 }
