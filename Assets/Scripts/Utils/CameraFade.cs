@@ -7,12 +7,13 @@ public class CameraFade : Singleton<CameraFade>
 {
     private void Awake()
     {
-        if ( Instance._fadeTexture != null ) return;
-        Instance._fadeTexture = new Texture2D( 1, 1 );
-        Instance._fadeTexture.SetPixel( 0, 0, Color.white );
-        Instance._fadeTexture.Apply();
+        if ( Instance.FadeTexture != null ) return;
+        Instance.FadeTexture = new Texture2D( 1, 1 );
+        Instance.FadeTexture.SetPixel( 0, 0, Color.white );
+        Instance.FadeTexture.Apply();
     }
 
+    public Texture2D FadeTexture;
     public Color FadeColor = Color.black;
     public int FadeGUIDepth = -1000;
     public bool UseUnscaledTime = true;
@@ -22,7 +23,6 @@ public class CameraFade : Singleton<CameraFade>
     private float _timeRemaining;
     private Action _completeAction;
 
-    private Texture2D _fadeTexture;
 
     // Draw the texture and perform the fade:
     private void OnGUI()
@@ -58,7 +58,7 @@ public class CameraFade : Singleton<CameraFade>
         {
             GUI.color = _currentColor;
             GUI.depth = FadeGUIDepth;
-            GUI.DrawTexture( new Rect( 0, 0, Screen.width, Screen.height ), Instance._fadeTexture,
+            GUI.DrawTexture( new Rect( 0, 0, Screen.width, Screen.height ), Instance.FadeTexture,
                 ScaleMode.StretchToFill, true );
         }
     }
