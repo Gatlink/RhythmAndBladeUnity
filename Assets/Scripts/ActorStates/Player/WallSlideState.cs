@@ -62,10 +62,10 @@ namespace ActorStates.Player
             mob.Move( wallMovement );
 
             // check damages
-            var harmfull = Actor.Health.CheckDamages();
+            var harmfull = Actor.CheckDamages();
             if ( harmfull != null )
             {
-                return new HurtState( Actor, harmfull );
+                return harmfull;
             }
 
             // check if player wants to unstick from wall

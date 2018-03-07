@@ -94,10 +94,10 @@ namespace ActorStates.Player
             // default move
             mob.Move();
 
-            var harmfull = actor.Health.CheckDamages();
+            var harmfull = actor.CheckDamages();
             if ( harmfull != null )
             {
-                return new HurtState( actor, harmfull );
+                return harmfull;
             }
 
             Vector2 normal;

@@ -102,10 +102,10 @@ namespace ActorStates.Player
             {
                 // combo phase
 
-                var harmfull = Actor.Health.CheckDamages();
+                var harmfull = Actor.CheckDamages();
                 if ( harmfull != null )
                 {
-                    return new HurtState( Actor, harmfull );
+                    return harmfull;
                 }
 
                 if ( ComboCount + 1 < MaxComboCount

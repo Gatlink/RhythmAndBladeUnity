@@ -8,6 +8,9 @@ public class HurtPlayer : MonoBehaviour, IHarmfull
     [ SerializeField ]
     private float _recoil = 1;
 
+    [ SerializeField ]
+    private bool _passiveHurt;
+
     public int Damage
     {
         get { return _damage; }
@@ -23,5 +26,10 @@ public class HurtPlayer : MonoBehaviour, IHarmfull
     public GameObject GameObject
     {
         get { return gameObject; }
+    }
+
+    public bool PassiveHurt
+    {
+        get { return _passiveHurt; }
     }
 }
