@@ -1,4 +1,5 @@
-﻿using ActorStates;
+﻿using System.Linq;
+using ActorStates;
 using ActorStates.Boss;
 using Gamelogic.Extensions;
 using UnityEngine;
@@ -86,5 +87,12 @@ public class BossActor : ActorBase<BossActor>
         {
             TransitionToState( new HurtState( this, -_hurtDirection ) );
         }
+#if UNITY_EDITOR
+        foreach ( var hitbox in GetComponentsInChildren<Collider2D>().Where( col =>
+            col.enabled && col.gameObject.layer == LayerMask.NameToLayer( Layers.Harmfull ) ) )
+        {
+            GeometryUtils.DebugCollider( hitbox );
+        }
+#endif
     }
 }

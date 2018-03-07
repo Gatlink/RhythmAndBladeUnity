@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class GeometryUtils
@@ -51,5 +52,25 @@ public static class GeometryUtils
         var segmentEnd = vertices[ minDistanceSegmentIndex + 1 ];
 
         return ProjectPointToSegment( p, segmentStart, segmentEnd );
+    }
+    
+    public static void DebugCollider( Collider2D hitbox )
+    {
+        var circleCollider2D = hitbox as CircleCollider2D;
+        if ( circleCollider2D != null )
+        {
+            var matrix = circleCollider2D.transform.localToWorldMatrix;
+            DebugExtension.DebugCircle( matrix.MultiplyPoint3x4(circleCollider2D.offset), Vector3.forward, circleCollider2D.radius );
+            return;
+        }
+
+        var boxCollider2D = hitbox as BoxCollider2D;
+        if ( boxCollider2D != null )
+        {
+            DebugExtension.DebugLocalCube( boxCollider2D.transform, boxCollider2D.size, boxCollider2D.offset );
+            return;
+        }
+
+        throw new NotSupportedException( hitbox.GetType() + " not supported" );
     }
 }
