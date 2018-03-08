@@ -117,15 +117,12 @@ namespace Controllers
             DrawRange( CloseRangeThreshold, Color.blue );
         }
 
-        private void DrawRange( float range, Color color, float height = 10 )
+        private void DrawRange( float range, Color color )
         {
             Gizmos.color = color;
 
-            var leftRange = transform.position + Vector3.left * range;
-            Gizmos.DrawLine( leftRange, leftRange + Vector3.up * height );
-
-            var rightRange = transform.position + Vector3.right * range;
-            Gizmos.DrawLine( rightRange, rightRange + Vector3.up * height );
+            var mob = GetComponent<Mobile>();
+            Gizmos.DrawWireSphere( mob.BodyPosition, range  );
         }
     }
 }
