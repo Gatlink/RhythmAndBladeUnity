@@ -30,6 +30,14 @@ namespace ActorStates.Boss
         {
             ApplyHorizontalMovement();
 
+            Mobile.Move();
+
+            if ( Mobile.CheckWallProximity( Mobile.Direction, snap: false ) )
+            {
+                Mobile.CancelHorizontalMovement();
+                TerminateState();
+            }
+
             return base.Update();
         }
     }

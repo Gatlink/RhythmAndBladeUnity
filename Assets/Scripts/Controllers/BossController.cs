@@ -35,7 +35,6 @@ namespace Controllers
             _actionGenerator = Generator.UniformRandomInt( (int) Action.Count ).Cast<Action>();
             _randomDurationGenerator = Generator.GaussianRandomFloat( ActionDurationMean, ActionDurationStdDeviation )
                 .Where( v => v > 0 );
-            NextAction();
         }
 
         public bool Enabled
@@ -45,18 +44,24 @@ namespace Controllers
 
         public void UpdateActorIntent( BossActor actor )
         {
+            _nextStateTimeout -= Time.deltaTime;
+            if ( _nextStateTimeout <= 0 )
+            {
+                NextAction( actor );
+            }
+
+            var toPlayer = _player.BodyPosition - actor.Mobile.BodyPosition;
             switch ( _actionGenerator.Current )
             {
                 case Action.Stands:
                     break;
                 case Action.Move:
-                    var delta = _player.BodyPosition.x - actor.Mobile.BodyPosition.x;
-                    if ( Mathf.Abs( delta ) < CloseRangeThreshold )
+                    if ( Mathf.Abs( toPlayer.x ) <= CloseRangeThreshold )
                     {
                         _nextStateTimeout = 0;
                     }
 
-                    actor.DesiredMovement = Mathf.Sign( delta );
+                    actor.DesiredMovement = Mathf.Sign( toPlayer.x );
                     break;
                 case Action.Jump:
                     actor.DesiredJumpAttack = true;
@@ -70,22 +75,25 @@ namespace Controllers
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            _nextStateTimeout -= Time.deltaTime;
-            if ( _nextStateTimeout <= 0 )
-            {
-                NextAction();
-            }
         }
 
-        private void NextAction()
+        private void NextAction( BossActor actor )
         {
             _actionGenerator.Next();
+            var toPlayer = _player.BodyPosition - actor.Mobile.BodyPosition;
+            if ( toPlayer.magnitude > CloseRangeThreshold )
+            {
+                do
+                {
+                    _actionGenerator.Next();
+                } while ( _actionGenerator.Current == Action.Attack );
+            }
             _randomDurationGenerator.Next();
+
             switch ( _actionGenerator.Current )
             {
                 case Action.Stands:
-                    _nextStateTimeout = _randomDurationGenerator.Current;
+                    _nextStateTimeout = _randomDurationGenerator.Current / 2;
                     break;
                 case Action.Move:
                     _nextStateTimeout = _randomDurationGenerator.Current;

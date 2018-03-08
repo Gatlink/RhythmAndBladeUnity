@@ -9,7 +9,7 @@ namespace ActorStates.Player
 
         public DashState( PlayerActor actor ) : base( actor )
         {
-            _playerSettings = PlayerSettings.Instance;            
+            _playerSettings = PlayerSettings.Instance;
         }
 
         protected override float TotalDuration
@@ -43,6 +43,8 @@ namespace ActorStates.Player
         public override IActorState Update()
         {
             ApplyHorizontalMovement();
+
+            Mobile.Move();
 
             Vector2 wallNormal;
             if ( !CurrentlyGrounded && Mobile.CheckWallProximity( Mobile.Direction, out wallNormal ) )

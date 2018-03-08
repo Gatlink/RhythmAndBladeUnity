@@ -18,11 +18,16 @@ namespace ActorStates
             get { return ElapsedTime / TotalDuration; }
         }
 
+        protected void TerminateState()
+        {
+            _timeRemaining = 0;
+        }
+
         public override void OnEnter()
         {
             _timeRemaining = TotalDuration;
         }
-        
+
         public override IActorState Update()
         {
             _timeRemaining -= Time.deltaTime;

@@ -58,7 +58,7 @@ namespace ActorStates.Player
         {
             base.OnEnter();
             _hitId = HitInfo.GenerateId();
-            
+
             _startedGrounded = Actor.Mobile.CheckGround( snap: false );
             if ( _startedGrounded )
             {
@@ -66,6 +66,7 @@ namespace ActorStates.Player
             }
             else
             {
+                Mobile.CancelVerticalMovement();
                 Actor.AddAttackCooldown( _setting.Cooldown );
             }
         }
@@ -76,6 +77,15 @@ namespace ActorStates.Player
             {
                 ApplyHorizontalMovement();
             }
+            else
+            {
+                var velocity = Mobile.CurrentVelocity.x;
+                var maxVelocity = PlayerSettings.MaxAirAttackHorizontalMovement;
+                velocity = Mathf.Clamp(velocity, -maxVelocity, maxVelocity );
+                Mobile.ChangeHorizontalVelocity( velocity, PlayerSettings.GroundedMoveInertia );
+            }
+
+            Mobile.Move();
 
             var time = ElapsedTime;
 
