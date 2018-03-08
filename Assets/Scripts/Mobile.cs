@@ -245,10 +245,10 @@ public class Mobile : MonoBehaviour, IMoving
         return false;
     }
 
-    public bool ProbeCeiling(out float distance, float maxDistance = 10)
+    public bool ProbeCeiling( out float distance, float maxDistance = 10 )
     {
         var hit = Physics2D.Raycast( BodyPosition, Vector2.up, maxDistance, _groundLayerMask );
-        
+
         if ( hit.collider != null )
         {
             distance = hit.point.y - ( BodyPosition.y + 0.5f * BodySize.y );
@@ -258,21 +258,21 @@ public class Mobile : MonoBehaviour, IMoving
         distance = 0;
         return false;
     }
-    
-    public bool CheckWallProximity( float direction )
+
+    public bool CheckWallProximity( float direction, bool snap = true )
     {
         Vector2 normal;
         Collider2D col;
-        return CheckWallProximity( direction, out normal, out col );
+        return CheckWallProximity( direction, out normal, out col, snap );
     }
 
-    public bool CheckWallProximity( float direction, out Vector2 normal )
+    public bool CheckWallProximity( float direction, out Vector2 normal, bool snap = true )
     {
         Collider2D col;
-        return CheckWallProximity( direction, out normal, out col );
+        return CheckWallProximity( direction, out normal, out col, snap );
     }
 
-    public bool CheckWallProximity( float direction, out Vector2 normal, out Collider2D col )
+    public bool CheckWallProximity( float direction, out Vector2 normal, out Collider2D col, bool snap = true )
     {
         var hit = Physics2D.Raycast( BodyPosition, Vector2.right * direction, 0.5f * BodySize.x + WallStickiness,
             _wallLayerMask );
@@ -280,8 +280,12 @@ public class Mobile : MonoBehaviour, IMoving
         {
             DebugExtension.DebugPoint( hit.point, 0.1f, 1 );
             // snap to wall
-            BodyPosition = hit.point + hit.normal * 0.5f * BodySize.x;
-            CancelHorizontalMovement();
+            if ( snap )
+            {
+                BodyPosition = hit.point + hit.normal * 0.5f * BodySize.x;
+                CancelHorizontalMovement();
+            }
+
             normal = hit.normal;
             col = hit.collider;
             return true;
