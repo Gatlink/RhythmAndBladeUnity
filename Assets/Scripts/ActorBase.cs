@@ -29,7 +29,6 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
 
     protected virtual void Start()
     {
-        _controller = this.GetInterfaceComponents<IActorController<TActor>>().FirstOrDefault( controller => controller.Enabled );
         _currentState = CreateInitialState();
         _currentState.OnEnter();
         StateName = _currentState.Name;
@@ -37,10 +36,12 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
 
     protected virtual void Update()
     {
+        FindController();
+
         // update intents
         ResetIntent();
 
-        if ( _controller == null )
+        if ( _controller == null || !_controller.Enabled )
         {
             Debug.LogError( "Actor has no controller", this );
         }
@@ -60,6 +61,15 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
             {
                 TransitionToState( nextState );
             }
+        }
+    }
+
+    private void FindController()
+    {
+        if ( _controller == null || !_controller.Enabled )
+        {
+            _controller = this.GetInterfaceComponents<IActorController<TActor>>()
+                .FirstOrDefault( controller => controller.Enabled );
         }
     }
 
