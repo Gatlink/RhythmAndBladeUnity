@@ -6,7 +6,7 @@ namespace ActorStates
     public abstract class FixedHorizontalMovementStateBase : FixedTimeStateBase
     {
         protected readonly Mobile Mobile;
-        private float _direction;
+        protected float Direction;
         private float _lastNormalizedTime;
         private Vector2 _lastTangent;
         protected bool CurrentlyGrounded;
@@ -23,7 +23,7 @@ namespace ActorStates
         public override void OnEnter()
         {
             base.OnEnter();
-            _direction = Mobile.Direction;
+            Direction = Mobile.Direction;
             _lastNormalizedTime = 0;
         }
 
@@ -32,7 +32,7 @@ namespace ActorStates
             var mob = Mobile;
 
             // apply tangencial velocity curve
-            var deltaU = _direction * MovementLength *
+            var deltaU = Direction * MovementLength *
                          ( MovementCurve.Evaluate( NormalizedTime ) - MovementCurve.Evaluate( _lastNormalizedTime ) );
 
             _lastNormalizedTime = NormalizedTime;

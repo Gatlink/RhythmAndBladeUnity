@@ -30,6 +30,12 @@ namespace ActorStates.Player
         public override void OnEnter()
         {
             base.OnEnter();
+            if ( Actor.DesiredMovement != 0 )
+            {
+                Direction = Actor.DesiredMovement;
+                Mobile.UpdateDirection( Direction );
+            }
+
             Actor.ConsumeDash();
             _initiatedGrounded = Mobile.CheckGround();
         }
