@@ -122,6 +122,7 @@ MonoBehaviour:
     AirControlTiming: 0.66
     InitialMovementSpeed: 25
     CheckWallSlide: 1
+  MaxAirAttackHorizontalMovement: 2
   Attack1:
     HitDuration: 0.1
     ComboDuration: 0.2

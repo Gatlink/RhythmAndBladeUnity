@@ -30,6 +30,8 @@ namespace ActorStates.Boss
         {
             ApplyHorizontalMovement();
 
+            Mobile.Move();
+
             return base.Update();
         }
     }

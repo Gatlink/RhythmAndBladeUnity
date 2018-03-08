@@ -51,9 +51,6 @@ namespace ActorStates
             }
 
             mob.CurrentVelocity = tangent * deltaU / Time.deltaTime;
-
-            // default move
-            mob.Move();
         }
     }
 }

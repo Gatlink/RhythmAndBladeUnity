@@ -44,6 +44,8 @@ namespace ActorStates.Boss
         {
             ApplyHorizontalMovement();
 
+            Mobile.Move();
+
             var time = ElapsedTime;
 
             if ( time > _setting.ComboWindowStartTime && time <= _setting.ComboWindowEndTime )
