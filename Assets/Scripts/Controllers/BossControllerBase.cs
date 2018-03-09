@@ -37,10 +37,23 @@ namespace Controllers
             Player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>();
         }
 
-        protected IEnumerator ActionResolver( BossActor actor, Action action )
+        protected IEnumerator ActionResolver( BossActor actor, Action action, bool byPassRules = false )
         {
-            var duration = action.SampleDuration();
+            if ( !byPassRules )
+            {
+                if ( action.Type == ActionType.Attack )
+                {
+                    // never attack if player is not in range
+                    var toPlayer = Player.BodyPosition.x - actor.Mobile.BodyPosition.x;
+                    if ( Mathf.Abs( toPlayer ) > Boss1Settings.Instance.CloseRangeThreshold )
+                    {
+                        yield break;
+                    }
+                }
+            }
 
+            var duration = action.SampleDuration();
+            var mob = actor.Mobile;
             while ( duration > 0 )
             {
                 duration -= Time.deltaTime;
@@ -50,13 +63,13 @@ namespace Controllers
                     case ActionType.Stands:
                         break;
                     case ActionType.Move:
-                        var toPlayer = Player.BodyPosition - actor.Mobile.BodyPosition;
-                        if ( Mathf.Abs( toPlayer.x ) <= Boss1Settings.Instance.CloseRangeThreshold )
+                        var toPlayer = Player.BodyPosition.x - mob.BodyPosition.x;
+                        if ( Mathf.Abs( toPlayer ) <= Boss1Settings.Instance.CloseRangeThreshold )
                         {
                             duration = 0;
                         }
 
-                        actor.DesiredMovement = Mathf.Sign( toPlayer.x );
+                        actor.DesiredMovement = Mathf.Sign( toPlayer );
                         break;
                     case ActionType.Jump:
                         actor.DesiredJumpAttack = true;
@@ -76,7 +89,7 @@ namespace Controllers
         }
 
         private static readonly IGenerator<float> GaussianGenerator = Generator.GaussianRandomFloat( 0, 1 );
-        
+
         private static float NextPositiveGaussian( float mean, float stdDev )
         {
             float next;

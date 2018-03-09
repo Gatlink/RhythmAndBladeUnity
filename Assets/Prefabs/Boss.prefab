@@ -341,9 +341,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
-  CloseRangeThreshold: 2.8
-  ActionDurationMean: 1
-  ActionDurationStdDeviation: 1
+  WeightedActions:
+    values:
+    - Action:
+        Type: 0
+        Duration: 0.5
+        DurationStdDev: 0.5
+      Weight: 1
+    - Action:
+        Type: 1
+        Duration: 1
+        DurationStdDev: 1
+      Weight: 3
+    - Action:
+        Type: 2
+        Duration: 1
+        DurationStdDev: 1
+      Weight: 1
+    - Action:
+        Type: 3
+        Duration: 1
+        DurationStdDev: 1
+      Weight: 1
+    - Action:
+        Type: 4
+        Duration: 1
+        DurationStdDev: 1
+      Weight: 5
 --- !u!114 &114210730153343898
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -403,7 +427,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
-  CloseRangeThreshold: 2.8
   Randomize: 0
   LoopRepeat: 0
   Script:
