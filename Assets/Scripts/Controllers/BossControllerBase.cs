@@ -8,6 +8,8 @@ namespace Controllers
 {
     public abstract class BossControllerBase : GLMonoBehaviour, IActorController<BossActor>
     {
+        // ReSharper disable once NotAccessedField.Global
+        // used by Editor in inspectors
         public string Name;
         
         public enum ActionType

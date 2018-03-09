@@ -6,19 +6,18 @@ namespace Controllers
 {
     public class BossControllerManager : GLMonoBehaviour, IActorController<BossActor>
     {
+        // ReSharper disable once NotAccessedField.Global
+        // used by Editor in inspectors
+        public string Name;
+        
         public bool Randomize;
         public bool LoopRepeat;
 
         public ControllerList SubControllers;
 
-        private int _nextControllerIndex = 0;
+        private int _nextControllerIndex;
         private BossControllerBase _currentController;
        
-        // ReSharper disable once Unity.RedundantEventFunction
-        private void Start()
-        {            
-        }
-
         public bool Enabled
         {
             get { return enabled; }
