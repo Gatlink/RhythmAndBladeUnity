@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 114360097638799396}
   - component: {fileID: 114454162900846782}
   - component: {fileID: 114179763777175788}
+  - component: {fileID: 114430435903046616}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Boss
@@ -368,6 +369,9 @@ MonoBehaviour:
         Duration: 1
         DurationStdDev: 1
       Weight: 5
+  HealthEndCondition:
+    useValue: 1
+    value: 4
 --- !u!114 &114210730153343898
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -415,6 +419,48 @@ MonoBehaviour:
   _damage: 1
   _recoil: 1
   _passiveHurt: 0
+--- !u!114 &114430435903046616
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1493278349051608}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5d6b825ec884908823d3c5f73ef4805, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  WeightedActions:
+    values:
+    - Action:
+        Type: 0
+        Duration: 0.5
+        DurationStdDev: 0.5
+      Weight: 0
+    - Action:
+        Type: 1
+        Duration: 1
+        DurationStdDev: 1
+      Weight: 3
+    - Action:
+        Type: 2
+        Duration: 1
+        DurationStdDev: 1
+      Weight: 3
+    - Action:
+        Type: 3
+        Duration: 1
+        DurationStdDev: 1
+      Weight: 3
+    - Action:
+        Type: 4
+        Duration: 1
+        DurationStdDev: 1
+      Weight: 5
+  HealthEndCondition:
+    useValue: 0
+    value: 4
 --- !u!114 &114454162900846782
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -479,6 +525,7 @@ MonoBehaviour:
     values:
     - {fileID: 114454162900846782}
     - {fileID: 114179763777175788}
+    - {fileID: 114430435903046616}
 --- !u!114 &114606754072423226
 MonoBehaviour:
   m_ObjectHideFlags: 1

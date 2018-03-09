@@ -3,14 +3,14 @@ using System.Collections;
 using System.Linq;
 using Gamelogic.Extensions;
 using Gamelogic.Extensions.Algorithms;
-using UnityEngine.Serialization;
 
 namespace Controllers
 {
-    public class RandomBossController : BossControllerBase
+    public class WeightedActionsBossController : BossControllerBase
     {
-        [FormerlySerializedAs("Actions")]
         public WeightedActionList WeightedActions;
+
+        public OptionalInt HealthEndCondition;
 
         private IGenerator<Action> _actionGenerator;
 
@@ -25,6 +25,14 @@ namespace Controllers
 
         public override void UpdateActorIntent( BossActor actor )
         {
+            if ( HealthEndCondition.UseValue )
+            {
+                if ( actor.GetComponent<ActorHealth>().CurrentHitCount <= HealthEndCondition.Value )
+                {
+                    enabled = false;
+                    return;
+                }
+            }
             while ( _currentAction == null || !_currentAction.MoveNext() )
             {
                 _currentAction = ActionResolver( actor, _actionGenerator.Next() );
@@ -40,7 +48,7 @@ namespace Controllers
     }
 
     [ Serializable ]
-    public class WeightedActionList : InspectorList<RandomBossController.WeightedAction>
+    public class WeightedActionList : InspectorList<WeightedActionsBossController.WeightedAction>
     {
     }
 }
