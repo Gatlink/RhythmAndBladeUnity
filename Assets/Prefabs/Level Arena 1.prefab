@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 4623976772145206}
   - component: {fileID: 114476736183637976}
   - component: {fileID: 61967086660759336}
+  - component: {fileID: 114576736439933108}
   m_Layer: 0
   m_Name: BossTriggered
   m_TagString: Untagged
@@ -607,9 +608,10 @@ MonoBehaviour:
   TargetGameObjects: []
   TargetBehaviours:
   - {fileID: 114520579515588662}
-  TrackingTarget: {fileID: 0}
+  - {fileID: 0}
   AutoReset: 0
-  StateWhenInCollider: 1
+  TargetState: 1
+  TrackingTarget: {fileID: 0}
 --- !u!114 &114476736183637976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -624,9 +626,9 @@ MonoBehaviour:
   TargetGameObjects: []
   TargetBehaviours:
   - {fileID: 114184274047557608}
-  TrackingTarget: {fileID: 0}
   AutoReset: 0
-  StateWhenInCollider: 1
+  TargetState: 1
+  TrackingTarget: {fileID: 0}
 --- !u!114 &114481222486118512
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -698,6 +700,23 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     Function: 7
+--- !u!114 &114576736439933108
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1982824041717130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 094915e870c44cd481629aadfa953055, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetGameObjects:
+  - {fileID: 1634703790122622}
+  TargetBehaviours: []
+  AutoReset: 0
+  TargetState: 0
+  TargetHealth: {fileID: 0}
 --- !u!114 &114611327543723714
 MonoBehaviour:
   m_ObjectHideFlags: 1

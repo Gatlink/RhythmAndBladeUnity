@@ -31,7 +31,7 @@ namespace Controllers
 
         // ReSharper disable once Unity.RedundantEventFunction
         protected virtual void Start()
-        {            
+        {
         }
 
         protected virtual void Awake()
@@ -41,9 +41,7 @@ namespace Controllers
 
         protected IEnumerator ActionResolver( BossActor actor, Action action )
         {
-            var duration = action.DurationStdDev == 0
-                ? action.Duration
-                : NextPositiveGaussian( action.Duration, action.DurationStdDev );
+            var duration = action.SampleDuration();
 
             while ( duration > 0 )
             {
@@ -118,21 +116,38 @@ namespace Controllers
 
             public static Action Jump()
             {
-                return new Action( ActionType.Jump, Boss1Settings.Instance.JumpAttackDuration );
+                return new Action( ActionType.Jump, 0 );
             }
 
             public static Action Charge()
             {
-                return new Action( ActionType.Charge, Boss1Settings.Instance.ChargeDuration );
+                return new Action( ActionType.Charge, 0 );
             }
 
             public static Action Attack( float duration, float stdDev = 0 )
             {
                 return new Action( ActionType.Attack, duration, stdDev );
             }
+
+            public float SampleDuration()
+            {
+                switch ( Type )
+                {
+                    case ActionType.Jump:
+                        return Boss1Settings.Instance.JumpAttackDuration - 0.05f;
+                    case ActionType.Charge:
+                        return Boss1Settings.Instance.ChargeDuration - 0.05f;
+                    case ActionType.Stands:
+                    case ActionType.Move:
+                    case ActionType.Attack:
+                    case ActionType.Count:
+                    default:
+                        return DurationStdDev == 0 ? Duration : NextPositiveGaussian( Duration, DurationStdDev );
+                }
+            }
         }
-        
-        [Serializable]
+
+        [ Serializable ]
         public class ActionList : InspectorList<Action>
         {
         }

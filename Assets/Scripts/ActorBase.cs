@@ -41,15 +41,11 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
         // update intents
         ResetIntent();
 
-        if ( _controller == null || !_controller.Enabled )
-        {
-            Debug.LogError( "Actor has no controller", this );
-        }
-        else
+        if ( _controller != null && _controller.Enabled )
         {
             _controller.UpdateActorIntent( this as TActor );
         }
-
+        
         if ( _currentState == null )
         {
             Debug.LogError( "Actor has no current state", this );

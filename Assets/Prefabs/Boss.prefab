@@ -409,13 +409,13 @@ MonoBehaviour:
   Script:
     values:
     - Type: 0
-      Duration: 1
+      Duration: 0.6
       DurationStdDev: 0
     - Type: 3
       Duration: 1
       DurationStdDev: 0
     - Type: 0
-      Duration: 2
+      Duration: 1.3
       DurationStdDev: 0
 --- !u!114 &114500015476263518
 MonoBehaviour:
