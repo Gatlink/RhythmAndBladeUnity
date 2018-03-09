@@ -37,11 +37,13 @@ GameObject:
   m_Component:
   - component: {fileID: 4818911658601620}
   - component: {fileID: 114500015476263518}
-  - component: {fileID: 114179763777175788}
-  - component: {fileID: 114360097638799396}
   - component: {fileID: 114166970997549666}
   - component: {fileID: 114210730153343898}
   - component: {fileID: 114366331282936172}
+  - component: {fileID: 114578221024393692}
+  - component: {fileID: 114360097638799396}
+  - component: {fileID: 114454162900846782}
+  - component: {fileID: 114179763777175788}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Boss
@@ -333,7 +335,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5d6b825ec884908823d3c5f73ef4805, type: 3}
   m_Name: 
@@ -389,6 +391,32 @@ MonoBehaviour:
   _damage: 1
   _recoil: 1
   _passiveHurt: 0
+--- !u!114 &114454162900846782
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1493278349051608}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af439054e36484e9c8f65938a61c10c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  CloseRangeThreshold: 2.8
+  Randomize: 0
+  LoopRepeat: 0
+  Script:
+    values:
+    - Type: 0
+      Duration: 1
+      DurationStdDev: 0
+    - Type: 3
+      Duration: 1
+      DurationStdDev: 0
+    - Type: 0
+      Duration: 2
+      DurationStdDev: 0
 --- !u!114 &114500015476263518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -410,6 +438,24 @@ MonoBehaviour:
   TrackPositions:
     useValue: 1
     value: 200
+--- !u!114 &114578221024393692
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1493278349051608}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67a485f6e51644beb57b9030fdd8edde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  Randomize: 0
+  LoopRepeat: 0
+  SubControllers:
+    values:
+    - {fileID: 114454162900846782}
+    - {fileID: 114179763777175788}
 --- !u!114 &114606754072423226
 MonoBehaviour:
   m_ObjectHideFlags: 1
