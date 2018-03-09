@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Configuration;
 using Gamelogic.Extensions;
 using Gamelogic.Extensions.Algorithms;
 using UnityEngine;
@@ -21,8 +20,6 @@ namespace Controllers
 
         protected Mobile Player;
 
-        protected Boss1Settings Settings;
-
         public bool Enabled
         {
             get { return enabled; }
@@ -38,7 +35,6 @@ namespace Controllers
         protected virtual void Awake()
         {
             Player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>();
-            Settings = Boss1Settings.Instance;
         }
 
         protected IEnumerator ActionResolver( BossActor actor, Action action )
@@ -55,7 +51,7 @@ namespace Controllers
                         break;
                     case ActionType.Move:
                         var toPlayer = Player.BodyPosition - actor.Mobile.BodyPosition;
-                        if ( Mathf.Abs( toPlayer.x ) <= Settings.CloseRangeThreshold )
+                        if ( Mathf.Abs( toPlayer.x ) <= Boss1Settings.Instance.CloseRangeThreshold )
                         {
                             duration = 0;
                         }
@@ -159,7 +155,7 @@ namespace Controllers
             Gizmos.color = Color.blue;
 
             var mob = GetComponent<Mobile>();
-            Gizmos.DrawWireSphere( mob.BodyPosition, Settings.CloseRangeThreshold );
+            Gizmos.DrawWireSphere( mob.BodyPosition, Boss1Settings.Instance.CloseRangeThreshold );
         }
     }
 }

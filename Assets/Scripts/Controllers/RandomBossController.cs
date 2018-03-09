@@ -32,7 +32,7 @@ namespace Controllers
         {
             _actionGenerator.MoveNext();
             var toPlayer = Player.BodyPosition - actor.Mobile.BodyPosition;
-            if ( toPlayer.magnitude > Settings.CloseRangeThreshold )
+            if ( toPlayer.magnitude > Boss1Settings.Instance.CloseRangeThreshold )
             {
                 while ( _actionGenerator.Current == ActionType.Attack )
                 {
