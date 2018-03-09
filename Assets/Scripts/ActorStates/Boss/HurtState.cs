@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace ActorStates.Boss
+﻿namespace ActorStates.Boss
 {
     public class HurtState : BossFixedHorizontalMovementBase
     {
@@ -21,9 +19,9 @@ namespace ActorStates.Boss
             get { return _direction * Settings.HurtDriftLength; }
         }
 
-        protected override AnimationCurve MovementCurve
+        protected override Easing MovementTrajectory
         {
-            get { return Settings.HurtDriftMovementCurve; }
+            get { return Settings.HurtDriftTrajectory; }
         }
 
         public override IActorState Update()

@@ -18,7 +18,7 @@ namespace ActorStates
 
         protected abstract float MovementLength { get; }
 
-        protected abstract AnimationCurve MovementCurve { get; }
+        protected abstract Easing MovementTrajectory { get; }
 
         public override void OnEnter()
         {
@@ -33,7 +33,7 @@ namespace ActorStates
 
             // apply tangencial velocity curve
             var deltaU = Direction * MovementLength *
-                         ( MovementCurve.Evaluate( NormalizedTime ) - MovementCurve.Evaluate( _lastNormalizedTime ) );
+                         ( MovementTrajectory.Eval( NormalizedTime ) - MovementTrajectory.Eval( _lastNormalizedTime ) );
 
             _lastNormalizedTime = NormalizedTime;
 

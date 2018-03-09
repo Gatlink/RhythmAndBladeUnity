@@ -42,29 +42,53 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  DashLength: 6
-  DashJumpTiming: 0
-  NormalJump:
-    Duration: 0.3
-    Height: 5
-    HeightCurve:
+  DashTrajectory:
+    Type: 0
+    Curve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
         time: 0
         value: 0
-        inSlope: 2.8392856
-        outSlope: 2.8392856
+        inSlope: 2.1562495
+        outSlope: 2.1562495
         tangentMode: 0
       - serializedVersion: 2
         time: 1
         value: 1
-        inSlope: 0
-        outSlope: 0
+        inSlope: 0.37500045
+        outSlope: 0.37500045
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
+    Function: 21
+  DashLength: 6
+  DashJumpTiming: 0
+  NormalJump:
+    Duration: 0.3
+    Height: 5
+    HeightTrajectory:
+      Type: 0
+      Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 2
+          time: 0
+          value: 0
+          inSlope: 2.8392856
+          outSlope: 2.8392856
+          tangentMode: 0
+        - serializedVersion: 2
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 0
+      Function: 21
     HorizontalMovementSpeed: 10
     HorizontalMovementInertia: 0.2
     AirControlTiming: 0
@@ -73,24 +97,27 @@ MonoBehaviour:
   WallJump:
     Duration: 0.3
     Height: 5
-    HeightCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0
-        value: 0
-        inSlope: 2.8392856
-        outSlope: 2.8392856
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
+    HeightTrajectory:
+      Type: 0
+      Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 2
+          time: 0
+          value: 0
+          inSlope: 2.8392856
+          outSlope: 2.8392856
+          tangentMode: 0
+        - serializedVersion: 2
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 0
+      Function: 21
     HorizontalMovementSpeed: 10
     HorizontalMovementInertia: 0.2
     AirControlTiming: 0.66
@@ -99,24 +126,27 @@ MonoBehaviour:
   DashJump:
     Duration: 0.6
     Height: 3
-    HeightCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0
-        value: 0
-        inSlope: 2.8392856
-        outSlope: 2.8392856
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
+    HeightTrajectory:
+      Type: 0
+      Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 2
+          time: 0
+          value: 0
+          inSlope: 2.8392856
+          outSlope: 2.8392856
+          tangentMode: 0
+        - serializedVersion: 2
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 0
+      Function: 21
     HorizontalMovementSpeed: 10
     HorizontalMovementInertia: 0.2
     AirControlTiming: 0.66
@@ -146,6 +176,27 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
+    Trajectory:
+      Type: 0
+      Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 2
+          time: 0
+          value: 0
+          inSlope: 2.1562495
+          outSlope: 2.1562495
+          tangentMode: 0
+        - serializedVersion: 2
+          time: 1
+          value: 1
+          inSlope: 0.37500045
+          outSlope: 0.37500045
+          tangentMode: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 0
+      Function: 21
     Cooldown: 0.3
   Attack2:
     HitDuration: 0.2
@@ -170,6 +221,27 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
+    Trajectory:
+      Type: 0
+      Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 2
+          time: 0
+          value: 0
+          inSlope: 2.1562495
+          outSlope: 2.1562495
+          tangentMode: 0
+        - serializedVersion: 2
+          time: 1
+          value: 1
+          inSlope: 0.37500045
+          outSlope: 0.37500045
+          tangentMode: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 0
+      Function: 21
     Cooldown: 0.3
   Attack3:
     HitDuration: 0.2
@@ -194,4 +266,25 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
+    Trajectory:
+      Type: 0
+      Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 2
+          time: 0
+          value: 0
+          inSlope: 2.1562495
+          outSlope: 2.1562495
+          tangentMode: 0
+        - serializedVersion: 2
+          time: 1
+          value: 1
+          inSlope: 0.37500045
+          outSlope: 0.37500045
+          tangentMode: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 0
+      Function: 21
     Cooldown: 0.3

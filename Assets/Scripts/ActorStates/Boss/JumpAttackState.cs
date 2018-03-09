@@ -20,9 +20,9 @@ namespace ActorStates.Boss
             get { return Settings.JumpAttackDuration; }
         }
 
-        protected override AnimationCurve MovementCurve
+        protected override Easing MovementTrajectory
         {
-            get { return Settings.JumpAttackHeightCurve; }
+            get { return Settings.JumpAttackHeightTrajectory; }
         }
 
         protected override float MovementLength
@@ -57,11 +57,11 @@ namespace ActorStates.Boss
         private void ApplyHorizontalMovement()
         {
             var mob = Mobile;
-            var curve = Settings.JumpAttackMovementCurve;
+            var curve = Settings.JumpAttackMovementTrajectory;
 
             // apply tangencial velocity curve
             var delta = _horizontalDistance *
-                         ( curve.Evaluate( NormalizedTime ) - curve.Evaluate( _lastNormalizedTime ) );
+                         ( curve.Eval( NormalizedTime ) - curve.Eval( _lastNormalizedTime ) );
 
             _lastNormalizedTime = NormalizedTime;
 

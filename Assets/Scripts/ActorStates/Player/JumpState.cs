@@ -49,9 +49,9 @@ namespace ActorStates.Player
             get { return _setting.Height; }
         }
 
-        protected override AnimationCurve MovementCurve
+        protected override Easing MovementTrajectory
         {
-            get { return _setting.HeightCurve; }
+            get { return _setting.HeightTrajectory; }
         }
 
         public JumpState( PlayerActor actor, JumpSetting setting ) : base( actor )

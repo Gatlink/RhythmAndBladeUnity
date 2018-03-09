@@ -8,7 +8,7 @@ namespace ActorStates
 
         private float _jumpStartPositionY;
 
-        protected abstract AnimationCurve MovementCurve { get; }
+        protected abstract Easing MovementTrajectory { get; }
 
         protected abstract float MovementLength { get; }
 
@@ -26,7 +26,7 @@ namespace ActorStates
         protected void ApplyVerticalMovement()
         {
             // apply vertical velocity curve
-            var targetPositionY = _jumpStartPositionY + MovementCurve.Evaluate( NormalizedTime ) * MovementLength;
+            var targetPositionY = _jumpStartPositionY + MovementTrajectory.Eval( NormalizedTime ) * MovementLength;
             Mobile.SetVerticalVelocity( ( targetPositionY - Mobile.transform.position.y ) / Time.deltaTime );
         }
     }

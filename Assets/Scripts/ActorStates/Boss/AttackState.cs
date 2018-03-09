@@ -35,9 +35,9 @@ namespace ActorStates.Boss
             get { return _setting.HorizontalMovementLength; }
         }
 
-        protected override AnimationCurve MovementCurve
+        protected override Easing MovementTrajectory
         {
-            get { return _setting.MovementCurve; }
+            get { return _setting.Trajectory; }
         }
 
         public override IActorState Update()

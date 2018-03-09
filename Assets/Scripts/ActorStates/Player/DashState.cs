@@ -22,9 +22,9 @@ namespace ActorStates.Player
             get { return _playerSettings.DashLength; }
         }
 
-        protected override AnimationCurve MovementCurve
+        protected override Easing MovementTrajectory
         {
-            get { return _playerSettings.DashPositionCurve; }
+            get { return _playerSettings.DashTrajectory; }
         }
 
         public override void OnEnter()

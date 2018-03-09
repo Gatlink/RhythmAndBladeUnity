@@ -107,7 +107,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  - m_Name: 
+  - m_Name: default jump
     m_Curve:
       serializedVersion: 2
       m_Curve:
@@ -126,7 +126,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  - m_Name: 
+  - m_Name: default dash
     m_Curve:
       serializedVersion: 2
       m_Curve:
@@ -138,6 +138,44 @@ MonoBehaviour:
         tangentMode: 0
       - serializedVersion: 2
         time: 1
+        value: 1
+        inSlope: 0.37500045
+        outSlope: 0.37500045
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  - m_Name: boss charge
+    m_Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0.22
+        value: 0
+        inSlope: 2.1562495
+        outSlope: 2.1562495
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.88
+        value: 1
+        inSlope: 0.37500045
+        outSlope: 0.37500045
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  - m_Name: boss attack 2
+    m_Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0.18333435
+        value: 0
+        inSlope: 2.1562495
+        outSlope: 2.1562495
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.90000004
         value: 1
         inSlope: 0.37500045
         outSlope: 0.37500045

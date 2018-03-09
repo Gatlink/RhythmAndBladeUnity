@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace ActorStates.Boss
+﻿namespace ActorStates.Boss
 {
     public class ChargeAttackState : BossFixedHorizontalMovementBase
     {
@@ -21,9 +19,9 @@ namespace ActorStates.Boss
             get { return _distance; }
         }
 
-        protected override AnimationCurve MovementCurve
+        protected override Easing MovementTrajectory
         {
-            get { return Settings.ChargeMovementCurve; }
+            get { return Settings.ChargeTrajectory; }
         }
 
         public override IActorState Update()

@@ -8,26 +8,29 @@ public class EasingDrawer : PropertyDrawer
     {
         using ( var scope = new EditorGUI.PropertyScope( position, label, property ) )
         {
-            EditorGUILayout.PrefixLabel( scope.content );
+            var contentPosition = EditorGUI.PrefixLabel( position, scope.content );
 
-            using ( new EditorGUI.IndentLevelScope( 1 ) )
+            const float typeWidthRatio = 0.25f;
+
+            contentPosition.width *= typeWidthRatio;
+            EditorGUI.indentLevel = 0;
+            var typeProp = property.FindPropertyRelative( "Type" );
+            var easeType = (Easing.EasingType) EditorGUI.EnumPopup( contentPosition, GUIContent.none,
+                (Easing.EasingType) typeProp.enumValueIndex );
+            typeProp.enumValueIndex = (int) easeType;
+
+            contentPosition.x += contentPosition.width;
+            contentPosition.width *= 3;
+            if ( easeType == Easing.EasingType.Curve )
             {
-                var typeProp = property.FindPropertyRelative( "Type" );
-                var easeType = (Easing.EasingType) EditorGUILayout.EnumPopup( "Type",
-                    (Easing.EasingType) typeProp.enumValueIndex );
-                typeProp.enumValueIndex = (int) easeType;
-
-                if ( easeType == Easing.EasingType.Curve )
-                {
-                    EditorGUILayout.PropertyField( property.FindPropertyRelative( "Curve" ) );
-                }
-                else
-                {
-                    var funcProp = property.FindPropertyRelative( "Function" );
-                    var funcType = (EasingFunction.Ease) EditorGUILayout.EnumPopup( "Function",
-                        (EasingFunction.Ease) funcProp.enumValueIndex );
-                    funcProp.enumValueIndex = (int) funcType;
-                }
+                EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "Curve" ), GUIContent.none );
+            }
+            else
+            {
+                var funcProp = property.FindPropertyRelative( "Function" );
+                var funcType = (EasingFunction.Ease) EditorGUI.EnumPopup( contentPosition, GUIContent.none,
+                    (EasingFunction.Ease) funcProp.enumValueIndex );
+                funcProp.enumValueIndex = (int) funcType;
             }
         }
     }

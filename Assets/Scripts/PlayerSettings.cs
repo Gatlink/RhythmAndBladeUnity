@@ -64,7 +64,7 @@ public class PlayerSettings : ScriptableObject
     public float DashDuration = 0.3f;
 
     [ FormerlySerializedAs( "_dashPositionCurve" ) ]
-    public AnimationCurve DashPositionCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+    public Easing DashTrajectory = new Easing();
 
     [ FormerlySerializedAs( "_dashLength" ) ]
     public float DashLength = 6;
@@ -105,7 +105,7 @@ public class PlayerSettings : ScriptableObject
         public float HorizontalMovementLength;
 
         [ Tooltip( "Horizontal (X) trajectory from t=0 to t=Hit+Combo+Recovery" ) ]
-        public AnimationCurve MovementCurve;
+        public Easing Trajectory;
 
         [ Tooltip( "Cannot trigger another attack during cooldown" ) ]
         public float Cooldown;
@@ -121,9 +121,8 @@ public struct JumpSetting
     [ Tooltip( "Jump height (max Y)" ) ]
     public float Height;
 
-    [ ClampedCurve ]
     [ Tooltip( "Height (Y) trajectory from t=0 to t=Duration" ) ]
-    public AnimationCurve HeightCurve;
+    public Easing HeightTrajectory;
 
     [ Tooltip( "Movement speed during air control" ) ]
     public float HorizontalMovementSpeed;

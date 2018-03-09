@@ -35,13 +35,13 @@ public class Boss1Settings : ScriptableObject
     public float MaxJumpAttackHeight = 10;
 
     [ Tooltip( "Height (Y) trajectory from t=0 to t=Duration" ) ]
-    public AnimationCurve JumpAttackHeightCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+    public Easing JumpAttackHeightTrajectory = new Easing();
 
     [ Tooltip( "Max horizontal movement allowed during jump" ) ]
     public float MaxJumpAttackMovementLength = 10;
 
     [ Tooltip( "Height (Y) trajectory from t=0 to t=Duration" ) ]
-    public AnimationCurve JumpAttackMovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+    public Easing JumpAttackMovementTrajectory = new Easing();
 
     [ Header( "Dive" ) ]
     public float DiveGravity;
@@ -57,7 +57,7 @@ public class Boss1Settings : ScriptableObject
     [ Header( "Charge" ) ]
     public float ChargeDuration = 0.75f;
 
-    public AnimationCurve ChargeMovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+    public Easing ChargeTrajectory = new Easing();
 
     public float MaxChargeMovementLength = 8;
 
@@ -75,7 +75,7 @@ public class Boss1Settings : ScriptableObject
 
     public float HurtDriftLength;
 
-    public AnimationCurve HurtDriftMovementCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
+    public Easing HurtDriftTrajectory = new Easing();
 
     [ Serializable ]
     public struct AttackSetting
@@ -87,7 +87,7 @@ public class Boss1Settings : ScriptableObject
         public float HorizontalMovementLength;
 
         [ Tooltip( "Horizontal (X) trajectory from t=0 to t=Duration" ) ]
-        public AnimationCurve MovementCurve;
+        public Easing Trajectory;
 
         public float ComboWindowStartTime;
 
