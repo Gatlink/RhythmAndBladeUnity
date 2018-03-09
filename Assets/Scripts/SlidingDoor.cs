@@ -50,6 +50,8 @@ public class SlidingDoor : GLMonoBehaviour
 
     private void Transition( Vector3 to )
     {
+        if ( !gameObject.activeInHierarchy ) return;
+        
         if ( _transition != null )
         {
             StopCoroutine( _transition );
