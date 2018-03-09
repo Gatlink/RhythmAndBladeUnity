@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Configuration;
 using Gamelogic.Extensions;
 using Gamelogic.Extensions.Algorithms;
 using UnityEngine;
@@ -8,8 +9,6 @@ namespace Controllers
 {
     public abstract class BossControllerBase : GLMonoBehaviour, IActorController<BossActor>
     {
-        public float CloseRangeThreshold;
-
         public enum ActionType
         {
             Stands = 0,
@@ -21,6 +20,8 @@ namespace Controllers
         }
 
         protected Mobile Player;
+
+        protected Boss1Settings Settings;
 
         public bool Enabled
         {
@@ -37,6 +38,7 @@ namespace Controllers
         protected virtual void Awake()
         {
             Player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>();
+            Settings = Boss1Settings.Instance;
         }
 
         protected IEnumerator ActionResolver( BossActor actor, Action action )
@@ -53,7 +55,7 @@ namespace Controllers
                         break;
                     case ActionType.Move:
                         var toPlayer = Player.BodyPosition - actor.Mobile.BodyPosition;
-                        if ( Mathf.Abs( toPlayer.x ) <= CloseRangeThreshold )
+                        if ( Mathf.Abs( toPlayer.x ) <= Settings.CloseRangeThreshold )
                         {
                             duration = 0;
                         }
@@ -78,7 +80,7 @@ namespace Controllers
         }
 
         private static readonly IGenerator<float> GaussianGenerator = Generator.GaussianRandomFloat( 0, 1 );
-
+        
         private static float NextPositiveGaussian( float mean, float stdDev )
         {
             float next;
@@ -157,7 +159,7 @@ namespace Controllers
             Gizmos.color = Color.blue;
 
             var mob = GetComponent<Mobile>();
-            Gizmos.DrawWireSphere( mob.BodyPosition, CloseRangeThreshold );
+            Gizmos.DrawWireSphere( mob.BodyPosition, Settings.CloseRangeThreshold );
         }
     }
 }

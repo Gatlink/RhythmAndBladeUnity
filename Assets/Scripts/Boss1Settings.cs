@@ -19,6 +19,9 @@ public class Boss1Settings : ScriptableObject
         }
     }
 
+    [ Header( "General" ) ]
+    public float CloseRangeThreshold = 2.8f;
+
     [ Header( "Grounded" ) ]
     public float GroundedMovementSpeed = 5;
 

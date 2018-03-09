@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using Gamelogic.Extensions;
 using Gamelogic.Extensions.Algorithms;
-using UnityEngine;
 
 namespace Controllers
 {
@@ -34,7 +32,7 @@ namespace Controllers
         {
             _actionGenerator.MoveNext();
             var toPlayer = Player.BodyPosition - actor.Mobile.BodyPosition;
-            if ( toPlayer.magnitude > CloseRangeThreshold )
+            if ( toPlayer.magnitude > Settings.CloseRangeThreshold )
             {
                 while ( _actionGenerator.Current == ActionType.Attack )
                 {
