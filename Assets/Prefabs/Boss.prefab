@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 114360097638799396}
   - component: {fileID: 114454162900846782}
   - component: {fileID: 114179763777175788}
+  - component: {fileID: 114055642730819164}
   - component: {fileID: 114430435903046616}
   m_Layer: 0
   m_Name: Boss
@@ -317,6 +318,32 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114055642730819164
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1493278349051608}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af439054e36484e9c8f65938a61c10c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  Name: JumpX3
+  Randomize: 0
+  LoopRepeat: 0
+  Script:
+    values:
+    - Type: 2
+      Duration: 0
+      DurationStdDev: 0
+    - Type: 2
+      Duration: 0
+      DurationStdDev: 0
+    - Type: 2
+      Duration: 0
+      DurationStdDev: 0
 --- !u!114 &114166970997549666
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -342,6 +369,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
+  Name: Easy
   WeightedActions:
     values:
     - Action:
@@ -431,6 +459,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
+  Name: Hard
   WeightedActions:
     values:
     - Action:
@@ -473,6 +502,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
+  Name: Intro
   Randomize: 0
   LoopRepeat: 0
   Script:
@@ -525,6 +555,7 @@ MonoBehaviour:
     values:
     - {fileID: 114454162900846782}
     - {fileID: 114179763777175788}
+    - {fileID: 114055642730819164}
     - {fileID: 114430435903046616}
 --- !u!114 &114606754072423226
 MonoBehaviour:

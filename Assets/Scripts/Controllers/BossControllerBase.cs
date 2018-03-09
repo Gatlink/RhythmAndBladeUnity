@@ -8,6 +8,8 @@ namespace Controllers
 {
     public abstract class BossControllerBase : GLMonoBehaviour, IActorController<BossActor>
     {
+        public string Name;
+        
         public enum ActionType
         {
             Stands = 0,

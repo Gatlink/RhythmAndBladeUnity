@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Reflection;
 using Gamelogic.Extensions.Internal;
 using UnityEditor;
 using UnityEditorInternal;
@@ -5,117 +7,130 @@ using UnityEngine;
 
 namespace Gamelogic.Extensions.Editor
 {
-	/// <summary>
-	/// A property drawer for type InspectorList.
-	/// </summary>
-	[Version(2, 5)]
-	[CustomPropertyDrawer(typeof (InspectorList), true)]
-	public class InspectorListPropertyDrawer : PropertyDrawer
-	{
-		private ReorderableList reorderableList;
-		private float lastHeight = 0;
+    /// <summary>
+    /// A property drawer for type InspectorList.
+    /// </summary>
+    [ Version( 2, 5 ) ]
+    [ CustomPropertyDrawer( typeof( InspectorList ), true ) ]
+    public class InspectorListPropertyDrawer : PropertyDrawer
+    {
+        private ReorderableList reorderableList;
+        private float lastHeight = 0;
 
-		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-		{
-			//	property.isExpanded = true;
-			//	return EditorGUI.GetPropertyHeight(property, label, true) + 200;
+        public override float GetPropertyHeight( SerializedProperty property, GUIContent label )
+        {
+            //	property.isExpanded = true;
+            //	return EditorGUI.GetPropertyHeight(property, label, true) + 200;
 
-			var list = property.FindPropertyRelative("values");
+            var list = property.FindPropertyRelative( "values" );
 
-			if (list == null)
-			{
-				return 0;
-			}
+            if ( list == null )
+            {
+                return 0;
+            }
 
-			InitList(list, property);
+            InitList( list, property );
 
-			if (reorderableList != null)
-			{
-				return reorderableList.GetHeight();
-			}
+            if ( reorderableList != null )
+            {
+                return reorderableList.GetHeight();
+            }
 
-			return lastHeight;
-			
-			//return EditorGUIUtility.singleLineHeight;
-		}
+            return lastHeight;
 
-		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-		{
-			var list = property.FindPropertyRelative("values");
+            //return EditorGUIUtility.singleLineHeight;
+        }
 
-			if (list == null)
-			{
-				return;
-			}
+        public override void OnGUI( Rect position, SerializedProperty property, GUIContent label )
+        {
+            var list = property.FindPropertyRelative( "values" );
 
-			int indentLevel = EditorGUI.indentLevel;
+            if ( list == null )
+            {
+                return;
+            }
 
-			InitList(list, property);
+            int indentLevel = EditorGUI.indentLevel;
 
-			if (list.arraySize > 0)
-				reorderableList.elementHeight = EditorGUI.GetPropertyHeight(list.GetArrayElementAtIndex(0));
+            InitList( list, property );
 
-			if(position.height <= 0)
-			{
-				return;
-			}
+            if ( list.arraySize > 0 )
+                reorderableList.elementHeight = EditorGUI.GetPropertyHeight( list.GetArrayElementAtIndex( 0 ) );
 
-			lastHeight = reorderableList.GetHeight();
+            if ( position.height <= 0 )
+            {
+                return;
+            }
 
-			reorderableList.DoList(position);
-			
-			EditorGUI.indentLevel = indentLevel;
-		}
+            lastHeight = reorderableList.GetHeight();
 
-		public void InitList(SerializedProperty list, SerializedProperty property)
-		{
-			if (reorderableList == null)
-			{
-				reorderableList = new ReorderableList(property.serializedObject, list, true, true, true, true)
-				{
-					drawElementCallback =
-						(rect, index, isActive, isFocused) =>
-						{
-							var element = list.GetArrayElementAtIndex(index);
-							var labelProperty = element;
-							var potentialProperty = (SerializedProperty)null;
-							var maxCheck = 0;
+            reorderableList.DoList( position );
 
-							while (labelProperty.Next(true) && maxCheck++ < 3)
-							{
-								if (labelProperty.propertyType == SerializedPropertyType.String)
-								{
+            EditorGUI.indentLevel = indentLevel;
+        }
 
-									//TODO: @omar this is always true
+        public void InitList( SerializedProperty list, SerializedProperty property )
+        {
+            if ( reorderableList == null )
+            {
+                reorderableList = new ReorderableList( property.serializedObject, list, true, true, true, true )
+                {
+                    drawElementCallback =
+                        ( rect, index, isActive, isFocused ) =>
+                        {
+                            var element = list.GetArrayElementAtIndex( index );
+                            if ( element.propertyType == SerializedPropertyType.ObjectReference )
+                            {
+                                var obj = element.objectReferenceValue;
+                                var prop = obj.GetType().GetFields( BindingFlags.Instance | BindingFlags.Public )
+                                    .FirstOrDefault( info =>
+                                        typeof( string ).IsAssignableFrom( info.FieldType ) && info.Name == "Name" );
 
-									if (labelProperty.name == "name" || potentialProperty == null)
-									{
-										potentialProperty = labelProperty;
-										break;
-									}
-								}
-							}
+                                var itemLabel =
+                                    new GUIContent( prop == null ? "Element: " + index : (string)prop.GetValue( obj ) );
+                                EditorGUI.PropertyField( rect, list.GetArrayElementAtIndex( index ), itemLabel, true );
+                            }
+                            else
+                            {
+                                var labelProperty = element;
+                                var potentialProperty = (SerializedProperty) null;
+                                var maxCheck = 0;
 
-							var itemLabel = potentialProperty == null
-								? new GUIContent("Element: " + index)
-								: new GUIContent(labelProperty.stringValue);
+                                while ( labelProperty.Next( true ) && maxCheck++ < 3 )
+                                {
+                                    if ( labelProperty.propertyType == SerializedPropertyType.String )
+                                    {
+                                        //TODO: @omar this is always true
 
-							EditorGUI.PropertyField(rect, list.GetArrayElementAtIndex(index), itemLabel, true);
-						},
+                                        if ( labelProperty.name == "name" || potentialProperty == null )
+                                        {
+                                            potentialProperty = labelProperty;
+                                            break;
+                                        }
+                                    }
+                                }
 
-					drawHeaderCallback =
-						rect =>
-						{
-							EditorGUI.indentLevel++;
-							EditorGUI.LabelField(rect, property.displayName);
-						},
+                                var itemLabel = potentialProperty == null
+                                    ? new GUIContent( "Element: " + index )
+                                    : new GUIContent( labelProperty.stringValue );
+
+                                EditorGUI.PropertyField( rect, list.GetArrayElementAtIndex( index ), itemLabel, true );
+                            }
+                        },
+
+                    drawHeaderCallback =
+                        rect =>
+                        {
+                            EditorGUI.indentLevel++;
+                            EditorGUI.LabelField( rect, property.displayName );
+                        },
 
 
 #if UNITY_5
 					elementHeightCallback = index => EditorGUI.GetPropertyHeight(list.GetArrayElementAtIndex(index), null, true)
 #endif
-				};
-			}
-		}
-	}
+                };
+            }
+        }
+    }
 }
