@@ -81,6 +81,11 @@ namespace ActorStates.Player
             {
                 _unstickInhibition = PlayerSettings.TimeToUnstickFromWall;
             }
+            
+            if ( !Actor.GetComponent<ActorHealth>().IsAlive )
+            {
+                return new DeathState( Actor );
+            }
 
             if ( !mob.CheckWallProximity( -mob.Direction ) )
             {

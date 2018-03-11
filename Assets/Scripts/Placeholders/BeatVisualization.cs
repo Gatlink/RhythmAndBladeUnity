@@ -71,11 +71,6 @@ public class BeatVisualization : GLMonoBehaviour
         var delay = Mathf.Max( 0, nextBeat - PreviewTime );
         var duration = Mathf.Min( PreviewTime, nextBeat );
 
-//        if ( beatCount == 0 )
-//        {
-//            //delay += 4 * Adjustment;
-//        }
-
         StartCoroutine( ShowVizualization( duration, delay, requiredBeatAction ) );
     }
 

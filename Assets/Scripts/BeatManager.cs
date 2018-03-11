@@ -52,6 +52,8 @@ public class BeatManager : Singleton<BeatManager>
         _source.clip = Track.Clip;
         _source.Play();
 
+        yield return new WaitUntil( () => Time > 0 );
+        
         var beatCount = 0;
         var playerSuccess = true;
         foreach ( var beatTime in Track.Beats )
