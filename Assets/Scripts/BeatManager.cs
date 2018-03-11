@@ -1,21 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Gamelogic.Extensions;
 using UnityEngine;
 
 public class BeatManager : Singleton<BeatManager>
 {
-    public delegate void BeatEventHandler( int beatCount, float nextBeat );
+    public delegate void NextBeatEventHandler( int beatCount, float nextBeat );
 
-    public event BeatEventHandler BeatEvent;
+    public event NextBeatEventHandler NextBeatEvent;
 
-    public float FirstBeatOffset;
-
-    public float BeatPerMinute;
-
-    public float BeatPeriodSeconds
-    {
-        get { return 60 / BeatPerMinute; }
-    }
+    public BeatEventList Beats;
 
     public float Time
     {
@@ -44,23 +40,69 @@ public class BeatManager : Singleton<BeatManager>
     {
         _source.Play();
 
-        yield return new WaitUntil( () => Time >= FirstBeatOffset );
+        var beatCount = 0;
 
-        int beatCount = 0;
-        var targetTime = FirstBeatOffset;
-        var totalTime = _source.clip.length;
-        while ( targetTime <= totalTime )
+        foreach ( var beatTime in Beats )
         {
-            targetTime += BeatPeriodSeconds;
-            var nextBeat = targetTime - Time;
-            OnBeatEvent( beatCount, nextBeat );
-            yield return new WaitForSecondsRealtime( nextBeat );
+            var nextBeatDuration = beatTime - Time;
+            OnNextBeatEvent( beatCount++, nextBeatDuration );
+            yield return new WaitForSecondsRealtime( nextBeatDuration );
         }
     }
 
-    private void OnBeatEvent( int beatCount, float nextBeat )
+    private void OnNextBeatEvent( int beatCount, float nextBeat )
     {
-        var handler = BeatEvent;
+        var handler = NextBeatEvent;
         if ( handler != null ) handler( beatCount, nextBeat );
+    }
+
+    [ Serializable ]
+    public class BeatEventList : IEnumerable<float>
+    {
+        [ SerializeField ]
+        [ HideInInspector ]
+        private float[] _beats;
+
+        public BeatEventList( float interval, float duration, float offset = 0 )
+        {
+            SetFromInterval( interval, duration, offset );
+        }
+
+        public BeatEventList( IEnumerable<float> beats )
+        {
+            SetFromBeats( beats );
+        }
+
+        public int BeatCount { get; private set; }
+
+        public void SetFromBeats( IEnumerable<float> beats )
+        {
+            _beats = beats.ToArray();
+            BeatCount = _beats.Length;
+        }
+
+        public void SetFromInterval( float interval, float duration, float offset )
+        {
+            var count = Mathf.CeilToInt( ( duration - offset ) / interval );
+            _beats = new float[ count ];
+            var beat = offset;
+            for ( var i = 0; i < count; i++ )
+            {
+                _beats[ i ] = beat;
+                beat += interval;
+            }
+
+            BeatCount = count;
+        }
+
+        public IEnumerator<float> GetEnumerator()
+        {
+            return _beats.AsEnumerable().GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

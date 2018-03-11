@@ -1,7 +1,16 @@
-﻿using Gamelogic.Extensions;
+﻿#define USE_GAMELOGIC_EXTENSION
+
+#if USE_GAMELOGIC_EXTENSION
+using Gamelogic.Extensions;
+#endif
+
 using UnityEngine;
 
+#if USE_GAMELOGIC_EXTENSION
 public class ShakeBehaviour : GLMonoBehaviour
+#else
+public class ShakeBehaviour : MonoBehaviour
+#endif
 {
     [ Header( "Translation" ) ]
     public Vector3 TranslationDirection = Vector2.zero;
@@ -19,7 +28,7 @@ public class ShakeBehaviour : GLMonoBehaviour
     public float Vibrato = 30;
 
     public float Smoothing = 0.01f;
-
+    
     public float Strength
     {
         get { return _strength; }
@@ -43,7 +52,7 @@ public class ShakeBehaviour : GLMonoBehaviour
     private Vector3 _currentMomentum;
     private float _strength;
 
-    void Update()
+    private void Update()
     {
         if ( Vibrato > 0 && TranslationStrength > 0 )
         {
@@ -112,7 +121,8 @@ public class ShakeBehaviour : GLMonoBehaviour
             _nextStepRotation = Vector3.zero;
         }
     }
-
+    
+#if USE_GAMELOGIC_EXTENSION
     public Coroutine Shake( float strength, float duration )
     {
         return Tween( strength, 0, duration, EasingFunction.EaseOutQuad, v => Strength = v );
@@ -123,4 +133,5 @@ public class ShakeBehaviour : GLMonoBehaviour
     {
         Shake( 1, 0.5f );
     }
+#endif
 }

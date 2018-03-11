@@ -50,8 +50,8 @@ public class Easing
         Function = function;
         Curve = AnimationCurve.Linear( 0, 0, 1, 1 );
     }
-    
-    public static implicit operator Func<float, float, float, float>(Easing self)
+
+    public static implicit operator Func<float, float, float, float>( Easing self )
     {
         return self.Eval;
     }
@@ -60,7 +60,7 @@ public class Easing
     {
         return Eval( 0, 1, t );
     }
-    
+
     public float Eval( float a, float b, float t )
     {
         if ( Type == EasingType.Curve )

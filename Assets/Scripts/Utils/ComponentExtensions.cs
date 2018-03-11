@@ -31,21 +31,15 @@ public static class ComponentExtensions
         return DefaultCoroutineHost.Instance.StartCoroutine( ChainWithAction( self, action ) );
     }
 
-    public static Coroutine Then( this Coroutine self, Coroutine coroutine )
+    public static Coroutine Then( this Coroutine self, IEnumerator coroutine )
     {
         return DefaultCoroutineHost.Instance.StartCoroutine( ChainWithCoroutine( self, coroutine ) );
     }
 
-    public static Coroutine Then( this Coroutine self, IEnumerator coroutine )
-    {
-        return DefaultCoroutineHost.Instance.StartCoroutine( ChainWithCoroutine( self,
-            DefaultCoroutineHost.Instance.StartCoroutine( coroutine ) ) );
-    }
-
-    private static IEnumerator ChainWithCoroutine( Coroutine first, Coroutine second )
+    private static IEnumerator ChainWithCoroutine( Coroutine first, IEnumerator second )
     {
         yield return first;
-        yield return second;
+        yield return DefaultCoroutineHost.Instance.StartCoroutine( second );
     }
 
     private static IEnumerator ChainWithAction( Coroutine coroutine, Action action )
