@@ -23,7 +23,6 @@ public class CameraFade : Singleton<CameraFade>
     private float _timeRemaining;
     private Action _completeAction;
 
-
     // Draw the texture and perform the fade:
     private void OnGUI()
     {

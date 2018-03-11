@@ -1,32 +1,43 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Gamelogic.Extensions;
+using Gamelogic.Extensions.Algorithms;
 using UnityEngine;
 
 public class BeatManager : Singleton<BeatManager>
 {
-    public delegate void NextBeatEventHandler( int beatCount, float nextBeat );
+    public delegate void BeatEventHandler( int beatCount, bool playerSuccess, float nextBeat,
+        BeatAction nextBeatAction );
 
-    public event NextBeatEventHandler NextBeatEvent;
+    public event BeatEventHandler BeatEvent;
 
-    public BeatEventList Beats;
+    public AudioTrack Track;
+
+    private IGenerator<BeatAction> _beatActionsGenerator;
+
+    private AudioSource _source;
+
+    private PlayerActor _player;
 
     public float Time
     {
         get { return _source.time; }
     }
 
-    private AudioSource _source;
-
     private void Awake()
     {
         _source = GetRequiredComponent<AudioSource>();
-    }
+        _beatActionsGenerator = new RandomBagGenerator<BeatAction>(new BeatAction[]
+        {
+            BeatAction.Up, BeatAction.Down, BeatAction.Left, BeatAction.Right
+        });
+    }            
 
-    private void OnEnable()
+    private IEnumerator Start()
     {
+        _player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<PlayerActor>();
+        yield return new WaitForEndOfFrame();
         StartCoroutine( PlayCoroutine() );
     }
 
@@ -38,71 +49,37 @@ public class BeatManager : Singleton<BeatManager>
 
     private IEnumerator PlayCoroutine()
     {
+        _source.clip = Track.Clip;
         _source.Play();
 
         var beatCount = 0;
-
-        foreach ( var beatTime in Beats )
+        var playerSuccess = true;
+        foreach ( var beatTime in Track.Beats )
         {
             var nextBeatDuration = beatTime - Time;
-            OnNextBeatEvent( beatCount++, nextBeatDuration );
+            var nextBeatAction = _beatActionsGenerator.Next();
+            Debug.Log( "Next beat in " + nextBeatDuration );
+
+            OnNextBeatEvent( beatCount++, playerSuccess, nextBeatDuration, nextBeatAction );
             yield return new WaitForSecondsRealtime( nextBeatDuration );
+            // check player success
+            playerSuccess = _player.DesiredBeatActions == nextBeatAction;
         }
     }
 
-    private void OnNextBeatEvent( int beatCount, float nextBeat )
+    private void OnNextBeatEvent( int beatCount, bool playerSuccess, float nextBeat, BeatAction nextBeatAction )
     {
-        var handler = NextBeatEvent;
-        if ( handler != null ) handler( beatCount, nextBeat );
+        var handler = BeatEvent;
+        if ( handler != null ) handler( beatCount, playerSuccess, nextBeat, nextBeatAction );
     }
 
-    [ Serializable ]
-    public class BeatEventList : IEnumerable<float>
+    [ Flags ]
+    public enum BeatAction
     {
-        [ SerializeField ]
-        [ HideInInspector ]
-        private float[] _beats;
-
-        public BeatEventList( float interval, float duration, float offset = 0 )
-        {
-            SetFromInterval( interval, duration, offset );
-        }
-
-        public BeatEventList( IEnumerable<float> beats )
-        {
-            SetFromBeats( beats );
-        }
-
-        public int BeatCount { get; private set; }
-
-        public void SetFromBeats( IEnumerable<float> beats )
-        {
-            _beats = beats.ToArray();
-            BeatCount = _beats.Length;
-        }
-
-        public void SetFromInterval( float interval, float duration, float offset )
-        {
-            var count = Mathf.CeilToInt( ( duration - offset ) / interval );
-            _beats = new float[ count ];
-            var beat = offset;
-            for ( var i = 0; i < count; i++ )
-            {
-                _beats[ i ] = beat;
-                beat += interval;
-            }
-
-            BeatCount = count;
-        }
-
-        public IEnumerator<float> GetEnumerator()
-        {
-            return _beats.AsEnumerable().GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        None = 0,
+        Up = 1,
+        Right = 2,
+        Down = 4,
+        Left = 8
     }
 }

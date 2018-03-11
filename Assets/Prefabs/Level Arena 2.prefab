@@ -10117,8 +10117,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
-  FadeDuration: 0.4
-  EffectAlpha: 0.5
 --- !u!114 &114663512360676182
 MonoBehaviour:
   m_ObjectHideFlags: 1

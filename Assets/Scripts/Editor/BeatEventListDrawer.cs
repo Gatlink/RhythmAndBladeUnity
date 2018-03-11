@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-[ CustomPropertyDrawer( typeof( BeatManager.BeatEventList ) ) ]
+[ CustomPropertyDrawer( typeof( AudioTrack.BeatList ) ) ]
 public class BeatEventListDrawer : PropertyDrawer
 {
-    private BeatManager.BeatEventList _instance;
+    private AudioTrack.BeatList _instance;
     private float _offset;
     private float _bpm;
     private float _duration;
 
-    private BeatManager.BeatEventList GetPropertyObject( SerializedProperty property )
+    private AudioTrack.BeatList GetPropertyObject( SerializedProperty property )
     {
         if ( _instance == null )
         {
@@ -25,7 +24,7 @@ public class BeatEventListDrawer : PropertyDrawer
                 propertyObject = propertyObject.GetType().GetField( pathNode ).GetValue( propertyObject );
             }
 
-            _instance = propertyObject as BeatManager.BeatEventList;
+            _instance = propertyObject as AudioTrack.BeatList;
         }
 
         return _instance;
@@ -48,8 +47,9 @@ public class BeatEventListDrawer : PropertyDrawer
             contentPosition.y += contentPosition.height + 1;
 
             var infos = string.Format( "Current: {0} beats loaded.", target.BeatCount );
-            EditorGUI.LabelField( contentPosition, infos );
-
+            var preview = string.Join( "\n",
+                target.Take( 5 ).Select( s => TimeSpan.FromSeconds( s ).ToString() ).ToArray() );
+            EditorGUI.LabelField( contentPosition, new GUIContent( infos, preview + "\n..." ) );
 
             contentPosition.y += contentPosition.height + 1;
             if ( GUI.Button( contentPosition, "Set From File" ) )
@@ -102,21 +102,21 @@ public class BeatEventListDrawer : PropertyDrawer
         }
     }
 
-    private static void LoadFromText( BeatManager.BeatEventList target, IEnumerable<string> lines )
+    private static void LoadFromText( AudioTrack.BeatList target, IEnumerable<string> lines )
     {
         var beats = lines.Select( ( l, i ) => new NumberedLine( i, l.Trim() ) )
             .Where( l => !l.Text.StartsWith( "#" ) )
             .Select( l =>
             {
-                float val;
-                if ( !float.TryParse( l.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out val ) )
+                TimeSpan val;
+                if ( !TimeSpan.TryParse( l.Text, out val ) )
                 {
                     var errorMessage = string.Format( "Parse error at line {0}: {1}", l.Num, l.Text );
                     EditorUtility.DisplayDialog( "Error", errorMessage, "OK" );
                     throw new ArgumentException( errorMessage );
                 }
 
-                return val;
+                return (float) val.TotalSeconds;
             } );
         target.SetFromBeats( beats );
     }
