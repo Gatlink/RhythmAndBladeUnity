@@ -11,7 +11,7 @@ public class HurtOnMissedBeatAction : MonoBehaviour
         var beatManager = BeatManager.Instance;
         if ( beatManager == null )
         {
-            gameObject.SetActive( false );
+            enabled = false;
             return;
         }
 
