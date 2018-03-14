@@ -12,8 +12,6 @@ public class BeatVisualization : GLMonoBehaviour
     [ Header( "Timings" ) ]
     public float PreviewTime = 1f;
 
-    public float Adjustment;
-
     [ Range( 0, 1 ) ]
     [ Header( "On set effect" ) ]
     public float FinalEffectSize = 0.2f;
@@ -67,7 +65,7 @@ public class BeatVisualization : GLMonoBehaviour
     {
         if ( beatCount > 0 )
         {
-            StartCoroutine( ShowResolveVizualization( playerSuccess ) );
+            ShowResolveVizualization( playerSuccess );
         }
         
         var delay = Mathf.Max( 0, nextBeat - PreviewTime );
@@ -76,9 +74,9 @@ public class BeatVisualization : GLMonoBehaviour
         StartCoroutine( ShowVizualization( duration, delay, requiredBeatAction ) );
     }
 
-    private IEnumerator ShowResolveVizualization( bool playerSuccess )
+    private void ShowResolveVizualization( bool playerSuccess )
     {
-        yield return new WaitForSeconds( Adjustment );
+        StopAllCoroutines();
         if ( playerSuccess )
         {
             Tween( 0f, 1f, FinalEffectDuration, FinalEffectMovementEasing,
@@ -111,7 +109,7 @@ public class BeatVisualization : GLMonoBehaviour
         var delta = Time.time - ( startTime + delay );
         Tween( 0f, 1f, 0.2f, EasingFunction.EaseOutQuad, SetBeatActionAlpha );
 
-        Tween( 0f, 1f, duration - delta + Adjustment, Mathf.Lerp, SetProgressNormalized );
+        Tween( 0f, 1f, duration - delta, Mathf.Lerp, SetProgressNormalized );
     }
 
     private void SetAlpha( float alpha )

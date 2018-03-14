@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Gamelogic.Extensions;
 using Gamelogic.Extensions.Algorithms;
 using UnityEngine;
@@ -14,6 +14,8 @@ public class BeatManager : Singleton<BeatManager>
 
     public AudioTrack Track;
 
+    public float Adjustment = 0.1f;
+    
     private IGenerator<BeatAction> _beatActionsGenerator;
 
     private AudioSource _source;
@@ -51,19 +53,19 @@ public class BeatManager : Singleton<BeatManager>
     {
         _source.clip = Track.Clip;
         _source.Play();
-
+        
         yield return new WaitUntil( () => Time > 0 );
         
         var beatCount = 0;
         var playerSuccess = true;
         foreach ( var beatTime in Track.Beats )
         {
-            var nextBeatDuration = beatTime - Time;
+            var nextBeatDuration = beatTime - Time + Adjustment;
             var nextBeatAction = _beatActionsGenerator.Next();
             Debug.Log( "Next beat in " + nextBeatDuration );
 
             OnNextBeatEvent( beatCount++, playerSuccess, nextBeatDuration, nextBeatAction );
-            yield return new WaitForSecondsRealtime( nextBeatDuration );
+            yield return new WaitForSeconds( nextBeatDuration );
             // check player success
             playerSuccess = _player.DesiredBeatActions == nextBeatAction;
         }

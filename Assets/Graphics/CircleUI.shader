@@ -127,8 +127,8 @@ Shader "Custom/Circle UI"
             {
                 float2 pos = position - _Center.xy;// / ScreenSize * _ScreenParams.xy;
                 float distance = sqrt(pow(pos.x, 2) + pow(pos.y,2));
-                float t = _Thickness / ScreenSize.y * _ScreenParams.y;
-                float r = _Radius / ScreenSize.y * _ScreenParams.y;
+                float t = _Thickness;// / ScreenSize.y * _ScreenParams.y;
+                float r = _Radius;// / ScreenSize.y * _ScreenParams.y;
                      
                 return fixed4(1, 1, 1, antialias(r, distance, t, _Dropoff));
             }

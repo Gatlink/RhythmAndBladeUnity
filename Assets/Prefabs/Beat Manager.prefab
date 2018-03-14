@@ -135,3 +135,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   __messageText: 
   Track: {fileID: 11400000, guid: 52fa23661860f994ba1e592d88d6d853, type: 2}
+  Adjustment: 0.08
