@@ -15,7 +15,7 @@ public class AudioTrack : ScriptableObject
     {
         [ SerializeField ]
         [ HideInInspector ]
-        private float[] _beats;
+        private float[] _beats = new float[0];
 
         public BeatList( float interval, float duration, float offset = 0 )
         {
