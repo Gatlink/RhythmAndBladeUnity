@@ -2,6 +2,7 @@ using System.Linq;
 using System.Reflection;
 using Gamelogic.Extensions.Internal;
 using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -81,13 +82,21 @@ namespace Gamelogic.Extensions.Editor
                             var element = list.GetArrayElementAtIndex( index );
                             if ( element.propertyType == SerializedPropertyType.ObjectReference )
                             {
+                                var itemLabel = new GUIContent( "Element: " + index );
                                 var obj = element.objectReferenceValue;
-                                var prop = obj.GetType().GetFields( BindingFlags.Instance | BindingFlags.Public )
-                                    .FirstOrDefault( info =>
-                                        typeof( string ).IsAssignableFrom( info.FieldType ) && info.Name == "Name" );
+                                if ( obj != null )
+                                {
+                                    var prop = obj.GetType().GetFields( BindingFlags.Instance | BindingFlags.Public )
+                                        .FirstOrDefault( info =>
+                                            typeof( string ).IsAssignableFrom( info.FieldType ) &&
+                                            info.Name == "Name" );
 
-                                var itemLabel =
-                                    new GUIContent( prop == null ? "Element: " + index : (string)prop.GetValue( obj ) );
+                                    if ( prop != null )
+                                    {
+                                        itemLabel = new GUIContent( (string) prop.GetValue( obj ) );
+                                    }
+                                }
+
                                 EditorGUI.PropertyField( rect, list.GetArrayElementAtIndex( index ), itemLabel, true );
                             }
                             else
