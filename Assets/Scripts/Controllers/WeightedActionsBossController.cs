@@ -17,8 +17,15 @@ namespace Controllers
         protected override void Awake()
         {
             base.Awake();
-            _actionGenerator = Generator.FrequencyRandomInt( WeightedActions.Select( wa => wa.Weight ) )
-                .Select( index => WeightedActions[ index ].Action );
+            if ( WeightedActions.Count == 1 )
+            {
+                _actionGenerator = Generator.Repeat( new Action[] { WeightedActions[ 0 ].Action } );
+            }
+            else
+            {
+                _actionGenerator = Generator.FrequencyRandomInt( WeightedActions.Select( wa => wa.Weight ) )
+                    .Select( index => WeightedActions[ index ].Action );
+            }
         }
 
         private IEnumerator _currentAction;

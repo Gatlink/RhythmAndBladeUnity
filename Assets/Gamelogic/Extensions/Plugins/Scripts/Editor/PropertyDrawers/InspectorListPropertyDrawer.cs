@@ -86,10 +86,7 @@ namespace Gamelogic.Extensions.Editor
                                 var obj = element.objectReferenceValue;
                                 if ( obj != null )
                                 {
-                                    var prop = obj.GetType().GetFields( BindingFlags.Instance | BindingFlags.Public )
-                                        .FirstOrDefault( info =>
-                                            typeof( string ).IsAssignableFrom( info.FieldType ) &&
-                                            info.Name == "Name" );
+                                    var prop = obj.GetType().GetField( "Name" );
 
                                     if ( prop != null )
                                     {
