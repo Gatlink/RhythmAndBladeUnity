@@ -21,6 +21,12 @@ public class PlayerActor : ActorBase<PlayerActor>
     [ ReadOnly ]
     public bool DesiredDash;
 
+    [ ReadOnly ]
+    public bool DesiredBeatMode;
+
+    [ ReadOnly ]   
+    public BeatManager.BeatAction DesiredBeatActions;
+
     [ Header( "State" ) ]
     [ ReadOnly ]
     [ SerializeField ]
@@ -81,9 +87,9 @@ public class PlayerActor : ActorBase<PlayerActor>
 
     public void AddAttackCooldown( float cooldown )
     {
-        AttackCooldown = cooldown;        
+        AttackCooldown = cooldown;
     }
-    
+
     public void ResetAttack()
     {
         _attackCount = 1;
@@ -129,7 +135,7 @@ public class PlayerActor : ActorBase<PlayerActor>
                 var recoilStrength = harmfull.Recoil;
                 return new HurtState( this, source, recoilStrength );
             }
-            else if (!Health.IsAlive)
+            else if ( !Health.IsAlive )
             {
                 return new DeathState( this );
             }
@@ -170,6 +176,8 @@ public class PlayerActor : ActorBase<PlayerActor>
         DesiredJump = false;
         DesiredAttack = false;
         DesiredDash = false;
+        DesiredBeatMode = false;
+        DesiredBeatActions = BeatManager.BeatAction.None;
     }
 
     #region UNITY MESSAGES
