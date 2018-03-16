@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Gamelogic.Extensions;
 using UnityEngine.Serialization;
 
+[ CheckInspectorButtons ]
 public class Rail : GLMonoBehaviour
 {
     public const float SlopeLimit = 35;
@@ -36,7 +37,7 @@ public class Rail : GLMonoBehaviour
         get
         {
             var pos = (Vector2) transform.position;
-            
+
             // ReSharper disable once RedundantTypeArgumentsOfMethod
             return Points.Aggregate<Vector2, Bounds>( new Bounds( Points[ 0 ] + pos, Vector2.zero ),
                 ( b, p ) =>

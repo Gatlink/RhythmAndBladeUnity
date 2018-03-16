@@ -30,12 +30,12 @@ namespace Gamelogic.Extensions.Editor
                 return 0;
             }
 
-            InitList( list, property );
-
-            if ( reorderableList != null )
-            {
-                return reorderableList.GetHeight();
-            }
+//            InitList( list, property );
+//
+//            if ( reorderableList != null )
+//            {
+//                return reorderableList.GetHeight();
+//            }
 
             return lastHeight;
 

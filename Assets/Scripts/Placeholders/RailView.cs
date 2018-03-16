@@ -1,6 +1,7 @@
 ﻿using Gamelogic.Extensions;
 using UnityEngine;
 
+[ CheckInspectorButtons ]
 public class RailView : GLMonoBehaviour
 {
     private const string ContainerName = "Rail View";

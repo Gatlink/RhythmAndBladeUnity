@@ -9,6 +9,7 @@ using UnityEditor;
 
 #endif
 
+[ CheckInspectorButtons ]
 public class CameraController : GLMonoBehaviour
 {
     private Mobile _target;

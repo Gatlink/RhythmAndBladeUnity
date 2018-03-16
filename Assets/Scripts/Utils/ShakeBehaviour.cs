@@ -6,6 +6,7 @@ using Gamelogic.Extensions;
 
 using UnityEngine;
 
+[ CheckInspectorButtons ]
 #if USE_GAMELOGIC_EXTENSION
 public class ShakeBehaviour : GLMonoBehaviour
 #else
@@ -28,7 +29,7 @@ public class ShakeBehaviour : MonoBehaviour
     public float Vibrato = 30;
 
     public float Smoothing = 0.01f;
-    
+
     public float Strength
     {
         get { return _strength; }
@@ -121,7 +122,7 @@ public class ShakeBehaviour : MonoBehaviour
             _nextStepRotation = Vector3.zero;
         }
     }
-    
+
 #if USE_GAMELOGIC_EXTENSION
     public Coroutine Shake( float strength, float duration )
     {
