@@ -32,6 +32,11 @@ namespace ActorStates.Player
                 return harmfull;
             }
 
+            if ( !Actor.GetComponent<ActorHealth>().IsAlive )
+            {
+                return new DeathState( Actor );
+            }
+            
             Vector2 normal;
             if ( mob.CheckWallProximity( mob.Direction, out normal ) )
             {

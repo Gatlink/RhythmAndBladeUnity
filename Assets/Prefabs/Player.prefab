@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 114624738396991014}
   - component: {fileID: 114143317058885136}
   - component: {fileID: 114072904148929840}
+  - component: {fileID: 114429194854247330}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -397,7 +398,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1963247483546628}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.95, y: 0.36, z: 0}
+  m_LocalPosition: {x: 5.7, y: 0.39, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4272248732145132}
@@ -611,6 +612,8 @@ MonoBehaviour:
   DesiredJump: 0
   DesiredAttack: 0
   DesiredDash: 0
+  DesiredBeatMode: 0
+  DesiredBeatActions: 0
   _dashCount: 1
   _jumpCount: 1
   AttackCooldown: 0
@@ -644,6 +647,18 @@ MonoBehaviour:
   MinVelocity: 0.001
   Smoothing: 0.1
   _percievedVelocity: {x: 0, y: 0}
+--- !u!114 &114429194854247330
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1963247483546628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da24cde2244803643bf8949d5b2dfb66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Damage: 1
 --- !u!114 &114624738396991014
 MonoBehaviour:
   m_ObjectHideFlags: 1

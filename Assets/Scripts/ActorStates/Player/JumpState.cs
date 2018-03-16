@@ -99,7 +99,7 @@ namespace ActorStates.Player
             {
                 return harmfull;
             }
-
+            
             Vector2 normal;
             if ( WallSlideCheck && mob.CheckWallProximity( mob.Direction, out normal ) )
             {

@@ -33,6 +33,6 @@ public class SceneLoader : MonoBehaviour
     private void LoadScene( int buildIndex )
     {
         _sceneLoadPending = true;
-        CameraFade.FadeTo( 1, 0.5f, () => SceneManager.LoadScene( buildIndex ) );
+        CameraFade.FadeTo( 1, 0.5f, () => SceneManager.LoadScene( buildIndex ), false );
     }
 }

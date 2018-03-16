@@ -62,6 +62,11 @@ namespace ActorStates.Player
                 return harmfull;
             }
 
+            if ( !Actor.GetComponent<ActorHealth>().IsAlive )
+            {
+                return new DeathState( Actor );
+            }
+            
             if ( !mob.CheckGround() )
             {
                 return new FallState( Actor );
