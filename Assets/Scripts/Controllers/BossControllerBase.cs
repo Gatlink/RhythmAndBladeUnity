@@ -101,22 +101,11 @@ namespace Controllers
 
         private IEnumerator ResolveWait( BossActor actor, float duration )
         {
-            throw new NotImplementedException();
-        }
-
-
-        private static readonly IGenerator<float> GaussianGenerator = Generator.GaussianRandomFloat( 0, 1 );
-
-        private static float NextPositiveGaussian( float mean, float stdDev )
-        {
-            float next;
-            do
-
+            while ( duration > 0 )
             {
-                next = GaussianGenerator.Next() * stdDev + mean;
-            } while ( next < 0 );
-
-            return next;
+                yield return null;
+                duration -= Time.deltaTime;
+            }
         }
 
         [ Serializable ]
