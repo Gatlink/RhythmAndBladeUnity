@@ -15,7 +15,7 @@ namespace ActorStates.Boss
 
             Vector2 normal;
             Collider2D collider;
-            if ( !mob.CheckGround( out collider, out normal ) )
+            if ( !mob.CheckGround( out collider, out normal, ignorePassThrough: true ) )
             {
                 Debug.LogWarning( "Should not happen except during the very first frame" );
                 return new FallState( Actor );

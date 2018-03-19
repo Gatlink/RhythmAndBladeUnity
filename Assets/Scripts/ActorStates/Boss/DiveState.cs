@@ -27,7 +27,7 @@ namespace ActorStates.Boss
             // default move
             mob.Move();
 
-            if ( mob.CheckGround() )
+            if ( mob.CheckGround( ignorePassThrough: true ) )
             {
                 return new StrikeGroundState( Actor );
             }

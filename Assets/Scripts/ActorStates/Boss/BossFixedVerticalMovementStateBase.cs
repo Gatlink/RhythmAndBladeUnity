@@ -13,7 +13,7 @@
 
         protected override IActorState GetNextState()
         {
-            return Mobile.CheckGround()
+            return Mobile.CheckGround( ignorePassThrough: true )
                 ? (IActorState) new GroundedState( Actor )
                 : new FallState( Actor );
         }

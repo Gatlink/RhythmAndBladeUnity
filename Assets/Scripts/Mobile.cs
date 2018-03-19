@@ -173,22 +173,27 @@ public class Mobile : MonoBehaviour, IMoving
 
     #region COLLISION CHECKS
 
-    public bool CheckGround( bool snap = true )
+    public bool CheckGround( bool snap = true, bool ignorePassThrough = false )
     {
         Vector2 normal;
         Collider2D col;
-        return CheckGround( out col, out normal, snap );
+        return CheckGround( out col, out normal, snap, ignorePassThrough );
     }
 
-    public bool CheckGround( out Vector2 normal, bool snap = true )
+    public bool CheckGround( out Vector2 normal, bool snap = true, bool ignorePassThrough = false )
     {
         Collider2D col;
-        return CheckGround( out col, out normal, snap );
+        return CheckGround( out col, out normal, snap, ignorePassThrough );
     }
 
-    public bool CheckGround( out Collider2D col, out Vector2 normal, bool snap = true )
+    public bool CheckGround( out Collider2D col, out Vector2 normal, bool snap = true, bool ignorePassThrough = false )
     {
-        var layerMask = _groundLayerMask | _passThroughLayerMask;
+        var layerMask = _groundLayerMask;
+        if ( !ignorePassThrough )
+        {
+            layerMask |= _passThroughLayerMask;
+        }
+
         var frontHit = Physics2D.Raycast( BodyPosition + 0.25f * BodySize.x * Direction * Vector2.right, Vector2.down,
             0.5f * BodySize.y + RailStickiness, layerMask );
         var backHit = Physics2D.Raycast( BodyPosition - 0.25f * BodySize.x * Direction * Vector2.right, Vector2.down,

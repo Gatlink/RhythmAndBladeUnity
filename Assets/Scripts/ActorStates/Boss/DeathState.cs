@@ -11,7 +11,7 @@ namespace ActorStates.Boss
         public override IActorState Update()
         {
             var mob = Actor.Mobile;
-            if ( !mob.CheckGround() )
+            if ( !mob.CheckGround( ignorePassThrough: true ) )
             {
                 var settings = PlayerSettings.Instance;
 

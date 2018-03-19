@@ -16,12 +16,12 @@ namespace ActorStates.Boss
             // apply gravity
             var verticalVelocity = mob.CurrentVelocity.y - Settings.Gravity * Time.deltaTime;
             verticalVelocity = Mathf.Max( verticalVelocity, -Settings.MaxFallVelocity );
-            mob.SetVerticalVelocity( verticalVelocity  );
+            mob.SetVerticalVelocity( verticalVelocity );
 
             // default move
             mob.Move();
 
-            if ( mob.CheckGround() )
+            if ( mob.CheckGround( ignorePassThrough: true ) )
             {
                 return new GroundedState( Actor );
             }
