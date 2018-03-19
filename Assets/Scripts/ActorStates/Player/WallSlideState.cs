@@ -38,11 +38,6 @@ namespace ActorStates.Player
             // update horizontal velocity is 0
             mob.CancelHorizontalMovement();
 
-            // apply gravity
-            var verticalVelocity = mob.CurrentVelocity.y - PlayerSettings.WallSlideGravity * Time.deltaTime;
-            verticalVelocity = Mathf.Max( verticalVelocity, -PlayerSettings.MaxWallSlideVelocity );
-            mob.SetVerticalVelocity( verticalVelocity  );
-
             // add wall movement if there is any
             var wallMovement = Vector2.zero;
             if ( collider.gameObject.CompareTag( Tags.Moving ) )
@@ -56,6 +51,13 @@ namespace ActorStates.Player
                 {
                     wallMovement = moving.CurrentVelocity;
                 }
+            }
+            else
+            {
+                // apply gravity
+                var verticalVelocity = mob.CurrentVelocity.y - PlayerSettings.WallSlideGravity * Time.deltaTime;
+                verticalVelocity = Mathf.Max( verticalVelocity, -PlayerSettings.MaxWallSlideVelocity );
+                mob.SetVerticalVelocity( verticalVelocity );
             }
 
             // default move
