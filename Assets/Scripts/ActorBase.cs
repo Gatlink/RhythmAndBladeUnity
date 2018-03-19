@@ -13,7 +13,7 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
 
     public event Action<IActorState, IActorState> StateChangeEvent;
 
-    private IActorState _currentState;
+    public IActorState CurrentState { get; private set; }
 
     private IActorController<TActor> _controller;
 
@@ -27,9 +27,9 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
 
     protected virtual void Start()
     {
-        _currentState = CreateInitialState();
-        _currentState.OnEnter();
-        StateName = _currentState.Name;
+        CurrentState = CreateInitialState();
+        CurrentState.OnEnter();
+        StateName = CurrentState.Name;
     }
 
     protected virtual void Update()
@@ -41,13 +41,13 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
             _controller.UpdateActorIntent( this as TActor );
         }
         
-        if ( _currentState == null )
+        if ( CurrentState == null )
         {
             Debug.LogError( "Actor has no current state", this );
         }
         else
         {
-            var nextState = _currentState.Update();
+            var nextState = CurrentState.Update();
             if ( nextState != null )
             {
                 TransitionToState( nextState );
@@ -67,12 +67,12 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
     protected void TransitionToState( IActorState nextState )
     {
 #if DEBUG_ACTOR_STATE
-        Debug.Log( string.Format( "{0} Going from {1} to {2}", this, _currentState.Name, nextState.Name ), this );
+        Debug.Log( string.Format( "{0} Going from {1} to {2}", this, CurrentState.Name, nextState.Name ), this );
 #endif
-        _currentState.OnExit();
-        OnStateChangeEvent( _currentState, nextState );
+        CurrentState.OnExit();
+        OnStateChangeEvent( CurrentState, nextState );
         nextState.OnEnter();
-        _currentState = nextState;
-        StateName = _currentState.Name;
+        CurrentState = nextState;
+        StateName = CurrentState.Name;
     }
 }
