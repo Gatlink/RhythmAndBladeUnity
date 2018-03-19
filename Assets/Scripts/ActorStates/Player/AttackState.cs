@@ -92,13 +92,13 @@ namespace ActorStates.Player
             if ( time <= HitDuration )
             {
                 // hit phase
-                Actor.DealDamage( _hitId );
+                Actor.CheckHits( _hitId );
             }
             else if ( time > HitDuration && time <= HitDuration + _setting.ComboDuration )
             {
                 // combo phase
 
-                var harmfull = Actor.CheckDamages();
+                var harmfull = Actor.CheckHurts();
                 if ( harmfull != null )
                 {
                     return harmfull;

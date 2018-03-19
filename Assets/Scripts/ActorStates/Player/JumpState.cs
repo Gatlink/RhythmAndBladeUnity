@@ -94,7 +94,7 @@ namespace ActorStates.Player
             // default move
             mob.Move();
 
-            var harmfull = actor.CheckDamages();
+            var harmfull = actor.CheckHurts();
             if ( harmfull != null )
             {
                 return harmfull;

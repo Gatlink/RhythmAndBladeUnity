@@ -109,7 +109,7 @@ public class PlayerActor : ActorBase<PlayerActor>
 
     private ContactFilter2D _hurtContactFilter2D;
 
-    public IActorState CheckDamages()
+    public IActorState CheckHurts()
     {
         Collider2D hitCollider = null;
         foreach ( var hurtbox in GetComponentsInChildren<Collider2D>()
@@ -146,7 +146,7 @@ public class PlayerActor : ActorBase<PlayerActor>
 
     private ContactFilter2D _hitContactFilter2D;
 
-    public void DealDamage( uint hitId )
+    public void CheckHits( uint hitId )
     {
         foreach ( var hitbox in GetComponentsInChildren<Collider2D>()
             .Where( col => col.CompareTag( Tags.Hitbox ) && col.enabled ) )

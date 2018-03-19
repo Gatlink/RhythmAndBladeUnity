@@ -64,7 +64,7 @@ namespace ActorStates.Player
             mob.Move( wallMovement );
 
             // check damages
-            var harmfull = Actor.CheckDamages();
+            var harmfull = Actor.CheckHurts();
             if ( harmfull != null )
             {
                 return harmfull;
