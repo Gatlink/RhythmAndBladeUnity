@@ -9,6 +9,8 @@ using ActorStates.Boss;
 using Gamelogic.Extensions;
 using Gamelogic.Extensions.Algorithms;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Assertions.Must;
 
 namespace Controllers
 {
@@ -142,7 +144,11 @@ namespace Controllers
 #if DEBUG_CONTROLLER_ACTION
             Debug.Log( actor + " jump attacks", actor );
 #endif
-            foreach ( var unused in JumpAttackAndWaitForCompletion( actor ) )
+            var target = Mathf.Clamp( Player.BodyPosition.x, GetHotSpotPosition( TargetType.LeftCorner ).x,
+                GetHotSpotPosition( TargetType.RightCorner ).x ); 
+            var delta = target - actor.Mobile.BodyPosition.x;            
+
+            foreach ( var unused in JumpAttackAndWaitForCompletion( actor, delta ) )
             {
                 yield return null;
             }
@@ -231,11 +237,12 @@ namespace Controllers
             }
         }
         
-        private IEnumerable JumpAttackAndWaitForCompletion( BossActor actor )
+        private IEnumerable JumpAttackAndWaitForCompletion( BossActor actor, float toTarget )
         {
             foreach ( var unused in WaitForStateEnter<JumpAttackState>( actor ) )
             {
                 actor.DesiredJumpAttack = true;
+                actor.DesiredJumpMovement = toTarget;
                 yield return null;
             }
 

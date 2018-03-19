@@ -26,14 +26,11 @@ namespace ActorStates.Boss
 
         protected override IActorState GetNextState()
         {
+            var delta = Actor.DesiredJumpMovement;
+            _mobile.UpdateDirection( Mathf.Sign( delta ) );
+            
             if ( _transitionToJumpAttack )
             {
-                var playerPosition =
-                    GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>().BodyPosition;
-                var delta = playerPosition.x - _mobile.BodyPosition.x;
-
-                _mobile.UpdateDirection( Mathf.Sign( delta ) );
-
                 // check ceiling
                 float distance,
                     jumpHeight = Settings.MaxJumpAttackHeight;
@@ -46,9 +43,6 @@ namespace ActorStates.Boss
             }
             else
             {
-                var delta = Actor.DesiredJumpMovement;
-                _mobile.UpdateDirection( Mathf.Sign( delta ) );
-
                 return new JumpState( Actor, Settings.JumpHeight, Mathf.Abs( delta ) );
             }
         }
