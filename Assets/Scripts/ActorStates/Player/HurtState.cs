@@ -8,32 +8,24 @@ namespace ActorStates.Player
         private readonly PlayerSettings _playerSettings;
         private readonly float _recoilDirection;
         private readonly float _recoilStrength;
+        private readonly Vector2 _recoil;
 
         protected override float TotalDuration
         {
             get { return _playerSettings.HurtRecoilDuration; }
         }
 
-        private float RecoilLength
-        {
-            get { return _playerSettings.HurtRecoilDistance * _recoilStrength; }
-        }
-
-        public HurtState( PlayerActor actor, GameObject source, float recoilStrength )
+        public HurtState( PlayerActor actor, Vector2 recoil )
         {
             _actor = actor;
             _playerSettings = PlayerSettings.Instance;
-            _recoilDirection = Mathf.Sign( _actor.transform.position.x - source.transform.position.x );
-            _recoilStrength = recoilStrength;
+            _recoil = recoil;
         }
 
         public override void OnEnter()
         {
             base.OnEnter();
-            var angle = Mathf.Atan( TotalDuration * TotalDuration * _playerSettings.Gravity / 2 / RecoilLength );
-            var velocity = TotalDuration * _playerSettings.Gravity / 2 / Mathf.Sin( angle );
-            _actor.Mobile.CurrentVelocity =
-                new Vector2( _recoilDirection * Mathf.Cos( angle ), Mathf.Sin( angle ) ) * velocity;
+            _actor.Mobile.CurrentVelocity = _recoil;
         }
 
         public override IActorState Update()

@@ -6,10 +6,12 @@ namespace ActorStates.Player
     {
         private bool _initiatedGrounded;
         private readonly PlayerSettings _playerSettings;
+        private readonly bool _useCurrentDirection;
 
-        public DashState( PlayerActor actor ) : base( actor )
+        public DashState( PlayerActor actor, bool useCurrentDirection = false ) : base( actor )
         {
             _playerSettings = PlayerSettings.Instance;
+            _useCurrentDirection = useCurrentDirection;
         }
 
         protected override float TotalDuration
@@ -30,7 +32,7 @@ namespace ActorStates.Player
         public override void OnEnter()
         {
             base.OnEnter();
-            if ( Actor.DesiredMovement != 0 )
+            if ( !_useCurrentDirection && Actor.DesiredMovement != 0 )
             {
                 Direction = Actor.DesiredMovement;
                 Mobile.UpdateDirection( Direction );
