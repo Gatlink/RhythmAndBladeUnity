@@ -24,7 +24,7 @@ public class PlayerActor : ActorBase<PlayerActor>
     [ ReadOnly ]
     public bool DesiredBeatMode;
 
-    [ ReadOnly ]   
+    [ ReadOnly ]
     public BeatManager.BeatAction DesiredBeatActions;
 
     [ Header( "State" ) ]
@@ -111,14 +111,16 @@ public class PlayerActor : ActorBase<PlayerActor>
 
     public IActorState CheckDamages()
     {
+        Collider2D hurtBox = null;
         Collider2D hitCollider = null;
-        foreach ( var hurtbox in GetComponentsInChildren<Collider2D>()
+        foreach ( var box in GetComponentsInChildren<Collider2D>()
             .Where( col => col.CompareTag( Tags.Hurtbox ) && col.enabled ) )
         {
-            var hitCount = hurtbox.OverlapCollider( _hurtContactFilter2D, _colliderBuffer );
+            var hitCount = box.OverlapCollider( _hurtContactFilter2D, _colliderBuffer );
             if ( hitCount > 0 )
             {
                 hitCollider = _colliderBuffer[ 0 ];
+                hurtBox = box;
                 break;
             }
         }
@@ -132,8 +134,9 @@ public class PlayerActor : ActorBase<PlayerActor>
 
             if ( !harmfull.PassiveHurt )
             {
+                var distance2D = Physics2D.Distance( hurtBox, hitCollider );
                 var recoilStrength = harmfull.Recoil;
-                return new HurtState( this, source, recoilStrength );
+                return new HurtState( this, -recoilStrength * distance2D.normal );
             }
             else if ( !Health.IsAlive )
             {
