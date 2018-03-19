@@ -15,6 +15,9 @@ public static class Tags
     public const string Moving = "Moving";
     public const string Hurtbox = "Hurtbox";
     public const string Player = "Player";
+    public const string Boss = "Boss";
     public const string Hitbox = "Hitbox";
     public const string Collisionbox = "Collisionbox";
+    public const string PreviewCamera = "PreviewCamera";
+    public const string HotSpot = "HotSpot";
 }

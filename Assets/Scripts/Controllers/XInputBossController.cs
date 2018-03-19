@@ -18,6 +18,7 @@ namespace Controllers
             actor.DesiredJumpAttack = false;
             actor.DesiredJump = false;
             actor.DesiredCharge = false;
+            actor.DesiredJumpMovement = 0;
         }
 
         public override void UpdateActorIntent( BossActor actor )

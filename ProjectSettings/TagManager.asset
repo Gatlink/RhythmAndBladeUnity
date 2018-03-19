@@ -10,6 +10,7 @@ TagManager:
   - PreviewCamera
   - Boss
   - Collisionbox
+  - HotSpot
   layers:
   - Default
   - TransparentFX

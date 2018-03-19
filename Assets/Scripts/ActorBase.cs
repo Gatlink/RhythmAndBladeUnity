@@ -66,7 +66,9 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
 
     protected void TransitionToState( IActorState nextState )
     {
+#if DEBUG_ACTOR_STATE
         Debug.Log( string.Format( "{0} Going from {1} to {2}", this, _currentState.Name, nextState.Name ), this );
+#endif
         _currentState.OnExit();
         OnStateChangeEvent( _currentState, nextState );
         nextState.OnEnter();

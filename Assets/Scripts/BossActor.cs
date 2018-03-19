@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using ActorStates;
 using ActorStates.Boss;
+using Controllers;
 using Gamelogic.Extensions;
 using UnityEngine;
 
@@ -22,6 +23,9 @@ public class BossActor : ActorBase<BossActor>
     [ ReadOnly ]
     public bool DesiredCharge;
 
+    [ ReadOnly ]
+    public float DesiredJumpMovement;
+    
     public Mobile Mobile { get; private set; }
 
     public ActorHealth Health { get; private set; }

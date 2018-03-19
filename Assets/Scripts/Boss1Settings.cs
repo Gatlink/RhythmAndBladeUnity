@@ -63,9 +63,6 @@ public class Boss1Settings : ScriptableObject
     [ Tooltip( "Height (Y) trajectory from t=0 to t=Duration" ) ]
     public Easing JumpAttackHeightTrajectory = new Easing();
 
-    [ Tooltip( "Max horizontal movement allowed during jump" ) ]
-    public float MaxJumpAttackMovementLength = 10;
-
     [ Tooltip( "Lateral (X) trajectory from t=0 to t=Duration" ) ]
     public Easing JumpAttackMovementTrajectory = new Easing();
 

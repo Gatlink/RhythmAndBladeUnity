@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net.Configuration;
 using ActorStates;
 using ActorStates.Boss;
@@ -35,7 +37,9 @@ namespace Controllers
         }
 
         protected Mobile Player;
+
         private Boss1Settings _settings;
+        private Dictionary<TargetType, Vector2> _hotSpotsPositions;
 
         public bool Enabled
         {
@@ -47,7 +51,9 @@ namespace Controllers
             actor.DesiredMovement = 0;
             actor.DesiredAttack = false;
             actor.DesiredJumpAttack = false;
+            actor.DesiredJump = false;
             actor.DesiredCharge = false;
+            //actor.DesiredJumpMovement = 0;
         }
 
         public virtual void UpdateActorIntent( BossActor actor )
@@ -57,12 +63,21 @@ namespace Controllers
 
         private Vector2 GetHotSpotPosition( TargetType type )
         {
-            throw new NotImplementedException();
+            return _hotSpotsPositions[ type ];
         }
 
         // ReSharper disable once Unity.RedundantEventFunction
         protected virtual void Start()
         {
+            _hotSpotsPositions = GameObject.FindGameObjectsWithTag( Tags.HotSpot )
+                .ToDictionary(
+                    go => (TargetType) Array.FindIndex( Enum.GetNames( typeof( TargetType ) ),
+                        s => s.Equals( go.name ) ),
+                    go => (Vector2) go.transform.position );
+            if ( _hotSpotsPositions.Count < 3 )
+            {
+                Debug.LogError( "Missing hot spots!" );
+            }
         }
 
         protected virtual void Awake()
@@ -92,45 +107,53 @@ namespace Controllers
 
         private IEnumerator AttackResolver( BossActor actor, int count )
         {
+#if DEBUG_CONTROLLER_ACTION
+            Debug.Log( actor + " attacks " + count + " times", actor );
+#endif
+
             for ( int i = count; i > 0; i-- )
             {
-                var waitState = WaitForStateEnter<AttackState>( actor );
-                waitState.MoveNext();
-                while ( waitState.MoveNext() )
+                foreach ( var unused in WaitForStateEnter<AttackState>( actor ) )
                 {
                     actor.DesiredAttack = true;
                     yield return null;
                 }
             }
+
+            foreach ( var unused in WaitForStateExit<AttackState>( actor ) )
+            {
+                yield return null;
+            }
         }
 
         private IEnumerator ChargeResolver( BossActor actor )
         {
-            var waitState = WaitForStateExit<ChargeAttackState>( actor );
-            waitState.MoveNext();
-            while ( waitState.MoveNext() )
+#if DEBUG_CONTROLLER_ACTION
+            Debug.Log( actor + " charges", actor );
+#endif
+            foreach ( var unused in ChargeAndWaitForCompletion( actor ) )
             {
-                actor.DesiredCharge = true;
                 yield return null;
             }
         }
 
         private IEnumerator JumpAttackResolver( BossActor actor )
         {
-            var waitState = WaitForStateEnter<JumpAttackState>( actor );
-            waitState.MoveNext();
-            while ( waitState.MoveNext() )
+#if DEBUG_CONTROLLER_ACTION
+            Debug.Log( actor + " jump attacks", actor );
+#endif
+            foreach ( var unused in JumpAttackAndWaitForCompletion( actor ) )
             {
-                actor.DesiredJumpAttack = true;
                 yield return null;
             }
         }
 
         private IEnumerator MoveResolver( BossActor actor, TargetType type )
         {
+#if DEBUG_CONTROLLER_ACTION
             Debug.Log( actor + " moves to " + type, actor );
+#endif
 
-            const float MoveEpsilon = 0.1f;
             var mob = actor.Mobile;
 
             float targetPositionX;
@@ -145,41 +168,37 @@ namespace Controllers
             }
 
             var toTarget = targetPositionX - mob.BodyPosition.x;
-            Debug.Log( actor + " will move " + toTarget, actor );
+            DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down, 1 );
 
             if ( Mathf.Abs( toTarget ) < _settings.CloseRangeThreshold )
             {
-                while ( Mathf.Abs( toTarget = targetPositionX - mob.BodyPosition.x ) > MoveEpsilon )
+                var movementDirection = Mathf.Sign( toTarget );
+                while ( Mathf.Sign( targetPositionX - mob.BodyPosition.x ) * movementDirection > 0 )
                 {
-                    actor.DesiredMovement = Mathf.Sign( toTarget );
+                    actor.DesiredMovement = movementDirection;
                     yield return null;
                 }
             }
             else if ( Mathf.Abs( toTarget ) < _settings.MidRangeThreshold )
             {
-                var jump = WaitForStateEnter<JumpState>( actor );
-                jump.MoveNext();
-                while ( jump.MoveNext() )
+                foreach ( var unused in JumpAndWaitForCompletion( actor, toTarget ) )
                 {
-                    actor.DesiredJump = true;
                     yield return null;
                 }
             }
             else
             {
-                const float LongRangeWalkDistance = 1;
-                var walkTargetX = mob.BodyPosition.x + Mathf.Sign( toTarget ) * LongRangeWalkDistance;
-                while ( Mathf.Abs( toTarget = walkTargetX - mob.BodyPosition.x ) > MoveEpsilon )
+                const float LongRangeWalkDistance = 2;
+                var movementDirection = Mathf.Sign( toTarget );
+                var walkTargetX = mob.BodyPosition.x + movementDirection * LongRangeWalkDistance;
+                while ( Mathf.Sign( walkTargetX - mob.BodyPosition.x ) * movementDirection > 0 )
                 {
-                    actor.DesiredMovement = Mathf.Sign( toTarget );
+                    actor.DesiredMovement = movementDirection;
                     yield return null;
                 }
 
-                var jump = WaitForStateEnter<JumpState>( actor );
-                jump.MoveNext();
-                while ( jump.MoveNext() )
+                foreach ( var unused in JumpAndWaitForCompletion( actor, targetPositionX - mob.BodyPosition.x ) )
                 {
-                    actor.DesiredJump = true;
                     yield return null;
                 }
             }
@@ -187,7 +206,9 @@ namespace Controllers
 
         private IEnumerator WaitResolver( BossActor actor, float duration )
         {
+#if DEBUG_CONTROLLER_ACTION
             Debug.Log( actor + " waits for " + duration + " seconds", actor );
+#endif
 
             while ( duration > 0 )
             {
@@ -196,19 +217,50 @@ namespace Controllers
             }
         }
 
-        private IEnumerator WaitForStateComplete<TBossState>( BossActor actor ) where TBossState : IActorState
+        private IEnumerable ChargeAndWaitForCompletion( BossActor actor )
         {
-            var waitEnter = WaitForStateEnter<TBossState>( actor );
-            waitEnter.MoveNext();
-            while ( waitEnter.MoveNext() )
+            foreach ( var unused in WaitForStateEnter<ChargeAttackState>( actor ) )
+            {
+                actor.DesiredCharge = true;
                 yield return null;
-            var waitExit = WaitForStateExit<TBossState>( actor );
-            waitExit.MoveNext();
-            while ( waitExit.MoveNext() )
+            }
+
+            foreach ( var unused in WaitForStateExit<StrikeGroundState>( actor ) )
+            {
                 yield return null;
+            }
+        }
+        
+        private IEnumerable JumpAttackAndWaitForCompletion( BossActor actor )
+        {
+            foreach ( var unused in WaitForStateEnter<JumpAttackState>( actor ) )
+            {
+                actor.DesiredJumpAttack = true;
+                yield return null;
+            }
+
+            foreach ( var unused in WaitForStateExit<StrikeGroundState>( actor ) )
+            {
+                yield return null;
+            }
         }
 
-        private IEnumerator WaitForStateEnter<TBossState>( BossActor actor ) where TBossState : IActorState
+        private IEnumerable JumpAndWaitForCompletion( BossActor actor, float toTarget )
+        {
+            foreach ( var unused in WaitForStateEnter<JumpState>( actor ) )
+            {
+                actor.DesiredJump = true;
+                actor.DesiredJumpMovement = toTarget;
+                yield return null;
+            }
+
+            foreach ( var unused in WaitForStateExit<JumpState>( actor ) )
+            {
+                yield return null;
+            }
+        }
+
+        private IEnumerable WaitForStateEnter<TBossState>( BossActor actor ) where TBossState : IActorState
         {
             var stateEntered = false;
             var handler = new Action<IActorState, IActorState>( ( prev, next ) =>
@@ -228,7 +280,7 @@ namespace Controllers
             actor.StateChangeEvent -= handler;
         }
 
-        private IEnumerator WaitForStateExit<TBossState>( BossActor actor ) where TBossState : IActorState
+        private IEnumerable WaitForStateExit<TBossState>( BossActor actor ) where TBossState : IActorState
         {
             var stateExited = false;
             var handler = new Action<IActorState, IActorState>( ( prev, next ) =>
@@ -267,13 +319,13 @@ namespace Controllers
         private void OnDrawGizmosSelected()
         {
             var mob = GetComponent<Mobile>();
-            Gizmos.color = Color.blue.Darker();
+            Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere( mob.BodyPosition, Boss1Settings.Instance.CombatRangeThreshold );
 
-            Gizmos.color = Gizmos.color.Lighter();
+            Gizmos.color = Gizmos.color.Lighter().Lighter().Lighter();
             Gizmos.DrawWireSphere( mob.BodyPosition, Boss1Settings.Instance.CloseRangeThreshold );
 
-            Gizmos.color = Gizmos.color.Lighter();
+            Gizmos.color = Gizmos.color.Lighter().Lighter().Lighter();
             Gizmos.DrawWireSphere( mob.BodyPosition, Boss1Settings.Instance.MidRangeThreshold );
         }
     }
