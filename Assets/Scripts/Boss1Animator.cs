@@ -50,6 +50,10 @@ public class Boss1Animator : ActorAnimator<BossActor>
         {
             Animator.SetTrigger( "Charge" );
         }
+        else if ( next is JumpState )
+        {
+            Animator.SetTrigger( "Jump" );
+        }
     }
 
     protected override void LateUpdate()

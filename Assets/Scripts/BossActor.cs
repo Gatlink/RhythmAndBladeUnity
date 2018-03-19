@@ -17,6 +17,9 @@ public class BossActor : ActorBase<BossActor>
     public bool DesiredJumpAttack;
 
     [ ReadOnly ]
+    public bool DesiredJump;
+
+    [ ReadOnly ]
     public bool DesiredCharge;
 
     public Mobile Mobile { get; private set; }
@@ -35,6 +38,11 @@ public class BossActor : ActorBase<BossActor>
     public bool CheckJumpAttack()
     {
         return DesiredJumpAttack;
+    }
+
+    public bool CheckJump()
+    {
+        return DesiredJump;
     }
 
     public bool CheckCharge()

@@ -13,10 +13,9 @@ namespace ActorStates.Boss
             var mob = Actor.Mobile;
             mob.UpdateDirection( mob.CurrentVelocity.x );
 
-            var settings = PlayerSettings.Instance;
             // apply gravity
-            var verticalVelocity = mob.CurrentVelocity.y - settings.Gravity * Time.deltaTime;
-            verticalVelocity = Mathf.Max( verticalVelocity, -settings.MaxFallVelocity );
+            var verticalVelocity = mob.CurrentVelocity.y - Settings.Gravity * Time.deltaTime;
+            verticalVelocity = Mathf.Max( verticalVelocity, -Settings.MaxFallVelocity );
             mob.SetVerticalVelocity( verticalVelocity  );
 
             // default move

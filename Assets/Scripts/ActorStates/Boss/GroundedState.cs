@@ -53,9 +53,14 @@ namespace ActorStates.Boss
                 return new FallState( Actor );
             }
 
+            if ( Actor.CheckJump() )
+            {
+                return new PrepareJumpState( Actor, false );
+            }
+
             if ( Actor.CheckJumpAttack() )
             {
-                return new PrepareJumpState( Actor );
+                return new PrepareJumpState( Actor, true );
             }
 
             if ( Actor.CheckCharge() )

@@ -11,8 +11,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7118a0b9a9e42f38dcbcb93b2a1c36f, type: 3}
   m_Name: Boss 1 Settings
   m_EditorClassIdentifier: 
+  CloseRangeThreshold: 2.8
+  Gravity: 80
+  MaxFallVelocity: 80
   GroundedMovementSpeed: 5
   GroundedMoveInertia: 0.1
+  JumpMinDuration: 0.3
+  JumpHorizontalSpeed: 36
+  JumpHeightTrajectory:
+    Type: 0
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 2.8392856
+        outSlope: 2.8392856
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.55
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0.0019417107
+        inSlope: -3.6743073
+        outSlope: -3.6743073
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    Function: 1
+  JumpMovementTrajectory:
+    Type: 0
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 2.1562495
+        outSlope: 2.1562495
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 1
+        inSlope: 0.37500045
+        outSlope: 0.37500045
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    Function: 21
+  JumpHeight: 2
   PrepareJumpDuration: 0.3
   JumpAttackDuration: 0.5
   MaxJumpAttackHeight: 10
@@ -38,24 +92,6 @@ MonoBehaviour:
       m_RotationOrder: 0
     Function: 21
   MaxJumpAttackMovementLength: 10
-  JumpAttackMovementCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 2.1562495
-      outSlope: 2.1562495
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 1
-      inSlope: 0.37500045
-      outSlope: 0.37500045
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
   JumpAttackMovementTrajectory:
     Type: 0
     Curve:
@@ -83,24 +119,6 @@ MonoBehaviour:
   ShockWaveDistance: 6
   ShockWaveDuration: 0.6
   ChargeDuration: 0.75
-  ChargeMovementCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0.22
-      value: 0
-      inSlope: 2.1562495
-      outSlope: 2.1562495
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 0.88
-      value: 1
-      inSlope: 0.37500045
-      outSlope: 0.37500045
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
   ChargeTrajectory:
     Type: 0
     Curve:
@@ -126,24 +144,6 @@ MonoBehaviour:
   Attack1:
     Duration: 0.75
     HorizontalMovementLength: 0
-    MovementCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0
-        value: 0
-        inSlope: 2.1562495
-        outSlope: 2.1562495
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 1
-        inSlope: 0.37500045
-        outSlope: 0.37500045
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
     Trajectory:
       Type: 0
       Curve:
@@ -170,24 +170,6 @@ MonoBehaviour:
   Attack2:
     Duration: 0.92
     HorizontalMovementLength: 2
-    MovementCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0.18333435
-        value: 0
-        inSlope: 2.1562495
-        outSlope: 2.1562495
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 0.90000004
-        value: 1
-        inSlope: 0.37500045
-        outSlope: 0.37500045
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
     Trajectory:
       Type: 0
       Curve:
@@ -214,24 +196,6 @@ MonoBehaviour:
   Attack3:
     Duration: 0.67
     HorizontalMovementLength: 2
-    MovementCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0
-        value: 0
-        inSlope: 2.1562495
-        outSlope: 2.1562495
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 1
-        inSlope: 0.37500045
-        outSlope: 0.37500045
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
     Trajectory:
       Type: 0
       Curve:
@@ -257,24 +221,6 @@ MonoBehaviour:
     ComboWindowEndTime: 0.67
   HurtDuration: 0.25
   HurtDriftLength: 0.6
-  HurtDriftMovementCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 2.1562495
-      outSlope: 2.1562495
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 1
-      inSlope: 0.37500045
-      outSlope: 0.37500045
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
   HurtDriftTrajectory:
     Type: 0
     Curve:

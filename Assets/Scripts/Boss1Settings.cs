@@ -22,10 +22,31 @@ public class Boss1Settings : ScriptableObject
     [ Header( "General" ) ]
     public float CloseRangeThreshold = 2.8f;
 
+    [ Header( "Fall" ) ]
+    public float Gravity = 40;
+
+    public float MaxFallVelocity = 60;
+
     [ Header( "Grounded" ) ]
     public float GroundedMovementSpeed = 5;
 
     public float GroundedMoveInertia = 0.1f;
+
+    [ Header( "Jump" ) ]
+    [ Tooltip( "Minimum Jump duration" ) ]
+    public float JumpMinDuration;
+
+    [ Tooltip( "Jump horizontal speed" ) ]
+    public float JumpHorizontalSpeed;
+
+    [ Tooltip( "Height (Y) trajectory from t=0 to t=Duration" ) ]
+    public Easing JumpHeightTrajectory;
+
+    [ Tooltip( "Lateral (X) trajectory from t=0 to t=Duration" ) ]
+    public Easing JumpMovementTrajectory;
+
+    [ Tooltip( "Jump height (max Y)" ) ]
+    public float JumpHeight;
 
     [ Header( "JumpAttack" ) ]
     [ Tooltip( "Duration of jump preparation" ) ]
@@ -43,7 +64,7 @@ public class Boss1Settings : ScriptableObject
     [ Tooltip( "Max horizontal movement allowed during jump" ) ]
     public float MaxJumpAttackMovementLength = 10;
 
-    [ Tooltip( "Height (Y) trajectory from t=0 to t=Duration" ) ]
+    [ Tooltip( "Lateral (X) trajectory from t=0 to t=Duration" ) ]
     public Easing JumpAttackMovementTrajectory = new Easing();
 
     [ Header( "Dive" ) ]

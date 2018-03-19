@@ -16,6 +16,7 @@ namespace Controllers
             actor.DesiredMovement = 0;
             actor.DesiredAttack = false;
             actor.DesiredJumpAttack = false;
+            actor.DesiredJump = false;
             actor.DesiredCharge = false;
         }
 
@@ -23,6 +24,11 @@ namespace Controllers
         {
             ResetIntent( actor );
             base.UpdateActorIntent( actor );
+
+            if ( State.Triggers.Left > DeadZone )
+            {
+                return;
+            }
 
             var rawAxis = State.ThumbSticks.Left.X;
 
@@ -45,8 +51,11 @@ namespace Controllers
 
             actor.DesiredMovement = direction * amplitude;
 
-            actor.DesiredJumpAttack = State.Buttons.A == ButtonState.Pressed &&
-                                      PrevState.Buttons.A == ButtonState.Released;
+            actor.DesiredJump = State.Buttons.A == ButtonState.Pressed &&
+                                  PrevState.Buttons.A == ButtonState.Released;
+
+            actor.DesiredJumpAttack = State.Buttons.Y == ButtonState.Pressed &&
+                                    PrevState.Buttons.Y == ButtonState.Released;
 
             actor.DesiredAttack = State.Buttons.X == ButtonState.Pressed;
 
