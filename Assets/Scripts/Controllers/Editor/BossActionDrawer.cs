@@ -1,4 +1,5 @@
-﻿using Controllers;
+﻿using System;
+using Controllers;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,9 +19,7 @@ public class BossActionDrawer : PropertyDrawer
             var typeProp = property.FindPropertyRelative( "Type" );
             var typeValue = (BossControllerBase.ActionType) typeProp.enumValueIndex;
 
-            var needDuration = !( typeValue == BossControllerBase.ActionType.Charge ||
-                                  typeValue == BossControllerBase.ActionType.Jump );
-            if ( needDuration )
+            if ( typeValue != BossControllerBase.ActionType.Charge && typeValue != BossControllerBase.ActionType.JumpAttack )
             {
                 contentPosition.width = typeWidth;
             }
@@ -29,20 +28,37 @@ public class BossActionDrawer : PropertyDrawer
                 typeValue );
             typeProp.enumValueIndex = (int) typeValue;
 
-            if ( !needDuration )
+            if ( typeValue == BossControllerBase.ActionType.Charge ||
+                 typeValue == BossControllerBase.ActionType.JumpAttack )
             {
                 return;
             }
 
             contentPosition.x += typeWidth;
-            contentPosition.width = ( position.width - typeWidth ) / 2;
-            EditorGUIUtility.labelWidth = labelWidth;
-            EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "Duration" ),
-                new GUIContent( "Duration" ) );
+            contentPosition.width = position.width - typeWidth;
 
-            contentPosition.x += contentPosition.width;
-            EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "DurationStdDev" ),
-                new GUIContent( "Deviation" ) );
+            EditorGUIUtility.labelWidth = labelWidth;
+
+            switch ( typeValue )
+            {
+                case BossControllerBase.ActionType.Wait:
+                    EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "DurationParameter" ),
+                        new GUIContent( "Duration" ) );
+                    break;
+                case BossControllerBase.ActionType.Move:
+                    EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "TargetPositionParameter" ),
+                        new GUIContent( "Target" ) );
+                    break;
+                case BossControllerBase.ActionType.Attack:
+                    EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "CountParameter" ),
+                        new GUIContent( "Count" ) );
+                    break;
+                case BossControllerBase.ActionType.Count:
+                case BossControllerBase.ActionType.JumpAttack:
+                case BossControllerBase.ActionType.Charge:
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

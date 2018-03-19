@@ -358,7 +358,7 @@ Prefab:
         type: 2}
       propertyPath: TargetBehaviours.Array.data[1]
       value: 
-      objectReference: {fileID: 1562674716}
+      objectReference: {fileID: 0}
     - target: {fileID: 114416932557953588, guid: 94bd3ff2693f8684e81eb5fb9a461235,
         type: 2}
       propertyPath: TrackingTarget
@@ -556,9 +556,3 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1326311927}
   m_Script: {fileID: 11500000, guid: 4a843a0aafa2492d9ba64352e592a7a6, type: 3}
---- !u!114 &1562674716 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114578221024393692, guid: 5a98adfc416e1ed4492d0cccc5322176,
-    type: 2}
-  m_PrefabInternal: {fileID: 1326311927}
-  m_Script: {fileID: 11500000, guid: 67a485f6e51644beb57b9030fdd8edde, type: 3}

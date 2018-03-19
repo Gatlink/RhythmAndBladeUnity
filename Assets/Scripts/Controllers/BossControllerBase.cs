@@ -14,12 +14,20 @@ namespace Controllers
 
         public enum ActionType
         {
-            Stands = 0,
+            Wait = 0,
             Move,
-            Jump,
+            JumpAttack,
             Charge,
             Attack,
             Count
+        }
+
+        public enum TargetPosition
+        {
+            LeftCorner,
+            Center,
+            RightCorner,
+            NextToPlayer
         }
 
         protected Mobile Player;
@@ -52,56 +60,50 @@ namespace Controllers
             Player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>();
         }
 
-        protected IEnumerator ActionResolver( BossActor actor, Action action, bool byPassRules = false )
+        protected IEnumerator ActionResolver( BossActor actor, Action action )
         {
-            if ( !byPassRules )
+            switch ( action.Type )
             {
-                if ( action.Type == ActionType.Attack )
-                {
-                    // never attack if player is not in range
-                    var toPlayer = Player.BodyPosition.x - actor.Mobile.BodyPosition.x;
-                    if ( Mathf.Abs( toPlayer ) > Boss1Settings.Instance.CloseRangeThreshold )
-                    {
-                        yield break;
-                    }
-                }
-            }
-
-            var duration = action.SampleDuration();
-            var mob = actor.Mobile;
-            while ( duration > 0 )
-            {
-                duration -= Time.deltaTime;
-
-                switch ( action.Type )
-                {
-                    case ActionType.Stands:
-                        break;
-                    case ActionType.Move:
-                        var toPlayer = Player.BodyPosition.x - mob.BodyPosition.x;
-                        if ( Mathf.Abs( toPlayer ) <= Boss1Settings.Instance.CloseRangeThreshold )
-                        {
-                            duration = 0;
-                        }
-
-                        actor.DesiredMovement = Mathf.Sign( toPlayer );
-                        break;
-                    case ActionType.Jump:
-                        actor.DesiredJumpAttack = true;
-                        break;
-                    case ActionType.Charge:
-                        actor.DesiredCharge = true;
-                        break;
-                    case ActionType.Attack:
-                        actor.DesiredAttack = true;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                yield return null;
+                case ActionType.Wait:
+                    return ResolveWait( actor, action.DurationParameter );
+                case ActionType.Move:
+                    return ResolveMove( actor, action.TargetPositionParameter );
+                case ActionType.JumpAttack:
+                    return ResolveJumpAttack( actor );
+                case ActionType.Charge:
+                    return ResolveCharge( actor );
+                case ActionType.Attack:
+                    return ResolveAttack( actor, action.CountParameter );
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
+
+        private IEnumerator ResolveAttack( BossActor actor, int count )
+        {
+            throw new NotImplementedException();
+        }
+
+        private IEnumerator ResolveCharge( BossActor actor )
+        {
+            throw new NotImplementedException();
+        }
+
+        private IEnumerator ResolveJumpAttack( BossActor actor )
+        {
+            throw new NotImplementedException();
+        }
+
+        private IEnumerator ResolveMove( BossActor actor, TargetPosition position )
+        {
+            throw new NotImplementedException();
+        }
+
+        private IEnumerator ResolveWait( BossActor actor, float duration )
+        {
+            throw new NotImplementedException();
+        }
+
 
         private static readonly IGenerator<float> GaussianGenerator = Generator.GaussianRandomFloat( 0, 1 );
 
@@ -109,6 +111,7 @@ namespace Controllers
         {
             float next;
             do
+
             {
                 next = GaussianGenerator.Next() * stdDev + mean;
             } while ( next < 0 );
@@ -120,57 +123,12 @@ namespace Controllers
         public struct Action
         {
             public ActionType Type;
-            public float Duration;
-            public float DurationStdDev;
 
-            private Action( ActionType type, float duration, float stdDev = 0 )
-            {
-                Type = type;
-                Duration = duration;
-                DurationStdDev = stdDev;
-            }
+            public float DurationParameter;
 
-            public static Action Stand( float duration, float stdDev = 0 )
-            {
-                return new Action( ActionType.Stands, duration, stdDev );
-            }
+            public int CountParameter;
 
-            public static Action Move( float duration, float stdDev = 0 )
-            {
-                return new Action( ActionType.Move, duration, stdDev );
-            }
-
-            public static Action Jump()
-            {
-                return new Action( ActionType.Jump, 0 );
-            }
-
-            public static Action Charge()
-            {
-                return new Action( ActionType.Charge, 0 );
-            }
-
-            public static Action Attack( float duration, float stdDev = 0 )
-            {
-                return new Action( ActionType.Attack, duration, stdDev );
-            }
-
-            public float SampleDuration()
-            {
-                switch ( Type )
-                {
-                    case ActionType.Jump:
-                        return Boss1Settings.Instance.JumpAttackDuration - 0.05f;
-                    case ActionType.Charge:
-                        return Boss1Settings.Instance.ChargeDuration - 0.05f;
-                    case ActionType.Stands:
-                    case ActionType.Move:
-                    case ActionType.Attack:
-                    case ActionType.Count:
-                    default:
-                        return DurationStdDev == 0 ? Duration : NextPositiveGaussian( Duration, DurationStdDev );
-                }
-            }
+            public TargetPosition TargetPositionParameter;
         }
 
         [ Serializable ]
@@ -181,7 +139,6 @@ namespace Controllers
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.blue;
-
             var mob = GetComponent<Mobile>();
             Gizmos.DrawWireSphere( mob.BodyPosition, Boss1Settings.Instance.CloseRangeThreshold );
         }

@@ -40,12 +40,7 @@ GameObject:
   - component: {fileID: 114166970997549666}
   - component: {fileID: 114210730153343898}
   - component: {fileID: 114366331282936172}
-  - component: {fileID: 114578221024393692}
   - component: {fileID: 114360097638799396}
-  - component: {fileID: 114454162900846782}
-  - component: {fileID: 114179763777175788}
-  - component: {fileID: 114055642730819164}
-  - component: {fileID: 114430435903046616}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Boss
@@ -318,32 +313,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114055642730819164
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af439054e36484e9c8f65938a61c10c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: JumpX3
-  Randomize: 0
-  LoopRepeat: 0
-  Script:
-    values:
-    - Type: 2
-      Duration: 0
-      DurationStdDev: 0
-    - Type: 2
-      Duration: 0
-      DurationStdDev: 0
-    - Type: 2
-      Duration: 0
-      DurationStdDev: 0
 --- !u!114 &114166970997549666
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -357,49 +326,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TotalHitCount: 10
   CurrentHitCount: 3
---- !u!114 &114179763777175788
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5d6b825ec884908823d3c5f73ef4805, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: Easy
-  WeightedActions:
-    values:
-    - Action:
-        Type: 0
-        Duration: 0.5
-        DurationStdDev: 0.5
-      Weight: 1
-    - Action:
-        Type: 1
-        Duration: 1
-        DurationStdDev: 1
-      Weight: 3
-    - Action:
-        Type: 2
-        Duration: 1
-        DurationStdDev: 1
-      Weight: 1
-    - Action:
-        Type: 3
-        Duration: 1
-        DurationStdDev: 1
-      Weight: 1
-    - Action:
-        Type: 4
-        Duration: 1
-        DurationStdDev: 1
-      Weight: 5
-  HealthEndCondition:
-    useValue: 1
-    value: 4
 --- !u!114 &114210730153343898
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -447,75 +373,6 @@ MonoBehaviour:
   _damage: 1
   _recoil: 1
   _passiveHurt: 0
---- !u!114 &114430435903046616
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5d6b825ec884908823d3c5f73ef4805, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: Hard
-  WeightedActions:
-    values:
-    - Action:
-        Type: 0
-        Duration: 0.5
-        DurationStdDev: 0.5
-      Weight: 0
-    - Action:
-        Type: 1
-        Duration: 1
-        DurationStdDev: 1
-      Weight: 3
-    - Action:
-        Type: 2
-        Duration: 1
-        DurationStdDev: 1
-      Weight: 3
-    - Action:
-        Type: 3
-        Duration: 1
-        DurationStdDev: 1
-      Weight: 3
-    - Action:
-        Type: 4
-        Duration: 1
-        DurationStdDev: 1
-      Weight: 5
-  HealthEndCondition:
-    useValue: 0
-    value: 4
---- !u!114 &114454162900846782
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af439054e36484e9c8f65938a61c10c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: Intro
-  Randomize: 0
-  LoopRepeat: 0
-  Script:
-    values:
-    - Type: 0
-      Duration: 0.6
-      DurationStdDev: 0
-    - Type: 3
-      Duration: 1
-      DurationStdDev: 0
-    - Type: 0
-      Duration: 1.3
-      DurationStdDev: 0
 --- !u!114 &114500015476263518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -537,27 +394,6 @@ MonoBehaviour:
   TrackPositions:
     useValue: 1
     value: 200
---- !u!114 &114578221024393692
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67a485f6e51644beb57b9030fdd8edde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: 
-  Randomize: 0
-  LoopRepeat: 0
-  SubControllers:
-    values:
-    - {fileID: 114454162900846782}
-    - {fileID: 114179763777175788}
-    - {fileID: 114055642730819164}
-    - {fileID: 114430435903046616}
 --- !u!114 &114606754072423226
 MonoBehaviour:
   m_ObjectHideFlags: 1
