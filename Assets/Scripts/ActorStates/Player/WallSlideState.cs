@@ -26,7 +26,7 @@ namespace ActorStates.Player
         public override IActorState Update()
         {
             var mob = Actor.Mobile;
-            
+
             Vector2 normal;
             Collider2D collider;
             if ( !mob.CheckWallProximity( -mob.Direction, out normal, out collider ) )
@@ -83,7 +83,7 @@ namespace ActorStates.Player
             {
                 _unstickInhibition = PlayerSettings.TimeToUnstickFromWall;
             }
-            
+
             if ( !Actor.GetComponent<ActorHealth>().IsAlive )
             {
                 return new DeathState( Actor );
@@ -101,7 +101,7 @@ namespace ActorStates.Player
 
             if ( Actor.CheckDash() )
             {
-                return new DashState( Actor );
+                return new DashState( Actor, useCurrentDirection: true );
             }
 
             if ( Actor.CheckJump() )
