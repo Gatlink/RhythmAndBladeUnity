@@ -46,7 +46,7 @@ public class BossActionDrawer : PropertyDrawer
                         new GUIContent( "Duration" ) );
                     break;
                 case BossControllerBase.ActionType.Move:
-                    EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "TargetPositionParameter" ),
+                    EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "TargetTypeParameter" ),
                         new GUIContent( "Target" ) );
                     break;
                 case BossControllerBase.ActionType.Attack:

@@ -20,7 +20,9 @@ public class Boss1Settings : ScriptableObject
     }
 
     [ Header( "General" ) ]
+    public float CombatRangeThreshold = 1.4f;
     public float CloseRangeThreshold = 2.8f;
+    public float MidRangeThreshold = 5.6f;
 
     [ Header( "Fall" ) ]
     public float Gravity = 40;

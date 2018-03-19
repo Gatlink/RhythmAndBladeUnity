@@ -11,12 +11,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7118a0b9a9e42f38dcbcb93b2a1c36f, type: 3}
   m_Name: Boss 1 Settings
   m_EditorClassIdentifier: 
-  CloseRangeThreshold: 2.8
+  CombatRangeThreshold: 2.8
+  CloseRangeThreshold: 5.6
+  MidRangeThreshold: 11.2
   Gravity: 80
   MaxFallVelocity: 80
   GroundedMovementSpeed: 5
   GroundedMoveInertia: 0.1
-  JumpMinDuration: 0.3
+  JumpMinDuration: 0.5
   JumpHorizontalSpeed: 36
   JumpHeightTrajectory:
     Type: 0
@@ -53,14 +55,14 @@ MonoBehaviour:
       - serializedVersion: 2
         time: 0
         value: 0
-        inSlope: 2.1562495
-        outSlope: 2.1562495
+        inSlope: 2.0157053
+        outSlope: 2.0157053
         tangentMode: 0
       - serializedVersion: 2
-        time: 1
+        time: 0.95
         value: 1
-        inSlope: 0.37500045
-        outSlope: 0.37500045
+        inSlope: 0.36046964
+        outSlope: 0.36046964
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
