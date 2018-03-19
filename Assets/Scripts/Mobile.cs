@@ -259,6 +259,20 @@ public class Mobile : MonoBehaviour, IMoving
         return false;
     }
 
+    public bool ProbeWall( float direction, out float distance, float maxDistance = 10 )
+    {
+        var hit = Physics2D.Raycast( BodyPosition, direction * Vector2.right, maxDistance, _wallLayerMask );
+
+        if ( hit.collider != null )
+        {
+            distance = Mathf.Max( 0, hit.distance - 0.5f * BodySize.x );
+            return true;
+        }
+
+        distance = 0;
+        return false;
+    }
+
     public bool CheckWallProximity( float direction, bool snap = true )
     {
         Vector2 normal;

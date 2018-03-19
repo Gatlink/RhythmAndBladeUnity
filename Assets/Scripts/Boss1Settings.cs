@@ -82,9 +82,6 @@ public class Boss1Settings : ScriptableObject
 
     public Easing ChargeTrajectory = new Easing();
 
-    public float MaxChargeMovementLength = 8;
-
-
     [ Header( "Attacks" ) ]
     public AttackSetting Attack1;
 

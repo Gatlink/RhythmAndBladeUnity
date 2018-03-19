@@ -1,12 +1,33 @@
-﻿namespace ActorStates.Boss
+﻿using UnityEngine;
+
+namespace ActorStates.Boss
 {
     public class ChargeAttackState : BossFixedHorizontalMovementBase
     {
-        private readonly float _distance;
+        private float _distance;
 
-        public ChargeAttackState( BossActor actor, float distance ) : base( actor )
+        public ChargeAttackState( BossActor actor ) : base( actor )
         {
-            _distance = distance;
+        }
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            var playerPosition =
+                GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>().BodyPosition;
+            var toPlayer = Mathf.Sign( playerPosition.x - Mobile.BodyPosition.x );
+
+            Direction = toPlayer;
+            Mobile.UpdateDirection( toPlayer );
+
+            //_distance = Mathf.Abs( toPlayer ) + 2;
+            float distance;
+            if ( !Mobile.ProbeWall( toPlayer, out distance, 100 ) )
+            {
+                Debug.LogError( "Wall not found !" );
+            }
+
+            _distance = Mathf.Max( 0, distance - 1 );
         }
 
         protected override float TotalDuration

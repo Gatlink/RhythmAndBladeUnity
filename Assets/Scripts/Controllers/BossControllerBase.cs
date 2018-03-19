@@ -231,7 +231,7 @@ namespace Controllers
                 yield return null;
             }
 
-            foreach ( var unused in WaitForStateExit<StrikeGroundState>( actor ) )
+            foreach ( var unused in WaitForStateExit<ChargeAttackState>( actor ) )
             {
                 yield return null;
             }
