@@ -5,8 +5,19 @@ namespace Controllers
 {
     public class XInputPlayerController : XInputControllerBase<PlayerActor>
     {
+        private void ResetIntent( PlayerActor actor )
+        {
+            actor.DesiredMovement = 0;
+            actor.DesiredJump = false;
+            actor.DesiredAttack = false;
+            actor.DesiredDash = false;
+            actor.DesiredBeatMode = false;
+            actor.DesiredBeatActions = BeatManager.BeatAction.None;
+        }
+
         public override void UpdateActorIntent( PlayerActor actor )
         {
+            ResetIntent( actor );
             base.UpdateActorIntent( actor );
 
             var rawAxis = State.ThumbSticks.Left.X;
@@ -29,7 +40,7 @@ namespace Controllers
             }
 
             actor.DesiredMovement = direction * amplitude;
-            
+
             if ( State.Triggers.Right > DeadZone )
             {
                 // beat mode
@@ -39,14 +50,17 @@ namespace Controllers
                 {
                     actor.DesiredBeatActions |= BeatManager.BeatAction.Left;
                 }
+
                 if ( State.Buttons.Y == ButtonState.Pressed )
                 {
                     actor.DesiredBeatActions |= BeatManager.BeatAction.Up;
                 }
+
                 if ( State.Buttons.A == ButtonState.Pressed )
                 {
                     actor.DesiredBeatActions |= BeatManager.BeatAction.Down;
                 }
+
                 if ( State.Buttons.B == ButtonState.Pressed )
                 {
                     actor.DesiredBeatActions |= BeatManager.BeatAction.Right;

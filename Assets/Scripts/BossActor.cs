@@ -58,19 +58,15 @@ public class BossActor : ActorBase<BossActor>
         _hurtDirection = Mathf.Sign( source.transform.position.x - Mobile.transform.position.x );
     }
 
-    protected override void ResetIntent()
-    {
-        DesiredMovement = 0;
-        DesiredAttack = false;
-        DesiredJumpAttack = false;
-        DesiredCharge = false;
-
-        _hurtThisFrame = false;
-    }
-
     protected override IActorState CreateInitialState()
     {
         return new FallState( this );
+    }
+
+    protected override void Update()
+    {
+        _hurtThisFrame = false;
+        base.Update();
     }
 
     private void Awake()

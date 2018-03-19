@@ -30,6 +30,8 @@ namespace Controllers
 
         public override void UpdateActorIntent( BossActor actor )
         {
+            base.UpdateActorIntent( actor );
+
             if ( _currentAction != null && _currentAction.MoveNext() ) return;
             
             if ( _nextActionIndex == Script.Count )

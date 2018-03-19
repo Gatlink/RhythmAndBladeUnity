@@ -32,6 +32,7 @@ namespace Controllers
 
         public override void UpdateActorIntent( BossActor actor )
         {
+            base.UpdateActorIntent( actor );
             if ( HealthEndCondition.UseValue )
             {
                 if ( actor.GetComponent<ActorHealth>().CurrentHitCount <= HealthEndCondition.Value )

@@ -19,8 +19,6 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
 
     protected abstract IActorState CreateInitialState();
 
-    protected abstract void ResetIntent();
-
     private void OnStateChangeEvent( IActorState previousState, IActorState nextState )
     {
         var handler = StateChangeEvent;
@@ -37,9 +35,6 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
     protected virtual void Update()
     {
         FindController();
-
-        // update intents
-        ResetIntent();
 
         if ( _controller != null && _controller.Enabled )
         {

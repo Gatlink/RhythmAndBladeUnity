@@ -17,8 +17,19 @@ namespace Controllers
             get { return enabled; }
         }
 
+        private void ResetIntent( PlayerActor actor )
+        {
+            actor.DesiredMovement = 0;
+            actor.DesiredJump = false;
+            actor.DesiredAttack = false;
+            actor.DesiredDash = false;
+            actor.DesiredBeatMode = false;
+            actor.DesiredBeatActions = BeatManager.BeatAction.None;
+        }
+
         public void UpdateActorIntent( PlayerActor actor )
         {
+            ResetIntent( actor );
             var rawAxis = Input.GetAxis( "Horizontal" );
             if ( DebugAxis.UseValue )
             {
@@ -27,7 +38,7 @@ namespace Controllers
 
             var amplitude = Mathf.Abs( rawAxis );
             var direction = Mathf.Sign( rawAxis );
-        
+
             if ( amplitude < DeadZone )
             {
                 amplitude = 0;
@@ -40,9 +51,9 @@ namespace Controllers
             if ( Step && amplitude > 0 )
             {
                 amplitude = 1;
-            }        
-        
-            actor.DesiredMovement = direction * amplitude;        
+            }
+
+            actor.DesiredMovement = direction * amplitude;
             actor.DesiredJump = Input.GetButtonDown( "Jump" );
             actor.DesiredDash = Input.GetButtonDown( "Dash" );
             actor.DesiredAttack = Input.GetButtonDown( "Fire1" );

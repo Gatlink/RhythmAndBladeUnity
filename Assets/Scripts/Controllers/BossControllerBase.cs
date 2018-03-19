@@ -11,7 +11,7 @@ namespace Controllers
         // ReSharper disable once NotAccessedField.Global
         // used by Editor in inspectors
         public string Name;
-        
+
         public enum ActionType
         {
             Stands = 0,
@@ -29,7 +29,18 @@ namespace Controllers
             get { return enabled; }
         }
 
-        public abstract void UpdateActorIntent( BossActor actor );
+        private void ResetIntent( BossActor actor )
+        {
+            actor.DesiredMovement = 0;
+            actor.DesiredAttack = false;
+            actor.DesiredJumpAttack = false;
+            actor.DesiredCharge = false;
+        }
+
+        public virtual void UpdateActorIntent( BossActor actor )
+        {
+            ResetIntent( actor );
+        }
 
         // ReSharper disable once Unity.RedundantEventFunction
         protected virtual void Start()

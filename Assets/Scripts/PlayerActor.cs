@@ -169,17 +169,7 @@ public class PlayerActor : ActorBase<PlayerActor>
             }
         }
     }
-
-    protected override void ResetIntent()
-    {
-        DesiredMovement = 0;
-        DesiredJump = false;
-        DesiredAttack = false;
-        DesiredDash = false;
-        DesiredBeatMode = false;
-        DesiredBeatActions = BeatManager.BeatAction.None;
-    }
-
+    
     #region UNITY MESSAGES
 
     private void Awake()

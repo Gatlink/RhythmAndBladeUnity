@@ -8,11 +8,20 @@ namespace Controllers
         // ReSharper disable once Unity.RedundantEventFunction
         // adds "enable" check box in inspector
         private void Start()
-        {            
+        {
+        }
+
+        private void ResetIntent( BossActor actor )
+        {
+            actor.DesiredMovement = 0;
+            actor.DesiredAttack = false;
+            actor.DesiredJumpAttack = false;
+            actor.DesiredCharge = false;
         }
 
         public override void UpdateActorIntent( BossActor actor )
         {
+            ResetIntent( actor );
             base.UpdateActorIntent( actor );
 
             var rawAxis = State.ThumbSticks.Left.X;
