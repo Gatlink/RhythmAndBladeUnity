@@ -4,12 +4,8 @@ using Gamelogic.Extensions.Algorithms;
 
 namespace Controllers
 {
-    public class BossControllerManager : GLMonoBehaviour, IActorController<BossActor>
+    public class BossControllerManager : BossControllerBase
     {
-        // ReSharper disable once NotAccessedField.Global
-        // used by Editor in inspectors
-        public string Name;
-        
         public bool Randomize;
         public bool LoopRepeat;
 
@@ -17,11 +13,6 @@ namespace Controllers
 
         private int _nextControllerIndex;
         private BossControllerBase _currentController;
-       
-        public bool Enabled
-        {
-            get { return enabled; }
-        }
 
         private void OnEnable()
         {
@@ -38,8 +29,11 @@ namespace Controllers
             }
         }
 
-        public void UpdateActorIntent( BossActor actor )
+        public override void UpdateActorIntent( BossActor actor )
         {
+            base.UpdateActorIntent( actor );
+            if ( !Enabled ) return;
+
             if ( _currentController == null || _currentController.Enabled == false )
             {
                 if ( _nextControllerIndex == SubControllers.Count )

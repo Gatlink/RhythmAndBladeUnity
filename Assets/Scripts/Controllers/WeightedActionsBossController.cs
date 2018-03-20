@@ -6,11 +6,9 @@ using Gamelogic.Extensions.Algorithms;
 
 namespace Controllers
 {
-    public class WeightedActionsBossController : BossControllerBase
+    public class WeightedActionsBossController : BossActionControllerBase
     {
         public WeightedActionList WeightedActions;
-
-        public OptionalInt HealthEndCondition;
 
         private IGenerator<Action> _actionGenerator;
 
@@ -33,14 +31,8 @@ namespace Controllers
         public override void UpdateActorIntent( BossActor actor )
         {
             base.UpdateActorIntent( actor );
-            if ( HealthEndCondition.UseValue )
-            {
-                if ( actor.GetComponent<ActorHealth>().CurrentHitCount <= HealthEndCondition.Value )
-                {
-                    enabled = false;
-                    return;
-                }
-            }
+            if ( !Enabled ) return;
+            
             while ( _currentAction == null || !_currentAction.MoveNext() )
             {
                 _currentAction = ActionResolver( actor, _actionGenerator.Next() );

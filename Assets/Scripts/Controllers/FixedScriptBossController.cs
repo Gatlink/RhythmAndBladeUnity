@@ -3,13 +3,13 @@ using Gamelogic.Extensions.Algorithms;
 
 namespace Controllers
 {
-    public class FixedScriptBossController : BossControllerBase
+    public class FixedScriptBossController : BossActionControllerBase
     {
         public bool Randomize;
         public bool LoopRepeat;
 
         public ActionList Script;
-        
+
         private int _nextActionIndex;
         private IEnumerator _currentAction;
 
@@ -31,9 +31,10 @@ namespace Controllers
         public override void UpdateActorIntent( BossActor actor )
         {
             base.UpdateActorIntent( actor );
+            if ( !Enabled ) return;
 
             if ( _currentAction != null && _currentAction.MoveNext() ) return;
-            
+
             if ( _nextActionIndex == Script.Count )
             {
                 if ( LoopRepeat )
@@ -46,8 +47,8 @@ namespace Controllers
                     return;
                 }
             }
-            
+
             _currentAction = ActionResolver( actor, Script[ _nextActionIndex++ ] );
         }
-    }    
+    }
 }

@@ -5,7 +5,7 @@ public class DestroyableByBoss : MonoBehaviour
 {
 	private Collider2D _collider;
 	private BossActor _boss;
-	private Collider2D[] _collidersBuffer = new Collider2D[1];
+	private readonly Collider2D[] _collidersBuffer = new Collider2D[1];
 	private ContactFilter2D _contactFilter2D;
 
 	private void Start ()
