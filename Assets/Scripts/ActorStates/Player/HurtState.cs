@@ -9,17 +9,19 @@ namespace ActorStates.Player
         private readonly float _recoilDirection;
         private readonly float _recoilStrength;
         private readonly Vector2 _recoil;
+        private readonly bool _teleportToCheckpointOnComplete;
 
         protected override float TotalDuration
         {
             get { return _playerSettings.HurtRecoilDuration; }
         }
 
-        public HurtState( PlayerActor actor, Vector2 recoil )
+        public HurtState( PlayerActor actor, IHarmfull harmfull, Vector2 recoil )
         {
             _actor = actor;
             _playerSettings = PlayerSettings.Instance;
-            _recoil = recoil;
+            _recoil = recoil * harmfull.Recoil;
+            _teleportToCheckpointOnComplete = harmfull.TeleportToLastCheckpoint;
         }
 
         public override void OnEnter()
@@ -48,6 +50,12 @@ namespace ActorStates.Player
             if ( !_actor.GetComponent<ActorHealth>().IsAlive )
             {
                 return new DeathState( _actor );
+            }
+
+            if ( _teleportToCheckpointOnComplete )
+            {
+                CheckpointManager.TeleportPlayerToLastCheckpoint();
+                return new PauseState();
             }
 
             return _actor.Mobile.CheckGround()

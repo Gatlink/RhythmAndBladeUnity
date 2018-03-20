@@ -11,6 +11,22 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1579075062745718}
   m_IsPrefabParent: 1
+--- !u!1 &1009457021340790
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4826788848418450}
+  - component: {fileID: 61390425961349036}
+  m_Layer: 0
+  m_Name: Checkpoint
+  m_TagString: Checkpoint
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1012689616860810
 GameObject:
   m_ObjectHideFlags: 1
@@ -319,6 +335,22 @@ GameObject:
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1097733087415528
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4001530664903912}
+  - component: {fileID: 61287328491772088}
+  m_Layer: 0
+  m_Name: Checkpoint
+  m_TagString: Checkpoint
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2036,6 +2068,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4778460255812158}
+  - component: {fileID: 114488848764497434}
   m_Layer: 0
   m_Name: Level Arena 2
   m_TagString: Untagged
@@ -2876,6 +2909,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1859245493989064
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4557197956883892}
+  - component: {fileID: 61600658842850818}
+  m_Layer: 0
+  m_Name: Checkpoint
+  m_TagString: Checkpoint
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1873698263785782
 GameObject:
   m_ObjectHideFlags: 1
@@ -3103,6 +3152,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4001530664903912
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1097733087415528}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -3, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4987481972060542}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4008106088570702
 Transform:
   m_ObjectHideFlags: 1
@@ -3286,6 +3348,7 @@ Transform:
   - {fileID: 4358382234232712}
   - {fileID: 4601524968129216}
   - {fileID: 4762766576113816}
+  - {fileID: 4826788848418450}
   m_Father: {fileID: 4778460255812158}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3840,6 +3903,7 @@ Transform:
   - {fileID: 4812945780225428}
   - {fileID: 4410470980527694}
   - {fileID: 4842158874298722}
+  - {fileID: 4557197956883892}
   m_Father: {fileID: 4778460255812158}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4598,6 +4662,19 @@ Transform:
   m_Father: {fileID: 4070947855450776}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4557197956883892
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1859245493989064}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4309279509167378}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4565059719874078
 Transform:
   m_ObjectHideFlags: 1
@@ -5254,6 +5331,19 @@ Transform:
   m_Father: {fileID: 4309279509167378}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4826788848418450
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1009457021340790}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 6, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4075665370687564}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4842158874298722
 Transform:
   m_ObjectHideFlags: 1
@@ -5689,6 +5779,7 @@ Transform:
   - {fileID: 4804802033621272}
   - {fileID: 4070947855450776}
   - {fileID: 4288501429363948}
+  - {fileID: 4001530664903912}
   m_Father: {fileID: 4778460255812158}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5795,6 +5886,31 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 62.310165, y: 19}
   m_EdgeRadius: 0
+--- !u!61 &61287328491772088
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1097733087415528}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.5, y: 3.5}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3, y: 7}
+  m_EdgeRadius: 0
 --- !u!61 &61369498679254706
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -5819,6 +5935,31 @@ BoxCollider2D:
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!61 &61390425961349036
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1009457021340790}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.5, y: 3.5}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3, y: 7}
   m_EdgeRadius: 0
 --- !u!61 &61406978586243948
 BoxCollider2D:
@@ -5944,6 +6085,31 @@ BoxCollider2D:
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 22.561546, y: 10.842615}
+  m_EdgeRadius: 0
+--- !u!61 &61600658842850818
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1859245493989064}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.5, y: 3.5}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3, y: 7}
   m_EdgeRadius: 0
 --- !u!61 &61624845218178206
 BoxCollider2D:
@@ -6825,6 +6991,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114016811012066514
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7020,6 +7187,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114074666323274376
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7158,6 +7326,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114112304749218476
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7172,6 +7341,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114118185270980116
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7238,9 +7408,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 100
+  _damage: 1
   _recoil: 0
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 1
 --- !u!114 &114134409829845588
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7294,6 +7465,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114159958016661808
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7334,6 +7506,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114178139051002732
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7493,6 +7666,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 16
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114270453724725732
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7641,6 +7815,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 16
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114307586475293480
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7836,6 +8011,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114359177146726974
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7893,9 +8069,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 100
+  _damage: 1
   _recoil: 0
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 1
 --- !u!114 &114376037707735582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7907,9 +8084,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 100
+  _damage: 1
   _recoil: 0
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 1
 --- !u!114 &114382182203539706
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7989,6 +8167,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114393236111197966
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8093,6 +8272,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114450895633654162
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8107,6 +8287,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114459831470036212
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8187,6 +8368,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 16
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114482358798736938
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8198,6 +8380,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f524efc3f60e8c241b5e474ffaba9fb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114488848764497434
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1579075062745718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb776a03007e4f53b2529cc2c481ee74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
 --- !u!114 &114492509324081360
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8276,6 +8470,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114515551674725182
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8316,6 +8511,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 16
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114532514849960854
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8330,6 +8526,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114539807599448888
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8357,6 +8554,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114550028153143532
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8493,6 +8691,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114597915558307508
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8567,6 +8766,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114611882145219524
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8750,6 +8950,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 16
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114659334725393570
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8938,6 +9139,7 @@ MonoBehaviour:
   _damage: 100
   _recoil: 0
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114689404051720126
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8952,6 +9154,7 @@ MonoBehaviour:
   _damage: 100
   _recoil: 0
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114689764457435376
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8995,6 +9198,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114701031543082608
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9040,6 +9244,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114720332891706344
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9103,6 +9308,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 16
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114737335030253786
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9223,9 +9429,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 100
+  _damage: 1
   _recoil: 0
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 1
 --- !u!114 &114781553207322038
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9334,6 +9541,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 4
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114812119391503488
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9550,6 +9758,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 16
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114889281737158840
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9704,9 +9913,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 100
+  _damage: 1
   _recoil: 0
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 1
 --- !u!114 &114933022911929638
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9833,6 +10043,7 @@ MonoBehaviour:
   _damage: 1
   _recoil: 16
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114971132095627664
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9884,9 +10095,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 100
+  _damage: 1
   _recoil: 0
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 1
 --- !u!212 &212009044015107010
 SpriteRenderer:
   m_ObjectHideFlags: 1

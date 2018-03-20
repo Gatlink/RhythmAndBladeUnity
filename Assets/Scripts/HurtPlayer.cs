@@ -11,6 +11,9 @@ public class HurtPlayer : MonoBehaviour, IHarmfull
     [ SerializeField ]
     private bool _passiveHurt;
 
+    [ SerializeField ]
+    private bool _teleportToLastCheckpoint;
+
     public int Damage
     {
         get { return _damage; }
@@ -28,8 +31,13 @@ public class HurtPlayer : MonoBehaviour, IHarmfull
         get { return gameObject; }
     }
 
-    public bool PassiveHurt
+    public bool SkipHurtState
     {
         get { return _passiveHurt; }
+    }
+
+    public bool TeleportToLastCheckpoint
+    {
+        get { return _teleportToLastCheckpoint; }
     }
 }

@@ -75,4 +75,9 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
         CurrentState = nextState;
         StateName = CurrentState.Name;
     }
+
+    public void RestartToIinitialState()
+    {
+        TransitionToState( CreateInitialState() );
+    }
 }

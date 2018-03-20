@@ -11,6 +11,7 @@ TagManager:
   - Boss
   - Collisionbox
   - HotSpot
+  - Checkpoint
   layers:
   - Default
   - TransparentFX

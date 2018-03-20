@@ -37,12 +37,11 @@ public class CameraFade : Singleton<CameraFade>
     {
         return () =>
         {
+            _tween = null;
             if ( action != null )
             {
                 action();
             }
-
-            _tween = null;
         };
     }
 
@@ -52,6 +51,7 @@ public class CameraFade : Singleton<CameraFade>
         {
             if ( !_lastTweenWasInterruptible )
             {
+                Debug.Log( "Previous ininterruptible tween is not complete" );
                 return;
             }
 

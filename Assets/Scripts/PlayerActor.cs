@@ -132,15 +132,23 @@ public class PlayerActor : ActorBase<PlayerActor>
 
             Health.AccountDamages( harmfull.Damage, source );
 
-            if ( !harmfull.PassiveHurt )
+            if ( harmfull.SkipHurtState )
+            {
+                if ( !Health.IsAlive )
+                {
+                    return new DeathState( this );
+                }
+
+                if ( harmfull.TeleportToLastCheckpoint )
+                {
+                    CheckpointManager.TeleportPlayerToLastCheckpoint();
+                    return new PauseState();
+                }
+            }
+            else
             {
                 var distance2D = Physics2D.Distance( hurtBox, hitCollider );
-                var recoilStrength = harmfull.Recoil;
-                return new HurtState( this, -recoilStrength * distance2D.normal );
-            }
-            else if ( !Health.IsAlive )
-            {
-                return new DeathState( this );
+                return new HurtState( this, harmfull, -distance2D.normal );
             }
         }
 
@@ -172,7 +180,7 @@ public class PlayerActor : ActorBase<PlayerActor>
             }
         }
     }
-    
+
     #region UNITY MESSAGES
 
     private void Awake()

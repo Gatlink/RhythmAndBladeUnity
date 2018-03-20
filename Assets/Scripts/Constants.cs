@@ -20,4 +20,5 @@ public static class Tags
     public const string Collisionbox = "Collisionbox";
     public const string PreviewCamera = "PreviewCamera";
     public const string HotSpot = "HotSpot";
+    public const string Checkpoint = "Checkpoint";
 }
