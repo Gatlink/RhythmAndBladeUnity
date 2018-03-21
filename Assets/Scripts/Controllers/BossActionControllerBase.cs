@@ -34,7 +34,7 @@ namespace Controllers
 
         private Boss1Settings _settings;
         private Dictionary<TargetType, Vector2> _hotSpotsPositions;
-                
+
         private void ResetIntent( BossActor actor )
         {
             actor.DesiredMovement = 0;
@@ -84,7 +84,7 @@ namespace Controllers
                 case ActionType.Move:
                     return MoveResolver( actor, action.TargetTypeParameter );
                 case ActionType.JumpAttack:
-                    return JumpAttackResolver( actor );
+                    return JumpAttackResolver( actor, action.TargetTypeParameter );
                 case ActionType.Charge:
                     return ChargeResolver( actor );
                 case ActionType.Attack:
@@ -126,14 +126,17 @@ namespace Controllers
             }
         }
 
-        private IEnumerator JumpAttackResolver( BossActor actor )
+        private IEnumerator JumpAttackResolver( BossActor actor, TargetType type )
         {
 #if DEBUG_CONTROLLER_ACTION
             Debug.Log( actor + " jump attacks", actor );
 #endif
-            var target = Mathf.Clamp( Player.BodyPosition.x, GetHotSpotPosition( TargetType.LeftCorner ).x,
-                GetHotSpotPosition( TargetType.RightCorner ).x ); 
-            var delta = target - actor.Mobile.BodyPosition.x;            
+            var mob = actor.Mobile;
+
+            var targetPositionX = GetTargetPositionX( type, mob );
+//            var targetPositionX = Mathf.Clamp( Player.BodyPosition.x, GetHotSpotPosition( TargetType.LeftCorner ).x,
+//                GetHotSpotPosition( TargetType.RightCorner ).x );
+            var delta = targetPositionX - actor.Mobile.BodyPosition.x;
 
             foreach ( var unused in JumpAttackAndWaitForCompletion( actor, delta ) )
             {
@@ -244,7 +247,7 @@ namespace Controllers
                 yield return null;
             }
         }
-        
+
         private IEnumerable JumpAttackAndWaitForCompletion( BossActor actor, float toTarget )
         {
             foreach ( var unused in WaitForStateEnter<JumpAttackState>( actor ) )

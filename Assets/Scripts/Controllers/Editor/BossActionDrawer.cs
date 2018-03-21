@@ -19,7 +19,7 @@ public class BossActionDrawer : PropertyDrawer
             var typeProp = property.FindPropertyRelative( "Type" );
             var typeValue = (BossActionControllerBase.ActionType) typeProp.enumValueIndex;
 
-            if ( typeValue != BossActionControllerBase.ActionType.Charge && typeValue != BossActionControllerBase.ActionType.JumpAttack )
+            if ( typeValue != BossActionControllerBase.ActionType.Charge )
             {
                 contentPosition.width = typeWidth;
             }
@@ -28,8 +28,7 @@ public class BossActionDrawer : PropertyDrawer
                 typeValue );
             typeProp.enumValueIndex = (int) typeValue;
 
-            if ( typeValue == BossActionControllerBase.ActionType.Charge ||
-                 typeValue == BossActionControllerBase.ActionType.JumpAttack )
+            if ( typeValue == BossActionControllerBase.ActionType.Charge )
             {
                 return;
             }
@@ -45,6 +44,7 @@ public class BossActionDrawer : PropertyDrawer
                     EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "DurationParameter" ),
                         new GUIContent( "Duration" ) );
                     break;
+                case BossActionControllerBase.ActionType.JumpAttack:
                 case BossActionControllerBase.ActionType.Move:
                     EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "TargetTypeParameter" ),
                         new GUIContent( "Target" ) );
@@ -54,7 +54,6 @@ public class BossActionDrawer : PropertyDrawer
                         new GUIContent( "Count" ) );
                     break;
                 case BossActionControllerBase.ActionType.Count:
-                case BossActionControllerBase.ActionType.JumpAttack:
                 case BossActionControllerBase.ActionType.Charge:
                 default:
                     throw new ArgumentOutOfRangeException();
