@@ -26,7 +26,8 @@ namespace Controllers
             NextToPlayer,
             LeftCorner,
             Center,
-            RightCorner
+            RightCorner,
+            FarthestFromPlayer
         }
 
         protected Mobile Player;
@@ -148,16 +149,7 @@ namespace Controllers
 
             var mob = actor.Mobile;
 
-            float targetPositionX;
-            if ( type == TargetType.NextToPlayer )
-            {
-                var toPlayer = Mathf.Sign( Player.BodyPosition.x - mob.BodyPosition.x );
-                targetPositionX = Player.BodyPosition.x - _settings.CombatRangeThreshold * toPlayer;
-            }
-            else
-            {
-                targetPositionX = GetHotSpotPosition( type ).x;
-            }
+            var targetPositionX = GetTargetPositionX( type, mob );
 
             var toTarget = targetPositionX - mob.BodyPosition.x;
             DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down, 1 );
@@ -194,6 +186,36 @@ namespace Controllers
                     yield return null;
                 }
             }
+        }
+
+        private float GetTargetPositionX( TargetType type, Mobile mob )
+        {
+            float targetPositionX;
+            if ( type == TargetType.NextToPlayer )
+            {
+                var toPlayer = Mathf.Sign( Player.BodyPosition.x - mob.BodyPosition.x );
+                targetPositionX = Player.BodyPosition.x - _settings.CombatRangeThreshold * toPlayer;
+            }
+            else if ( type == TargetType.FarthestFromPlayer )
+            {
+                var left = GetHotSpotPosition( TargetType.LeftCorner ).x;
+                var right = GetHotSpotPosition( TargetType.RightCorner ).x;
+                var player = Player.BodyPosition.x;
+                if ( Mathf.Abs( player - left ) < Mathf.Abs( player - right ) )
+                {
+                    targetPositionX = right;
+                }
+                else
+                {
+                    targetPositionX = left;
+                }
+            }
+            else
+            {
+                targetPositionX = GetHotSpotPosition( type ).x;
+            }
+
+            return targetPositionX;
         }
 
         private IEnumerator WaitResolver( BossActor actor, float duration )
