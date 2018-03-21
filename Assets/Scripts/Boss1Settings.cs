@@ -21,6 +21,7 @@ public class Boss1Settings : ScriptableObject
 
     [ Header( "General" ) ]
     public float CombatRangeThreshold = 1.4f;
+
     public float CloseRangeThreshold = 2.8f;
     public float MidRangeThreshold = 5.6f;
 
@@ -96,6 +97,11 @@ public class Boss1Settings : ScriptableObject
     public float HurtDriftLength;
 
     public Easing HurtDriftTrajectory = new Easing();
+
+    [ Header( "Critical Hurt" ) ]
+    public float CriticalHurtDuration;
+
+    public float CriticalHurtDriftLength;
 
     [ Serializable ]
     public struct AttackSetting

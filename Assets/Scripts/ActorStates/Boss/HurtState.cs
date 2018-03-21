@@ -2,11 +2,18 @@
 {
     public class HurtState : BossFixedHorizontalMovementBase
     {
-        private readonly float _direction;
+        private readonly float _hurtDirection;
 
         public HurtState( BossActor actor, float direction ) : base( actor )
         {
-            _direction = direction;
+            _hurtDirection = direction;
+        }
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            Direction = _hurtDirection;
+            Mobile.UpdateDirection( -_hurtDirection );
         }
 
         protected override float TotalDuration
@@ -16,7 +23,7 @@
 
         protected override float MovementLength
         {
-            get { return _direction * Settings.HurtDriftLength; }
+            get { return Settings.HurtDriftLength; }
         }
 
         protected override Easing MovementTrajectory

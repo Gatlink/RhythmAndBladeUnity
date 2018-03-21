@@ -15,7 +15,7 @@ public class Boss1Animator : ActorAnimator<BossActor>
         {
             Animator.SetTrigger( "Ground" );
         }
-        else if ( next is JumpAttackState )
+        else if ( next is JumpAttackState ) // must check attack first since Jump > JumpAttack
         {
             Animator.SetTrigger( "JumpAttack" );
         }
@@ -24,6 +24,10 @@ public class Boss1Animator : ActorAnimator<BossActor>
             var attackState = (AttackState) next;
             Animator.SetInteger( "Combo", attackState.ComboCount );
             Animator.SetTrigger( "Attack" );
+        }
+        else if ( next is CriticalHurtState ) // must check critical first since Hurt > CriticalHurt
+        {
+            Animator.SetTrigger( "CriticalHurt" );
         }
         else if ( next is HurtState )
         {
@@ -59,6 +63,6 @@ public class Boss1Animator : ActorAnimator<BossActor>
     protected override void LateUpdate()
     {
         base.LateUpdate();
-        ((BossActor) Actor).SetCanTransitionToHurt( CanActorTransitionToHurt );
+        ( (BossActor) Actor ).SetCanTransitionToHurt( CanActorTransitionToHurt );
     }
 }

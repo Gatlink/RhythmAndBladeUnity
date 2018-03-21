@@ -27,7 +27,8 @@ namespace Controllers
             LeftCorner,
             Center,
             RightCorner,
-            FarthestFromPlayer
+            FarthestCornerFromPlayer,
+            OntoPlayer
         }
 
         protected Mobile Player;
@@ -53,6 +54,13 @@ namespace Controllers
         private Vector2 GetHotSpotPosition( TargetType type )
         {
             return _hotSpotsPositions[ type ];
+        }
+
+        private float ClampPositionX( float x )
+        {
+            var left = GetHotSpotPosition( TargetType.LeftCorner ).x;
+            var right = GetHotSpotPosition( TargetType.RightCorner ).x;
+            return Mathf.Clamp( x, left, right );
         }
 
         // ReSharper disable once Unity.RedundantEventFunction
@@ -149,20 +157,20 @@ namespace Controllers
 #if DEBUG_CONTROLLER_ACTION
             Debug.Log( actor + " moves to " + type, actor );
 #endif
-
+            const float MovementEpsilon = 0.1f;
             var mob = actor.Mobile;
 
             var targetPositionX = GetTargetPositionX( type, mob );
 
             var toTarget = targetPositionX - mob.BodyPosition.x;
-            DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down, 1 );
 
             if ( Mathf.Abs( toTarget ) < _settings.CloseRangeThreshold )
             {
-                var movementDirection = Mathf.Sign( toTarget );
-                while ( Mathf.Sign( targetPositionX - mob.BodyPosition.x ) * movementDirection > 0 )
+                while ( Mathf.Abs( targetPositionX - mob.BodyPosition.x ) > MovementEpsilon )
                 {
-                    actor.DesiredMovement = movementDirection;
+                    DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down );
+
+                    actor.DesiredMovement = Mathf.Sign( targetPositionX - mob.BodyPosition.x );
                     yield return null;
                 }
             }
@@ -170,6 +178,8 @@ namespace Controllers
             {
                 foreach ( var unused in JumpAndWaitForCompletion( actor, toTarget ) )
                 {
+                    DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down );
+
                     yield return null;
                 }
             }
@@ -177,15 +187,19 @@ namespace Controllers
             {
                 const float LongRangeWalkDistance = 2;
                 var movementDirection = Mathf.Sign( toTarget );
-                var walkTargetX = mob.BodyPosition.x + movementDirection * LongRangeWalkDistance;
-                while ( Mathf.Sign( walkTargetX - mob.BodyPosition.x ) * movementDirection > 0 )
+                var walkTargetX = ClampPositionX( mob.BodyPosition.x + movementDirection * LongRangeWalkDistance );
+                while ( Mathf.Abs( walkTargetX - mob.BodyPosition.x ) > MovementEpsilon )
                 {
-                    actor.DesiredMovement = movementDirection;
+                    DebugExtension.DebugArrow( mob.BodyPosition.WithX( walkTargetX ), Vector3.down );
+
+                    actor.DesiredMovement = Mathf.Sign( walkTargetX - mob.BodyPosition.x );
                     yield return null;
                 }
 
                 foreach ( var unused in JumpAndWaitForCompletion( actor, targetPositionX - mob.BodyPosition.x ) )
                 {
+                    DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down );
+
                     yield return null;
                 }
             }
@@ -193,32 +207,24 @@ namespace Controllers
 
         private float GetTargetPositionX( TargetType type, Mobile mob )
         {
-            float targetPositionX;
-            if ( type == TargetType.NextToPlayer )
+            switch ( type )
             {
-                var toPlayer = Mathf.Sign( Player.BodyPosition.x - mob.BodyPosition.x );
-                targetPositionX = Player.BodyPosition.x - _settings.CombatRangeThreshold * toPlayer;
+                case TargetType.NextToPlayer:
+                    var toPlayer = Mathf.Sign( Player.BodyPosition.x - mob.BodyPosition.x );
+                    return ClampPositionX( Player.BodyPosition.x - _settings.CombatRangeThreshold * toPlayer );
+                case TargetType.FarthestCornerFromPlayer:
+                    var left = GetHotSpotPosition( TargetType.LeftCorner ).x;
+                    var right = GetHotSpotPosition( TargetType.RightCorner ).x;
+                    var player = Player.BodyPosition.x;
+                    return Mathf.Abs( player - left ) < Mathf.Abs( player - right ) ? right : left;
+                case TargetType.OntoPlayer:
+                    return ClampPositionX( Player.BodyPosition.x );
+                case TargetType.LeftCorner:
+                case TargetType.Center:
+                case TargetType.RightCorner:
+                default:
+                    return GetHotSpotPosition( type ).x;
             }
-            else if ( type == TargetType.FarthestFromPlayer )
-            {
-                var left = GetHotSpotPosition( TargetType.LeftCorner ).x;
-                var right = GetHotSpotPosition( TargetType.RightCorner ).x;
-                var player = Player.BodyPosition.x;
-                if ( Mathf.Abs( player - left ) < Mathf.Abs( player - right ) )
-                {
-                    targetPositionX = right;
-                }
-                else
-                {
-                    targetPositionX = left;
-                }
-            }
-            else
-            {
-                targetPositionX = GetHotSpotPosition( type ).x;
-            }
-
-            return targetPositionX;
         }
 
         private IEnumerator WaitResolver( BossActor actor, float duration )

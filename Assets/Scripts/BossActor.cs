@@ -25,7 +25,7 @@ public class BossActor : ActorBase<BossActor>
 
     [ ReadOnly ]
     public float DesiredJumpMovement;
-    
+
     public Mobile Mobile { get; private set; }
 
     public ActorHealth Health { get; private set; }
@@ -33,6 +33,7 @@ public class BossActor : ActorBase<BossActor>
     private bool _hurtThisFrame;
     private bool _canTransitionToHurt;
     private float _hurtDirection;
+    private bool _nextHurtIsCritical;
 
     public bool CheckAttack()
     {
@@ -56,7 +57,9 @@ public class BossActor : ActorBase<BossActor>
 
     public bool CheckHurt()
     {
-        return _hurtThisFrame && ( _canTransitionToHurt || !Health.IsAlive );
+        return _hurtThisFrame && ( _canTransitionToHurt
+                                   || !Health.IsAlive
+                                   || _nextHurtIsCritical );
     }
 
     public void SetCanTransitionToHurt( bool state )
@@ -64,10 +67,15 @@ public class BossActor : ActorBase<BossActor>
         _canTransitionToHurt = state;
     }
 
+    public void SetNextHurtIsCritical()
+    {
+        _nextHurtIsCritical = true;
+    }
+
     private void HitHandler( ActorHealth health, GameObject source )
     {
         _hurtThisFrame = true;
-        _hurtDirection = Mathf.Sign( source.transform.position.x - Mobile.transform.position.x );
+        _hurtDirection = -Mathf.Sign( source.transform.position.x - Mobile.transform.position.x );
     }
 
     protected override IActorState CreateInitialState()
@@ -93,7 +101,15 @@ public class BossActor : ActorBase<BossActor>
     {
         if ( CheckHurt() )
         {
-            TransitionToState( new HurtState( this, -_hurtDirection ) );
+            if ( _nextHurtIsCritical )
+            {
+                _nextHurtIsCritical = false;
+                TransitionToState( new CriticalHurtState( this, _hurtDirection ) );
+            }
+            else
+            {
+                TransitionToState( new HurtState( this, _hurtDirection ) );
+            }
         }
 #if UNITY_EDITOR
         foreach ( var hitbox in GetComponentsInChildren<Collider2D>().Where( col =>

@@ -93,7 +93,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 0
     Function: 21
-  MaxJumpAttackMovementLength: 10
   JumpAttackMovementTrajectory:
     Type: 0
     Curve:
@@ -142,7 +141,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 0
     Function: 21
-  MaxChargeMovementLength: 8
   Attack1:
     Duration: 0.75
     HorizontalMovementLength: 0
@@ -244,3 +242,5 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 0
     Function: 21
+  CriticalHurtDuration: 1
+  CriticalHurtDriftLength: 2

@@ -19,6 +19,8 @@ namespace Controllers
         public string Name;
         public OptionalInt HealthEndCondition;
 
+        private bool _actorCriticalHurtFlagSet;
+
         public bool Enabled
         {
             get { return enabled; }
@@ -29,11 +31,17 @@ namespace Controllers
         {
             if ( HealthEndCondition.UseValue )
             {
-                if ( actor.GetComponent<ActorHealth>().CurrentHitCount <= HealthEndCondition.Value )
+                var currentHealth = actor.GetComponent<ActorHealth>().CurrentHitCount;
+                if ( !_actorCriticalHurtFlagSet && currentHealth <= HealthEndCondition.Value + 1 )
+                {
+                    _actorCriticalHurtFlagSet = true;
+                    actor.SetNextHurtIsCritical();
+                }
+                if ( currentHealth <= HealthEndCondition.Value )
                 {
                     enabled = false;
                 }
             }
-        }        
+        }
     }
 }
