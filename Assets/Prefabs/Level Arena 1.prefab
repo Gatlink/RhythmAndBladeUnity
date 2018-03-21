@@ -726,6 +726,7 @@ MonoBehaviour:
   TargetGameObjects: []
   TargetBehaviours:
   - {fileID: 114520579515588662}
+  - {fileID: 0}
   AutoReset: 0
   TargetState: 1
   TrackingTarget: {fileID: 0}
