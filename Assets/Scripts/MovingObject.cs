@@ -13,6 +13,11 @@ public class MovingObject : MonoBehaviour, IMoving
     public float Phase;
     private Vector2 _initialPosition;
 
+    public bool Enabled
+    {
+        get { return enabled; }
+    }
+
     public Vector2 CurrentVelocity
     {
         get
