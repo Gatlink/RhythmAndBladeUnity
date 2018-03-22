@@ -117,8 +117,28 @@ MonoBehaviour:
   DiveGravity: 140
   DiveMaxFallVelocity: 60
   StrikeGroundDuration: 0.33
-  ShockWaveDistance: 6
-  ShockWaveDuration: 0.6
+  ShockWaveVelocity: 16
+  ShockWaveTrajectory:
+    Type: 1
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    Function: 1
   ChargeDuration: 0.75
   ChargeTrajectory:
     Type: 0

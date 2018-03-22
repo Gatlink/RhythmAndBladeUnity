@@ -75,8 +75,9 @@ public class Boss1Settings : ScriptableObject
     [ Header( "Strike Ground" ) ]
     public float StrikeGroundDuration;
 
-    public float ShockWaveDistance = 6;
-    public float ShockWaveDuration = 1;
+    public float ShockWaveVelocity = 10;
+
+    public Easing ShockWaveTrajectory;
 
     [ Header( "Charge" ) ]
     public float ChargeDuration = 0.75f;
