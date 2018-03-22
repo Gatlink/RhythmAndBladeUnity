@@ -24,6 +24,11 @@ public class Mobile : MonoBehaviour, IMoving
     [ ReadOnly, SerializeField ]
     private Vector2 _currentAcceleration;
 
+    public bool Enabled
+    {
+        get { return enabled; }
+    }
+
     public Vector2 CurrentVelocity
     {
         get { return _currentVelocity; }

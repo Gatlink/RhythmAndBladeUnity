@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Gamelogic.Extensions;
+using UnityEngine;
 
 namespace ActorStates.Player
 {
@@ -21,6 +22,13 @@ namespace ActorStates.Player
             _actor = actor;
             _playerSettings = PlayerSettings.Instance;
             _recoil = recoil * harmfull.Recoil;
+            if ( harmfull.RecoilDirectionOverride.UseValue )
+            {
+                // reference recoil direction is left
+                _recoil = harmfull.RecoilDirectionOverride.Value.normalized * harmfull.Recoil;
+                var sign = Mathf.Sign( Vector2.Dot( recoil, Vector2.left ) );
+                _recoil.x *= sign;
+            }
             _teleportToCheckpointOnComplete = harmfull.TeleportToLastCheckpoint;
         }
 

@@ -522,7 +522,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damage: 1
-  _recoil: 1
+  _recoil: 16
+  _recoilDirectionOverride:
+    useValue: 1
+    value: {x: -1, y: 1}
   _passiveHurt: 0
   _teleportToLastCheckpoint: 0
 --- !u!114 &114466402028377612
@@ -618,15 +621,15 @@ MonoBehaviour:
     - Type: 2
       DurationParameter: 0
       CountParameter: 0
+      TargetTypeParameter: 6
+    - Type: 2
+      DurationParameter: 0
+      CountParameter: 0
+      TargetTypeParameter: 7
+    - Type: 2
+      DurationParameter: 0
+      CountParameter: 0
       TargetTypeParameter: 2
-    - Type: 2
-      DurationParameter: 0
-      CountParameter: 0
-      TargetTypeParameter: 1
-    - Type: 2
-      DurationParameter: 0
-      CountParameter: 0
-      TargetTypeParameter: 3
 --- !u!114 &114857901565293242
 MonoBehaviour:
   m_ObjectHideFlags: 1

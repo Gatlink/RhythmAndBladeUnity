@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Gamelogic.Extensions;
+using UnityEngine;
 
 public class HurtPlayer : MonoBehaviour, IHarmfull
 {
@@ -7,6 +8,9 @@ public class HurtPlayer : MonoBehaviour, IHarmfull
 
     [ SerializeField ]
     private float _recoil = 1;
+
+    [ SerializeField ]
+    private OptionalVector2 _recoilDirectionOverride;
 
     [ SerializeField ]
     private bool _passiveHurt;
@@ -24,6 +28,11 @@ public class HurtPlayer : MonoBehaviour, IHarmfull
     {
         get { return _recoil; }
         set { _recoil = value; }
+    }
+
+    public Optional<Vector2> RecoilDirectionOverride
+    {
+        get { return _recoilDirectionOverride; }
     }
 
     public GameObject GameObject

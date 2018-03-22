@@ -47,7 +47,7 @@ namespace ActorStates.Player
                 {
                     Debug.LogError( "IMoving component not found in " + collider, collider );
                 }
-                else
+                else if ( moving.Enabled )
                 {
                     wallMovement = moving.CurrentVelocity;
                 }

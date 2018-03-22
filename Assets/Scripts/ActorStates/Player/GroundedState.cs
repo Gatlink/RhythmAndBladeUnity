@@ -19,7 +19,7 @@ namespace ActorStates.Player
         public override IActorState Update()
         {
             var mob = Actor.Mobile;
-            
+
             Vector2 normal;
             Collider2D collider;
             if ( !mob.CheckGround( out collider, out normal ) )
@@ -46,7 +46,7 @@ namespace ActorStates.Player
                 {
                     Debug.LogError( "IMoving component not found in " + collider, collider );
                 }
-                else
+                else if ( moving.Enabled )
                 {
                     groundMovement = moving.CurrentVelocity;
                 }
@@ -66,7 +66,7 @@ namespace ActorStates.Player
             {
                 return new DeathState( Actor );
             }
-            
+
             if ( !mob.CheckGround() )
             {
                 return new FallState( Actor );

@@ -28,7 +28,9 @@ namespace Controllers
             Center,
             RightCorner,
             FarthestCornerFromPlayer,
-            OntoPlayer
+            OntoPlayer,
+            LeftPlatform,
+            RightPlatform
         }
 
         protected Mobile Player;
