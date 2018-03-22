@@ -252,7 +252,6 @@ MonoBehaviour:
   MinRadius: 27
   MaxRadius: 740
   PreviewTime: 2
-  Adjustment: 0.1
   FinalEffectSize: 0.2
   FinalEffectDuration: 0.2
   FinalEffectMovementEasing:
@@ -418,7 +417,7 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 0d20014ebf688dd4da29e152795e1522, type: 2}
+  m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
