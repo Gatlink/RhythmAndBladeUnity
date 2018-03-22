@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Net.Configuration;
-using ActorStates;
-using ActorStates.Boss;
-using Gamelogic.Extensions;
-using Gamelogic.Extensions.Algorithms;
-using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Assertions.Must;
+﻿using Gamelogic.Extensions;
 
 namespace Controllers
 {
