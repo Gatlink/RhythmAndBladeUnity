@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace NodeEditor
@@ -13,46 +14,63 @@ namespace NodeEditor
     {
         public Rect Rect;
 
-        private readonly ConnectionPointType _type;
+        public readonly ConnectionPointType Type;
 
         public readonly Node Node;
 
         private readonly GUIStyle _style;
 
         private readonly Action<ConnectionPoint> _onClickConnectionPoint;
+        private readonly Action<ConnectionPoint> _onClickRemoveConnectionPoint;
 
         public ConnectionPoint( Node node, ConnectionPointType type, GUIStyle style,
-            Action<ConnectionPoint> onClickConnectionPoint )
+            Action<ConnectionPoint> onClickConnectionPoint, Action<ConnectionPoint> onClickRemoveConnectionPoint )
         {
             Node = node;
-            _type = type;
+            Type = type;
             _style = style;
             _onClickConnectionPoint = onClickConnectionPoint;
+            _onClickRemoveConnectionPoint = onClickRemoveConnectionPoint;
             Rect = new Rect( 0, 0, 20f, 10f );
         }
 
         public void Draw()
         {
-            if ( _type == ConnectionPointType.In )
+            Rect.position = Node.GetConnectionPointPosition( this );
+            Rect.x -= Rect.width * 0.5f;
+
+            if ( Type == ConnectionPointType.In )
             {
-                Rect.x = Node.Rect.x + Node.Rect.width * 0.5f - Rect.width * 0.5f;
-                Rect.y = Node.Rect.y - Rect.height + 9;    
+                Rect.y += -Rect.height + 9;
             }
             else
             {
-                var i = Node.OutPoints.IndexOf( this );
-                var step = Node.Rect.width / ( Node.OutPoints.Count + 1 );
-                Rect.x = Node.Rect.x + (i + 1) * step - Rect.width * 0.5f;
-                Rect.y = Node.Rect.y + Node.Rect.height - 10;
+                Rect.y += -10;
             }
-            
+
             if ( GUI.Button( Rect, "", _style ) )
             {
-//                if ( _onClickConnectionPoint != null )
-//                {
-//                    _onClickConnectionPoint( this );
-//                }
+                if ( _onClickRemoveConnectionPoint != null && Event.current.button == 1 )
+                {
+                    ProcessContextMenu();
+                    Event.current.Use();
+                }
+                else
+                {
+                    if ( _onClickConnectionPoint != null )
+                    {
+                        _onClickConnectionPoint( this );
+                    }
+                }
             }
+        }
+
+        private void ProcessContextMenu()
+        {
+            var genericMenu = new GenericMenu();
+            genericMenu.AddItem( new GUIContent( "Remove connector" ), false,
+                () => _onClickRemoveConnectionPoint( this ) );
+            genericMenu.ShowAsContext();
         }
     }
 }

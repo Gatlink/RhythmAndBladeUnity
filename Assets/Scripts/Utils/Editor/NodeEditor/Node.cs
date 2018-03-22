@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Controllers;
 using UnityEditor;
 using UnityEngine;
@@ -8,19 +9,25 @@ namespace NodeEditor
 {
     public class Node
     {
-        private readonly string _title;
+        public BossControllerBase Controller { get; protected set; }
+        
         public Rect Rect;
+
+        public readonly ConnectionPoint InPoint;
+        
         private const int defaultWidth = 120;
         private const int defaultHeight = 60;
         private bool _isDragged;
         private bool _isSelected;
 
-        public readonly ConnectionPoint InPoint;
-        public readonly List<ConnectionPoint> OutPoints;
-
+        private readonly Action<Node> _onRemoveNode;
+        private readonly Action<Node> _onDoubleClickNode;
+        
         private GUIStyle _style;
+        private readonly GUIStyle _defaultNodeStyle;
+        private readonly GUIStyle _selectedNodeStyle;
         private static GUIStyle _titleLabelStyle;
-
+        
         private static GUIStyle TitleLabelStyle
         {
             get
@@ -35,37 +42,19 @@ namespace NodeEditor
             }
         }
 
-        private readonly GUIStyle _defaultNodeStyle;
-        private readonly GUIStyle _selectedNodeStyle;
-
-        private readonly Action<Node> _onRemoveNode;
-
-        public readonly BossControllerBase Controller;
-
-        public Node( BossControllerBase controller, Vector2 position, GUIStyle nodeStyle,
-            GUIStyle selectedStyle,
-            GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> onClickInPoint,
-            Action<ConnectionPoint> onClickOutPoint, Action<Node> onClickRemoveNode )
+        public Node( BossControllerBase controller, Vector2 position, GUIStyle nodeStyle, GUIStyle selectedStyle,
+            GUIStyle inPointStyle, Action<ConnectionPoint> onClickInPoint, Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode )
         {
             Controller = controller;
-            _title = controller.Name;
             Rect = new Rect( position.x - defaultWidth / 2f, position.y - defaultHeight / 2f, defaultWidth,
                 defaultHeight );
             _style = nodeStyle;
-            InPoint = new ConnectionPoint( this, ConnectionPointType.In, inPointStyle, onClickInPoint );
-            var manager = Controller as BossControllerManager;
-            if ( manager != null )
-            {
-                OutPoints = new List<ConnectionPoint>();
-                for ( var i = 0; i < manager.SubControllers.Count ; i++ )
-                {
-                    OutPoints.Add( new ConnectionPoint( this, ConnectionPointType.Out, outPointStyle, onClickOutPoint ) );                    
-                }                    
-            }
+            InPoint = new ConnectionPoint( this, ConnectionPointType.In, inPointStyle, onClickInPoint, null );
 
             _defaultNodeStyle = nodeStyle;
             _selectedNodeStyle = selectedStyle;
             _onRemoveNode = onClickRemoveNode;
+            _onDoubleClickNode = onDoubleClickNode;
         }
 
         public void Drag( Vector2 delta )
@@ -73,17 +62,8 @@ namespace NodeEditor
             Rect.position += delta;
         }
 
-        public void Draw()
+        public virtual void Draw()
         {
-            InPoint.Draw();
-            if ( OutPoints != null )
-            {
-                foreach ( var outPoint in OutPoints )
-                {
-                    outPoint.Draw();
-                }
-            }
-
             using ( new GUI.GroupScope( Rect, _style ) )
             {
                 var rect = new Rect( Rect );
@@ -91,20 +71,10 @@ namespace NodeEditor
                 rect.width -= 20;
                 rect.y = 10;
                 rect.height -= 20;
-                GUI.Label( rect, _title, TitleLabelStyle );
-
-//                if ( Controller is FixedScriptBossController )
-//                {
-//                    rect.y += 16;
-//                    using ( new GUI.GroupScope( rect ) )
-//                    {
-//                        var editor = Editor.CreateEditor( Controller );
-//                        editor.DrawDefaultInspector();
-//                    }
-//                }
+                GUI.Label( rect, Controller.Name, TitleLabelStyle );
             }
 
-            //GUI.Box( Rect, _title, _style );
+            InPoint.Draw();
         }
 
         public bool ProcessEvents( Event e )
@@ -122,8 +92,9 @@ namespace NodeEditor
                             _style = _selectedNodeStyle;
                             if ( e.clickCount > 1 )
                             {
-                                InspectorPopup.ShowInspectorPopup( Controller );
+                                _onDoubleClickNode( this );
                             }
+                            e.Use();
                         }
                         else
                         {
@@ -174,6 +145,28 @@ namespace NodeEditor
             }
 
 //            Object.Destroy( Controller );
+        }
+
+        protected Vector2 GetInConnectionPointPosition()
+        {
+            var pos = Vector2.zero;
+            pos.x = Rect.x + Rect.width * 0.5f;
+            pos.y = Rect.y;
+            return pos;
+        }
+
+        public virtual Vector2 GetConnectionPointPosition( ConnectionPoint point )
+        {
+            if ( point == InPoint )
+            {
+                return GetInConnectionPointPosition();
+            }
+            throw new ArgumentException( "Connection point not found" );
+        }
+
+        public virtual IEnumerable<ConnectionPoint> EnumerateConnectionPoints()
+        {
+            yield return InPoint;
         }
     }
 }

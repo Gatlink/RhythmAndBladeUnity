@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System.Linq;
 using Controllers;
 
 namespace NodeEditor
@@ -9,10 +11,32 @@ namespace NodeEditor
     {
         private GameObject _bossActor;
 
-        private Dictionary<BossControllerBase, Node> _nodes;
+        private GameObject BossActor
+        {
+            get
+            {
+                if ( _bossActor == null )
+                {
+                    _bossActor = GameObject.FindWithTag( Tags.Boss );
+                    if ( _bossActor == null )
+                    {
+                        Debug.LogError( "Boss Actor not found in current scene" );
+                    }
+                }
 
-        //private List<Node> _nodes;
-        private List<Connection> _connections;
+                return _bossActor;
+            }
+        }
+
+        private readonly Dictionary<BossControllerBase, Node> _nodes = new Dictionary<BossControllerBase, Node>();
+
+        private readonly Dictionary<ConnectionPoint, Connection> _connectionsByOutput =
+            new Dictionary<ConnectionPoint, Connection>();
+
+        private IEnumerable<Connection> AllConnections
+        {
+            get { return _connectionsByOutput.Values; }
+        }
 
         private GUIStyle _nodeStyle;
         private GUIStyle _selectedNodeStyle;
@@ -25,6 +49,7 @@ namespace NodeEditor
         private Vector2 _offset;
         private Vector2 _drag;
         private Color _connectionColor;
+        private InspectorPopup _inspectorPopup;
 
         [ MenuItem( "Window/Boss Controller Editor" ) ]
         private static void OpenWindow()
@@ -61,20 +86,17 @@ namespace NodeEditor
 
             _connectionColor = Color.black;
 
-            _bossActor = GameObject.FindWithTag( Tags.Boss );
-            if ( _bossActor == null )
-            {
-                Debug.LogError( "Boss Actor not found in current scene" );
-            }
-            else
-            {
-                PopulateGraph();
-            }
+            PopulateGraph();
+
+            autoRepaintOnSceneChange = true;
         }
 
         private void PopulateGraph()
         {
-            var fixedScriptControllers = _bossActor.GetComponents<FixedScriptBossController>();
+            var actor = BossActor;
+            if ( actor == null ) return;
+
+            var fixedScriptControllers = actor.GetComponents<FixedScriptBossController>();
 
             var stepX = Mathf.Max( 100, position.width / fixedScriptControllers.Length );
             var mousePosition = new Vector2( stepX / 2, position.height - 100 );
@@ -84,7 +106,7 @@ namespace NodeEditor
                 mousePosition.x += stepX;
             }
 
-            var compoundControllers = _bossActor.GetComponents<BossControllerManager>();
+            var compoundControllers = actor.GetComponents<BossControllerManager>();
             stepX = Mathf.Max( 100, position.width / compoundControllers.Length );
             mousePosition = new Vector2( stepX / 2, mousePosition.y - 100 );
             foreach ( var controller in compoundControllers )
@@ -95,18 +117,22 @@ namespace NodeEditor
 
             foreach ( var compoundController in compoundControllers )
             {
-                for ( var index = 0; index < compoundController.SubControllers.Count; index++ )
+                foreach ( var subController in compoundController.SubControllers )
                 {
-                    var subController = compoundController.SubControllers[ index ];
-// make connection
-                    CreateConnection( _nodes[ subController ].InPoint,
-                        _nodes[ compoundController ].OutPoints[ index ] );
+                    var node = (CompoundNode) _nodes[ compoundController ];
+                    var connectionPoint = node.AddOutConnectionPoint();
 
-                    if ( subController is BossControllerManager )
+                    if ( subController != null )
                     {
-                        var topNode = _nodes[ compoundController ];
-                        var bottomNode = _nodes[ subController ];
-                        topNode.Rect.y = Mathf.Min( bottomNode.Rect.y - 100, topNode.Rect.y );
+                        // make connection
+                        CreateConnection( _nodes[ subController ].InPoint, connectionPoint, connectControllers: false );
+
+                        if ( subController is BossControllerManager )
+                        {
+                            var topNode = _nodes[ compoundController ];
+                            var bottomNode = _nodes[ subController ];
+                            topNode.Rect.y = Mathf.Min( bottomNode.Rect.y - 100, topNode.Rect.y );
+                        }
                     }
                 }
             }
@@ -129,11 +155,23 @@ namespace NodeEditor
 
             if ( GUI.Button( new Rect( 10, 10, 50, 20 ), "Reload" ) )
             {
+                if ( _inspectorPopup != null )
+                {
+                    _inspectorPopup.Close();
+                }
+
                 ClearGraph();
                 PopulateGraph();
             }
 
-            if ( GUI.changed ) Repaint();
+            if ( GUI.changed )
+            {
+                Repaint();
+                if ( _inspectorPopup != null )
+                {
+                    _inspectorPopup.Repaint();
+                }
+            }
         }
 
         private void DrawGrid( float gridSpacing, float gridOpacity, Color gridColor )
@@ -165,23 +203,17 @@ namespace NodeEditor
 
         private void DrawNodes()
         {
-            if ( _nodes != null )
+            foreach ( var node in _nodes.Values )
             {
-                foreach ( var node in _nodes.Values )
-                {
-                    node.Draw();
-                }
+                node.Draw();
             }
         }
 
         private void DrawConnections()
         {
-            if ( _connections != null )
+            foreach ( var connection in AllConnections )
             {
-                foreach ( var connection in _connections )
-                {
-                    connection.Draw();
-                }
+                connection.Draw();
             }
         }
 
@@ -216,16 +248,13 @@ namespace NodeEditor
 
         private void ProcessNodeEvents( Event e )
         {
-            if ( _nodes != null )
+            foreach ( var node in _nodes.Values )
             {
-                foreach ( var node in _nodes.Values )
-                {
-                    var guiChanged = node.ProcessEvents( e );
+                var guiChanged = node.ProcessEvents( e );
 
-                    if ( guiChanged )
-                    {
-                        GUI.changed = true;
-                    }
+                if ( guiChanged )
+                {
+                    GUI.changed = true;
                 }
             }
         }
@@ -274,12 +303,9 @@ namespace NodeEditor
         {
             _drag = delta;
 
-            if ( _nodes != null )
+            foreach ( var node in _nodes.Values )
             {
-                foreach ( var node in _nodes.Values )
-                {
-                    node.Drag( delta );
-                }
+                node.Drag( delta );
             }
 
             GUI.changed = true;
@@ -298,6 +324,12 @@ namespace NodeEditor
             {
                 if ( _selectedOutPoint.Node != _selectedInPoint.Node )
                 {
+                    // clear previous connection to this out point
+                    if ( _connectionsByOutput.ContainsKey( _selectedOutPoint ) )
+                    {
+                        RemoveConnection( _connectionsByOutput[ _selectedOutPoint ] );
+                    }
+
                     CreateConnection( _selectedInPoint, _selectedOutPoint );
                     ClearConnectionSelection();
                 }
@@ -316,6 +348,12 @@ namespace NodeEditor
             {
                 if ( _selectedOutPoint.Node != _selectedInPoint.Node )
                 {
+                    // clear previous connection to this out point
+                    if ( _connectionsByOutput.ContainsKey( _selectedOutPoint ) )
+                    {
+                        RemoveConnection( _connectionsByOutput[ _selectedOutPoint ] );
+                    }
+
                     CreateConnection( _selectedInPoint, _selectedOutPoint );
                     ClearConnectionSelection();
                 }
@@ -328,74 +366,109 @@ namespace NodeEditor
 
         private void OnClickRemoveNode( Node node )
         {
-            if ( _connections != null )
+            var connectionsToRemove = new List<Connection>();
+
+            foreach ( var connection in AllConnections )
             {
-                var connectionsToRemove = new List<Connection>();
-
-                foreach ( var connection in _connections )
+                if ( node.EnumerateConnectionPoints().Contains( connection.OutPoint ) )
                 {
-                    if ( connection.InPoint == node.InPoint ||
-                         ( node.OutPoints != null && node.OutPoints.Contains( connection.OutPoint ) ) )
-                    {
-                        connectionsToRemove.Add( connection );
-                    }
+                    connectionsToRemove.Add( connection );
                 }
+            }
 
-                foreach ( var connection in connectionsToRemove )
-                {
-                    _connections.Remove( connection );
-                }
+            foreach ( var connection in connectionsToRemove )
+            {
+                RemoveConnection( connection );
             }
 
             _nodes.Remove( node.Controller );
         }
 
-        private void OnClickRemoveConnection( Connection connection )
-        {
-            _connections.Remove( connection );
-        }
-
         private void ClearGraph()
         {
-            if ( _nodes != null )
-            {
-                _nodes.Clear();
-            }
+            _nodes.Clear();
 
-            if ( _connections != null )
-            {
-                _connections.Clear();
-            }
+            _connectionsByOutput.Clear();
+        }
+
+        private Node CreateNode( Vector2 mousePosition, BossControllerManager controller )
+        {
+            var node = new CompoundNode( controller, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
+                _outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, OnDoubleClickNode,
+                OnClickRemoveConnectionPoint );
+
+            _nodes.Add( node.Controller, node );
+            return node;
         }
 
         private Node CreateNode( Vector2 mousePosition, BossControllerBase controller )
         {
-            if ( _nodes == null )
-            {
-                _nodes = new Dictionary<BossControllerBase, Node>();
-            }
-
             var node = new Node( controller, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
-                _outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode );
-            _nodes.Add( controller, node );
+                OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode );
 
+            _nodes.Add( node.Controller, node );
             return node;
         }
 
-        private void CreateConnection( ConnectionPoint inPoint, ConnectionPoint outPoint )
+        private void OnClickRemoveConnectionPoint( ConnectionPoint connectionPoint )
         {
-            if ( _connections == null )
+            if ( connectionPoint.Type == ConnectionPointType.In )
             {
-                _connections = new List<Connection>();
+                Debug.LogError( "Cannot remove 'in' conection point !" );
+                return;
             }
 
-            _connections.Add( new Connection( inPoint, outPoint, OnClickRemoveConnection, _connectionColor ) );
+            Connection connection;
+            if ( _connectionsByOutput.TryGetValue( connectionPoint, out connection ) )
+            {
+                RemoveConnection( connection );
+            }
+
+            var node = (CompoundNode) connectionPoint.Node;
+            var index = node.OutPoints.IndexOf( connectionPoint );
+            node.RemoveConnectionPoint( connectionPoint );
+            node.Controller.SubControllers.RemoveAt( index );
+        }
+
+        private void OnDoubleClickNode( Node node )
+        {
+            _inspectorPopup = InspectorPopup.ShowInspectorPopup( node.Controller );
+        }
+
+        private void CreateConnection( ConnectionPoint inPoint, ConnectionPoint outPoint,
+            bool connectControllers = true )
+        {
+            var connection = new Connection( inPoint, outPoint, _connectionColor );
+            _connectionsByOutput.Add( outPoint, connection );
+
+            if ( connectControllers )
+            {
+                var inNode = inPoint.Node;
+                var outNode = (CompoundNode) outPoint.Node;
+
+                outNode.Controller.SubControllers[ outNode.OutPoints.IndexOf( outPoint ) ] = inNode.Controller;
+            }
+        }
+
+        private void CreateConnection( ConnectionPoint inPoint, CompoundNode outNode, bool connectControllers = true )
+        {
+            CreateConnection( inPoint, outNode.AddOutConnectionPoint(), connectControllers );
         }
 
         private void ClearConnectionSelection()
         {
             _selectedInPoint = null;
             _selectedOutPoint = null;
+        }
+
+        private void RemoveConnection( Connection connection )
+        {
+            _connectionsByOutput.Remove( connection.OutPoint );
+
+            var inNode = connection.InPoint.Node;
+            var outNode = (CompoundNode) connection.OutPoint.Node;
+            var index = outNode.Controller.SubControllers.IndexOf( inNode.Controller );
+            outNode.Controller.SubControllers[ index ] = null;
         }
     }
 }
