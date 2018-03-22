@@ -10,11 +10,11 @@ namespace NodeEditor
     public class Node
     {
         public BossControllerBase Controller { get; protected set; }
-        
+
         public Rect Rect;
 
         public readonly ConnectionPoint InPoint;
-        
+
         private const int defaultWidth = 120;
         private const int defaultHeight = 60;
         private bool _isDragged;
@@ -22,12 +22,12 @@ namespace NodeEditor
 
         private readonly Action<Node> _onRemoveNode;
         private readonly Action<Node> _onDoubleClickNode;
-        
+
         private GUIStyle _style;
         private readonly GUIStyle _defaultNodeStyle;
         private readonly GUIStyle _selectedNodeStyle;
         private static GUIStyle _titleLabelStyle;
-        
+
         private static GUIStyle TitleLabelStyle
         {
             get
@@ -132,9 +132,9 @@ namespace NodeEditor
 
         private void ProcessContextMenu()
         {
-//            var genericMenu = new GenericMenu();
-//            genericMenu.AddItem( new GUIContent( "Remove node" ), false, OnClickRemoveNode );
-//            genericMenu.ShowAsContext();
+            var genericMenu = new GenericMenu();
+            genericMenu.AddItem( new GUIContent( "Remove node" ), false, OnClickRemoveNode );
+            genericMenu.ShowAsContext();
         }
 
         private void OnClickRemoveNode()
@@ -143,8 +143,6 @@ namespace NodeEditor
             {
                 _onRemoveNode( this );
             }
-
-//            Object.Destroy( Controller );
         }
 
         protected Vector2 GetInConnectionPointPosition()
