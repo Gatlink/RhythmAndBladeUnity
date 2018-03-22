@@ -93,8 +93,8 @@ namespace NodeEditor
                             if ( e.clickCount > 1 )
                             {
                                 _onDoubleClickNode( this );
+                                e.Use();
                             }
-                            e.Use();
                         }
                         else
                         {
