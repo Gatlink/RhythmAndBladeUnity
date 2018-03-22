@@ -7,7 +7,7 @@ namespace NodeEditor
 {
     public class CompoundNode : Node
     {
-        public new BossControllerManager Controller { get; protected set; }
+        public new CompoundBehaviourNode BehaviourNode { get; protected set; }
 
         public readonly List<ConnectionPoint> OutPoints;
 
@@ -15,15 +15,15 @@ namespace NodeEditor
         private readonly Action<ConnectionPoint> _onClickOutPoint;
         private readonly Action<ConnectionPoint> _onClickRemoveConnectionPoint;
 
-        public CompoundNode( BossControllerManager controller, Vector2 position, GUIStyle nodeStyle,
+        public CompoundNode( CompoundBehaviourNode behaviourNode, Vector2 position, GUIStyle nodeStyle,
             GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle,
             Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint,
             Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode,
-            Action<ConnectionPoint> onClickRemoveConnectionPoint ) : base( controller, position, nodeStyle,
+            Action<ConnectionPoint> onClickRemoveConnectionPoint, Func<Node, bool> onClickNode ) : base( behaviourNode, position, nodeStyle,
             selectedStyle, inPointStyle,
-            onClickInPoint, onClickRemoveNode, onDoubleClickNode )
+            onClickInPoint, onClickRemoveNode, onDoubleClickNode, onClickNode )
         {
-            Controller = controller;
+            BehaviourNode = behaviourNode;
             OutPoints = new List<ConnectionPoint>();
             _outPointStyle = outPointStyle;
             _onClickOutPoint = onClickOutPoint;

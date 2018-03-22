@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using ActorStates;
 using ActorStates.Boss;
 using Gamelogic.Extensions;
@@ -9,102 +7,57 @@ using UnityEngine;
 
 namespace Controllers
 {
-    public abstract class BossActionControllerBase : BossControllerBase
+    public class ActionBehaviourResolver
     {
-        public enum ActionType
+        private readonly BossBehaviourController _controller;
+        private readonly Boss1Settings _settings;
+        
+        public ActionBehaviourResolver( BossBehaviourController controller )
         {
-            Wait = 0,
-            Move,
-            JumpAttack,
-            Charge,
-            Attack,
-            Count
+            _controller = controller;
+            _settings = Boss1Settings.Instance;
         }
 
-        public enum TargetType
+        public IEnumerable GetResolver( ActionBehaviourNode node )
         {
-            NextToPlayer,
-            LeftCorner,
-            Center,
-            RightCorner,
-            FarthestCornerFromPlayer,
-            OntoPlayer,
-            LeftPlatform,
-            RightPlatform
-        }
+            var actor = _controller.GetComponent<BossActor>();
 
-        protected Mobile Player;
-
-        private Boss1Settings _settings;
-        private Dictionary<TargetType, Vector2> _hotSpotsPositions;
-
-        private void ResetIntent( BossActor actor )
-        {
-            actor.DesiredMovement = 0;
-            actor.DesiredAttack = false;
-            actor.DesiredJumpAttack = false;
-            actor.DesiredJump = false;
-            actor.DesiredCharge = false;
-        }
-
-        public override void UpdateActorIntent( BossActor actor )
-        {
-            base.UpdateActorIntent( actor );
-            ResetIntent( actor );
-        }
-
-        private Vector2 GetHotSpotPosition( TargetType type )
-        {
-            return _hotSpotsPositions[ type ];
+            foreach ( var action in node.Script )
+            {
+                foreach ( var unused in ActionResolver( actor, action ) )
+                {
+                    yield return null;
+                }
+            }
         }
 
         private float ClampPositionX( float x )
         {
-            var left = GetHotSpotPosition( TargetType.LeftCorner ).x;
-            var right = GetHotSpotPosition( TargetType.RightCorner ).x;
+            var left = _controller.GetHotSpotPosition( BossBehaviour.TargetType.LeftCorner ).x;
+            var right = _controller.GetHotSpotPosition( BossBehaviour.TargetType.RightCorner ).x;
             return Mathf.Clamp( x, left, right );
         }
 
-        // ReSharper disable once Unity.RedundantEventFunction
-        protected virtual void Start()
-        {
-            _hotSpotsPositions = GameObject.FindGameObjectsWithTag( Tags.HotSpot )
-                .ToDictionary(
-                    go => (TargetType) Array.FindIndex( Enum.GetNames( typeof( TargetType ) ),
-                        s => s.Equals( go.name ) ),
-                    go => (Vector2) go.transform.position );
-            if ( _hotSpotsPositions.Count < 3 )
-            {
-                Debug.LogError( "Missing hot spots!" );
-            }
-        }
-
-        protected virtual void Awake()
-        {
-            Player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>();
-            _settings = Boss1Settings.Instance;
-        }
-
-        protected IEnumerator ActionResolver( BossActor actor, Action action )
+        private IEnumerable ActionResolver( BossActor actor, BossBehaviour.Action action )
         {
             switch ( action.Type )
             {
-                case ActionType.Wait:
+                case BossBehaviour.ActionType.Wait:
                     return WaitResolver( actor, action.DurationParameter );
-                case ActionType.Move:
+                case BossBehaviour.ActionType.Move:
                     return MoveResolver( actor, action.TargetTypeParameter );
-                case ActionType.JumpAttack:
+                case BossBehaviour.ActionType.JumpAttack:
                     return JumpAttackResolver( actor, action.TargetTypeParameter );
-                case ActionType.Charge:
+                case BossBehaviour.ActionType.Charge:
                     return ChargeResolver( actor );
-                case ActionType.Attack:
+                case BossBehaviour.ActionType.Attack:
                     return AttackResolver( actor, action.CountParameter );
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private IEnumerator AttackResolver( BossActor actor, int count )
+        private IEnumerable AttackResolver( BossActor actor, int count )
         {
 #if DEBUG_CONTROLLER_ACTION
             Debug.Log( actor + " attacks " + count + " times", actor );
@@ -125,7 +78,7 @@ namespace Controllers
             }
         }
 
-        private IEnumerator ChargeResolver( BossActor actor )
+        private IEnumerable ChargeResolver( BossActor actor )
         {
 #if DEBUG_CONTROLLER_ACTION
             Debug.Log( actor + " charges", actor );
@@ -136,7 +89,7 @@ namespace Controllers
             }
         }
 
-        private IEnumerator JumpAttackResolver( BossActor actor, TargetType type )
+        private IEnumerable JumpAttackResolver( BossActor actor, BossBehaviour.TargetType type )
         {
 #if DEBUG_CONTROLLER_ACTION
             Debug.Log( actor + " jump attacks", actor );
@@ -154,7 +107,7 @@ namespace Controllers
             }
         }
 
-        private IEnumerator MoveResolver( BossActor actor, TargetType type )
+        private IEnumerable MoveResolver( BossActor actor, BossBehaviour.TargetType type )
         {
 #if DEBUG_CONTROLLER_ACTION
             Debug.Log( actor + " moves to " + type, actor );
@@ -207,29 +160,33 @@ namespace Controllers
             }
         }
 
-        private float GetTargetPositionX( TargetType type, Mobile mob )
+        private float GetTargetPositionX( BossBehaviour.TargetType type, Mobile mob )
         {
             switch ( type )
             {
-                case TargetType.NextToPlayer:
-                    var toPlayer = Mathf.Sign( Player.BodyPosition.x - mob.BodyPosition.x );
-                    return ClampPositionX( Player.BodyPosition.x - _settings.CombatRangeThreshold * toPlayer );
-                case TargetType.FarthestCornerFromPlayer:
-                    var left = GetHotSpotPosition( TargetType.LeftCorner ).x;
-                    var right = GetHotSpotPosition( TargetType.RightCorner ).x;
-                    var player = Player.BodyPosition.x;
+                case BossBehaviour.TargetType.NextToPlayer:
+                    var toPlayer = Mathf.Sign( _controller.Player.BodyPosition.x - mob.BodyPosition.x );
+                    return ClampPositionX(
+                        _controller.Player.BodyPosition.x - _settings.CombatRangeThreshold * toPlayer );
+
+                case BossBehaviour.TargetType.FarthestCornerFromPlayer:
+                    var left = _controller.GetHotSpotPosition( BossBehaviour.TargetType.LeftCorner ).x;
+                    var right = _controller.GetHotSpotPosition( BossBehaviour.TargetType.RightCorner ).x;
+                    var player = _controller.Player.BodyPosition.x;
                     return Mathf.Abs( player - left ) < Mathf.Abs( player - right ) ? right : left;
-                case TargetType.OntoPlayer:
-                    return ClampPositionX( Player.BodyPosition.x );
-                case TargetType.LeftCorner:
-                case TargetType.Center:
-                case TargetType.RightCorner:
+
+                case BossBehaviour.TargetType.OntoPlayer:
+                    return ClampPositionX( _controller.Player.BodyPosition.x );
+
+                case BossBehaviour.TargetType.LeftCorner:
+                case BossBehaviour.TargetType.Center:
+                case BossBehaviour.TargetType.RightCorner:
                 default:
-                    return GetHotSpotPosition( type ).x;
+                    return _controller.GetHotSpotPosition( type ).x;
             }
         }
 
-        private IEnumerator WaitResolver( BossActor actor, float duration )
+        private IEnumerable WaitResolver( BossActor actor, float duration )
         {
 #if DEBUG_CONTROLLER_ACTION
             Debug.Log( actor + " waits for " + duration + " seconds", actor );
@@ -323,36 +280,6 @@ namespace Controllers
             }
 
             actor.StateChangeEvent -= handler;
-        }
-
-        [ Serializable ]
-        public struct Action
-        {
-            public ActionType Type;
-
-            public float DurationParameter;
-
-            public int CountParameter;
-
-            public TargetType TargetTypeParameter;
-        }
-
-        [ Serializable ]
-        public class ActionList : InspectorList<Action>
-        {
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            var mob = GetComponent<Mobile>();
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere( mob.BodyPosition, Boss1Settings.Instance.CombatRangeThreshold );
-
-            Gizmos.color = Gizmos.color.Lighter().Lighter().Lighter();
-            Gizmos.DrawWireSphere( mob.BodyPosition, Boss1Settings.Instance.CloseRangeThreshold );
-
-            Gizmos.color = Gizmos.color.Lighter().Lighter().Lighter();
-            Gizmos.DrawWireSphere( mob.BodyPosition, Boss1Settings.Instance.MidRangeThreshold );
         }
     }
 }

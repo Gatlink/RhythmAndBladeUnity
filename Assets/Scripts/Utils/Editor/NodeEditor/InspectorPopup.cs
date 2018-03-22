@@ -1,20 +1,20 @@
-﻿using UnityEditor;
+﻿using Controllers;
+using UnityEditor;
 using UnityEngine;
 
 namespace NodeEditor
 {
     public class InspectorPopup : EditorWindow
     {
-        private MonoBehaviour _target;
+        private Object _target;
         private Editor _editor;
 
-        public static InspectorPopup ShowInspectorPopup( MonoBehaviour behaviour )
+        public static InspectorPopup ShowInspectorPopup( BossBehaviour behaviour, BehaviourNode node )
         {
             var window = GetWindow<InspectorPopup>();
             window.titleContent = new GUIContent( behaviour.name + " inspector" );
             window._target = behaviour;
             window._editor = Editor.CreateEditor( behaviour );
-            Debug.Log( "Show " + behaviour + " " + window._editor, behaviour );
             return window;
         }
 
@@ -22,7 +22,7 @@ namespace NodeEditor
         {
             if ( _editor.target != _target )
             {
-                Debug.Log( "editor target changed" );
+                Debug.LogWarning( "editor target changed" );
                 DestroyImmediate( _editor );
                 _editor = Editor.CreateEditor( _target );
             }

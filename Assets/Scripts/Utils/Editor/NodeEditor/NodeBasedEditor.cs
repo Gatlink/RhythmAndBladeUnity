@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,26 +9,9 @@ namespace NodeEditor
 {
     public class NodeBasedEditor : EditorWindow
     {
-        private GameObject _bossActor;
+        private BossBehaviour _target;
 
-        private GameObject BossActor
-        {
-            get
-            {
-                if ( _bossActor == null )
-                {
-                    _bossActor = GameObject.FindWithTag( Tags.Boss );
-                    if ( _bossActor == null )
-                    {
-                        Debug.LogError( "Boss Actor not found in current scene" );
-                    }
-                }
-
-                return _bossActor;
-            }
-        }
-
-        private readonly Dictionary<BossControllerBase, Node> _nodes = new Dictionary<BossControllerBase, Node>();
+        private readonly Dictionary<BehaviourNode, Node> _nodes = new Dictionary<BehaviourNode, Node>();
 
         private GUIStyle _nodeStyle;
         private GUIStyle _selectedNodeStyle;
@@ -42,11 +26,12 @@ namespace NodeEditor
         private Color _connectionColor;
         private InspectorPopup _inspectorPopup;
 
-        [ MenuItem( "Window/Boss Controller Editor" ) ]
-        private static void OpenWindow()
+        public static void EditBossBehaviour( BossBehaviour target )
         {
             var window = GetWindow<NodeBasedEditor>();
             window.titleContent = new GUIContent( "Node Based Boss Controller Editor" );
+            window._target = target;
+            window.PopulateGraph();
         }
 
         private void OnEnable()
@@ -77,50 +62,42 @@ namespace NodeEditor
 
             _connectionColor = Color.black;
 
-            PopulateGraph();
-
             autoRepaintOnSceneChange = true;
         }
 
         private void PopulateGraph()
         {
-            var actor = BossActor;
-            if ( actor == null ) return;
+            var actionBehaviourNodes = _target.Behaviours.OfType<ActionBehaviourNode>().ToArray();
 
-            var fixedScriptControllers = actor.GetComponents<FixedScriptBossController>();
-
-            var stepX = Mathf.Max( 100, position.width / fixedScriptControllers.Length );
+            var stepX = Mathf.Max( 100, position.width / actionBehaviourNodes.Length );
             var mousePosition = new Vector2( stepX / 2, position.height - 100 );
-            foreach ( var controller in fixedScriptControllers )
+            foreach ( var actionBehaviourNode in actionBehaviourNodes )
             {
-                CreateNode( mousePosition, controller );
+                CreateNode( mousePosition, actionBehaviourNode );
                 mousePosition.x += stepX;
             }
 
-            var compoundControllers = actor.GetComponents<BossControllerManager>();
-            stepX = Mathf.Max( 100, position.width / compoundControllers.Length );
+            var compoundBehaviourNodes = _target.Behaviours.OfType<CompoundBehaviourNode>().ToArray();
+            stepX = Mathf.Max( 100, position.width / compoundBehaviourNodes.Length );
             mousePosition = new Vector2( stepX / 2, mousePosition.y - 100 );
-            foreach ( var controller in compoundControllers )
+            foreach ( var compoundBehaviourNode in compoundBehaviourNodes )
             {
-                CreateNode( mousePosition, controller );
+                CreateCompoundNode( mousePosition, compoundBehaviourNode );
                 mousePosition.x += stepX;
             }
 
-            foreach ( var compoundController in compoundControllers )
+            foreach ( var compoundBehaviourNode in compoundBehaviourNodes )
             {
-                foreach ( var subController in compoundController.SubControllers )
+                foreach ( var childNode in compoundBehaviourNode.ChildNodes )
                 {
-                    var node = (CompoundNode) _nodes[ compoundController ];
+                    var node = (CompoundNode) _nodes[ compoundBehaviourNode ];
                     node.AddOutConnectionPoint();
 
-                    if ( subController != null )
+                    if ( childNode is CompoundBehaviourNode )
                     {
-                        if ( subController is BossControllerManager )
-                        {
-                            var topNode = _nodes[ compoundController ];
-                            var bottomNode = _nodes[ subController ];
-                            topNode.Rect.y = Mathf.Min( bottomNode.Rect.y - 100, topNode.Rect.y );
-                        }
+                        var topNode = _nodes[ compoundBehaviourNode ];
+                        var bottomNode = _nodes[ childNode ];
+                        topNode.Rect.y = Mathf.Min( bottomNode.Rect.y - 100, topNode.Rect.y );
                     }
                 }
             }
@@ -203,7 +180,7 @@ namespace NodeEditor
             {
                 for ( var index = 0; index < node.OutPoints.Count; index++ )
                 {
-                    var connectedController = node.Controller.SubControllers[ index ];
+                    var connectedController = node.BehaviourNode.ChildNodes[ index ];
                     if ( connectedController != null )
                     {
                         var inPoint = _nodes[ connectedController ].InPoint;
@@ -298,9 +275,11 @@ namespace NodeEditor
 
         private void ProcessContextMenu( Vector2 mousePosition )
         {
-//            var genericMenu = new GenericMenu();
-//            genericMenu.AddItem( new GUIContent( "Add node" ), false, () => OnClickAddNode( mousePosition ) );
-//            genericMenu.ShowAsContext();
+            var genericMenu = new GenericMenu();
+            genericMenu.AddItem( new GUIContent( "Add Action Node" ), false, () => OnClickAddNode( mousePosition ) );
+            genericMenu.AddItem( new GUIContent( "Add Compound Node" ), false,
+                () => OnClickAddCoumpoudNode( mousePosition ) );
+            genericMenu.ShowAsContext();
         }
 
         private void OnDrag( Vector2 delta )
@@ -315,9 +294,18 @@ namespace NodeEditor
             GUI.changed = true;
         }
 
+        private void OnClickAddCoumpoudNode( Vector2 mousePosition )
+        {
+            var behaviourNode = new CompoundBehaviourNode();
+            _target.AddBehaviour( behaviourNode );
+            CreateCompoundNode( mousePosition, behaviourNode );
+        }
+
         private void OnClickAddNode( Vector2 mousePosition )
         {
-            // CreateNode( mousePosition, ... );
+            var behaviourNode = new ActionBehaviourNode();
+            _target.AddBehaviour( behaviourNode );
+            CreateNode( mousePosition, behaviourNode );
         }
 
         private void OnClickInPoint( ConnectionPoint inPoint )
@@ -361,20 +349,70 @@ namespace NodeEditor
                 }
             }
         }
+        
+        private bool OnClickNode( Node node )
+        {
+            if ( _selectedInPoint != null )
+            {
+                var compoundNode = node as CompoundNode;
+                if ( compoundNode != null )
+                {
+                    if ( _selectedInPoint.Node != compoundNode )
+                    {
+                        _selectedOutPoint = compoundNode.AddOutConnectionPoint();
+                        CreateConnection( _selectedInPoint, _selectedOutPoint );
+                        ClearConnectionSelection();
+                        return true;
+                    }
+                    else
+                    {
+                        ClearConnectionSelection();
+                        return false;
+                    }
+                }
+                else
+                {
+                    ClearConnectionSelection();
+                    return false;
+                }
+            } 
+            else if (_selectedOutPoint != null)
+            {
+                if ( _selectedOutPoint.Node != node )
+                {
+                    // clear previous connection to this out point
+                    RemoveConnection( _selectedOutPoint );
+
+                    _selectedInPoint = node.InPoint;
+                    CreateConnection( _selectedInPoint, _selectedOutPoint );
+                    ClearConnectionSelection();
+                    return true;
+                }
+                else
+                {
+                    ClearConnectionSelection();
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         private void OnClickRemoveNode( Node node )
         {
             var connectionsToRemove = new List<ConnectionPoint>();
 
-            var controller = node.Controller;
+            var behaviourNode = node.BehaviourNode;
             foreach ( var compoundNode in _nodes.Values.OfType<CompoundNode>() )
             {
-                var manager = compoundNode.Controller;
-                for ( int i = 0; i < manager.SubControllers.Count; i++ )
+                var compound = compoundNode.BehaviourNode;
+                for ( int i = 0; i < compound.ChildNodes.Count; i++ )
                 {
-                    if ( manager.SubControllers[ i ] == controller )
+                    if ( compound.ChildNodes[ i ] == behaviourNode )
                     {
-                        manager.SubControllers[ i ] = null;
+                        compound.ChildNodes[ i ] = null;
                         connectionsToRemove.Add( compoundNode.OutPoints[ i ] );
                     }
                 }
@@ -385,8 +423,8 @@ namespace NodeEditor
                 OnClickRemoveConnectionPoint( connectionPoint );
             }
 
-            _nodes.Remove( node.Controller );
-            DestroyImmediate( node.Controller );
+            _nodes.Remove( node.BehaviourNode );
+            _target.RemoveBehaviour( node.BehaviourNode );
         }
 
         private void ClearGraph()
@@ -394,22 +432,22 @@ namespace NodeEditor
             _nodes.Clear();
         }
 
-        private Node CreateNode( Vector2 mousePosition, BossControllerManager controller )
+        private Node CreateCompoundNode( Vector2 mousePosition, CompoundBehaviourNode compoundNode )
         {
-            var node = new CompoundNode( controller, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
+            var node = new CompoundNode( compoundNode, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
                 _outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, OnDoubleClickNode,
-                OnClickRemoveConnectionPoint );
+                OnClickRemoveConnectionPoint, OnClickNode );
 
-            _nodes.Add( node.Controller, node );
+            _nodes.Add( node.BehaviourNode, node );
             return node;
         }
 
-        private Node CreateNode( Vector2 mousePosition, BossControllerBase controller )
+        private Node CreateNode( Vector2 mousePosition, ActionBehaviourNode actionNode )
         {
-            var node = new Node( controller, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
-                OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode );
+            var node = new Node( actionNode, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
+                OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode, OnClickNode );
 
-            _nodes.Add( node.Controller, node );
+            _nodes.Add( node.BehaviourNode, node );
             return node;
         }
 
@@ -424,12 +462,12 @@ namespace NodeEditor
             var node = (CompoundNode) connectionPoint.Node;
             var index = node.OutPoints.IndexOf( connectionPoint );
             node.RemoveConnectionPoint( connectionPoint );
-            node.Controller.SubControllers.RemoveAt( index );
+            node.BehaviourNode.ChildNodes.RemoveAt( index );
         }
 
         private void OnDoubleClickNode( Node node )
         {
-            _inspectorPopup = InspectorPopup.ShowInspectorPopup( node.Controller );
+            _inspectorPopup = InspectorPopup.ShowInspectorPopup( _target, node.BehaviourNode );
         }
 
         private void CreateConnection( ConnectionPoint inPoint, ConnectionPoint outPoint )
@@ -437,7 +475,15 @@ namespace NodeEditor
             var inNode = inPoint.Node;
             var outNode = (CompoundNode) outPoint.Node;
 
-            outNode.Controller.SubControllers[ outNode.OutPoints.IndexOf( outPoint ) ] = inNode.Controller;
+            var index = outNode.OutPoints.IndexOf( outPoint );
+            if ( index < outNode.BehaviourNode.ChildNodes.Count )
+            {
+                outNode.BehaviourNode.ChildNodes[ index ] = inNode.BehaviourNode;
+            }
+            else
+            {
+                outNode.BehaviourNode.ChildNodes.Add( inNode.BehaviourNode );
+            }
         }
 
         private void ClearConnectionSelection()
@@ -451,7 +497,7 @@ namespace NodeEditor
             var outNode = (CompoundNode) outPoint.Node;
             var index = outNode.OutPoints.IndexOf( outPoint );
 
-            outNode.Controller.SubControllers[ index ] = null;
+            outNode.BehaviourNode.ChildNodes[ index ] = null;
         }
     }
 }

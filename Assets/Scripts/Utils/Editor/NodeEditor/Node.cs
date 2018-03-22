@@ -9,7 +9,7 @@ namespace NodeEditor
 {
     public class Node
     {
-        public BossControllerBase Controller { get; protected set; }
+        public BehaviourNode BehaviourNode { get; protected set; }
 
         public Rect Rect;
 
@@ -27,6 +27,7 @@ namespace NodeEditor
         private readonly GUIStyle _defaultNodeStyle;
         private readonly GUIStyle _selectedNodeStyle;
         private static GUIStyle _titleLabelStyle;
+        private Func<Node, bool> _onClickNode;
 
         private static GUIStyle TitleLabelStyle
         {
@@ -42,10 +43,10 @@ namespace NodeEditor
             }
         }
 
-        public Node( BossControllerBase controller, Vector2 position, GUIStyle nodeStyle, GUIStyle selectedStyle,
-            GUIStyle inPointStyle, Action<ConnectionPoint> onClickInPoint, Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode )
+        public Node( BehaviourNode behaviourNode, Vector2 position, GUIStyle nodeStyle, GUIStyle selectedStyle,
+            GUIStyle inPointStyle, Action<ConnectionPoint> onClickInPoint, Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode, Func<Node, bool> onClickNode )
         {
-            Controller = controller;
+            BehaviourNode = behaviourNode;
             Rect = new Rect( position.x - defaultWidth / 2f, position.y - defaultHeight / 2f, defaultWidth,
                 defaultHeight );
             _style = nodeStyle;
@@ -55,6 +56,7 @@ namespace NodeEditor
             _selectedNodeStyle = selectedStyle;
             _onRemoveNode = onClickRemoveNode;
             _onDoubleClickNode = onDoubleClickNode;
+            _onClickNode = onClickNode;
         }
 
         public void Drag( Vector2 delta )
@@ -71,7 +73,7 @@ namespace NodeEditor
                 rect.width -= 20;
                 rect.y = 10;
                 rect.height -= 20;
-                GUI.Label( rect, Controller.Name, TitleLabelStyle );
+                GUI.Label( rect, BehaviourNode.Name, TitleLabelStyle );
             }
 
             InPoint.Draw();
@@ -86,14 +88,21 @@ namespace NodeEditor
                     {
                         if ( Rect.Contains( e.mousePosition ) )
                         {
-                            _isDragged = true;
-                            GUI.changed = true;
-                            _isSelected = true;
-                            _style = _selectedNodeStyle;
-                            if ( e.clickCount > 1 )
+                            if ( _onClickNode( this ) )
                             {
-                                _onDoubleClickNode( this );
                                 e.Use();
+                            }
+                            else
+                            {
+                                _isDragged = true;
+                                GUI.changed = true;
+                                _isSelected = true;
+                                _style = _selectedNodeStyle;
+                                if ( e.clickCount > 1 )
+                                {
+                                    _onDoubleClickNode( this );
+                                    e.Use();
+                                }
                             }
                         }
                         else

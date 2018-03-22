@@ -1,8 +1,7 @@
-﻿using Controllers;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-[ CustomPropertyDrawer( typeof( WeightedActionsBossController.WeightedAction ) ) ]
+//[ CustomPropertyDrawer( typeof( WeightedActionsBossController.WeightedAction ) ) ]
 public class WeightedActionDrawer : PropertyDrawer
 {
     public override void OnGUI( Rect position, SerializedProperty property, GUIContent label )
