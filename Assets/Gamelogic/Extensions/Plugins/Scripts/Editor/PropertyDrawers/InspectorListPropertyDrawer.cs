@@ -16,7 +16,7 @@ namespace Gamelogic.Extensions.Editor
     public class InspectorListPropertyDrawer : PropertyDrawer
     {
         private ReorderableList reorderableList;
-        private float lastHeight = 0;
+        private float lastHeight = 50;
 
         public override float GetPropertyHeight( SerializedProperty property, GUIContent label )
         {
@@ -30,12 +30,12 @@ namespace Gamelogic.Extensions.Editor
                 return 0;
             }
 
-//            InitList( list, property );
-//
-//            if ( reorderableList != null )
-//            {
-//                return reorderableList.GetHeight();
-//            }
+            InitList( list, property );
+
+            if ( reorderableList != null )
+            {
+                return reorderableList.GetHeight();
+            }
 
             return lastHeight;
 
@@ -67,7 +67,7 @@ namespace Gamelogic.Extensions.Editor
 
             reorderableList.DoList( position );
 
-            EditorGUI.indentLevel = indentLevel;
+            EditorGUI.indentLevel = indentLevel;            
         }
 
         public void InitList( SerializedProperty list, SerializedProperty property )
