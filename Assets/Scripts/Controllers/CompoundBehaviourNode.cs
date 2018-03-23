@@ -8,9 +8,14 @@ namespace Controllers
     [ Serializable ]
     public class CompoundBehaviourNode : BehaviourNode
     {
-        public OptionalInt HealthEndCondition;
         public bool Randomize;
         public bool LoopRepeat;
+
+        // ReSharper disable once UnusedMember.Global
+        public bool UseHealthEndCondition;
+
+        [ ConditionalHide( "UseHealthEndCondition" ) ]
+        public int HealthEndConditionLimit;
 
         public CompoundBehaviourNode( string name ) : base( name )
         {

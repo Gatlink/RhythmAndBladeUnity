@@ -19,9 +19,9 @@ namespace NodeEditor
             GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle,
             Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint,
             Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode,
-            Action<ConnectionPoint> onClickRemoveConnectionPoint, Func<Node, bool> onClickNode ) : base( behaviourNode, position, nodeStyle,
+            Action<ConnectionPoint> onClickRemoveConnectionPoint, Func<Node, bool> onClickNode, Action<Node> onClickMainNode ) : base( behaviourNode, position, nodeStyle,
             selectedStyle, inPointStyle,
-            onClickInPoint, onClickRemoveNode, onDoubleClickNode, onClickNode )
+            onClickInPoint, onClickRemoveNode, onDoubleClickNode, onClickNode, onClickMainNode )
         {
             BehaviourNode = behaviourNode;
             OutPoints = new List<ConnectionPoint>();

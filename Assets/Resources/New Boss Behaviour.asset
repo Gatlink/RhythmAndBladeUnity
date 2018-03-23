@@ -14,30 +14,66 @@ MonoBehaviour:
   _actionBehaviours:
     _keys:
     - c577555b-7753-4fc0-9b14-50b4909f43f5
+    - f15bf45f-cc77-4d8c-bccc-b1255163f3ee
+    - 357720ce-2d30-471c-a51f-bf3cbed61d7e
     _values:
-    - Name: WAIT3
+    - Name: INTRO
       Guid: c577555b-7753-4fc0-9b14-50b4909f43f5
       Script:
         values:
-        - Type: 3
+        - Type: 1
           DurationParameter: 0
           CountParameter: 0
+          TargetTypeParameter: 7
+        - Type: 0
+          DurationParameter: 0.5
+          CountParameter: 0
           TargetTypeParameter: 0
+    - Name: ATTACK 1
+      Guid: f15bf45f-cc77-4d8c-bccc-b1255163f3ee
+      Script:
+        values:
         - Type: 1
           DurationParameter: 0
           CountParameter: 0
           TargetTypeParameter: 0
+        - Type: 4
+          DurationParameter: 0
+          CountParameter: 1
+          TargetTypeParameter: 0
+    - Name: CHARGE
+      Guid: 357720ce-2d30-471c-a51f-bf3cbed61d7e
+      Script:
+        values:
+        - Type: 1
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 4
+        - Type: 3
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 4
   _compoundBehaviours:
     _keys:
     - 5bc8113d-cb48-43ae-b26a-d053869f5821
+    - 5b8743f8-2e34-4921-9eb6-e8d6e0ff517b
     _values:
     - Name: COMPO
       Guid: 5bc8113d-cb48-43ae-b26a-d053869f5821
-      HealthEndCondition:
-        useValue: 0
-        value: 0
       Randomize: 0
       LoopRepeat: 0
+      UseHealthEndCondition: 0
+      HealthEndConditionLimit: 0
       ChildNodes:
       - c577555b-7753-4fc0-9b14-50b4909f43f5
-  _mainBehaviourGuid: 
+      - 5b8743f8-2e34-4921-9eb6-e8d6e0ff517b
+    - Name: SIMPLE
+      Guid: 5b8743f8-2e34-4921-9eb6-e8d6e0ff517b
+      Randomize: 1
+      LoopRepeat: 1
+      UseHealthEndCondition: 1
+      HealthEndConditionLimit: 10
+      ChildNodes:
+      - f15bf45f-cc77-4d8c-bccc-b1255163f3ee
+      - 357720ce-2d30-471c-a51f-bf3cbed61d7e
+  MainBehaviourGuid: 5bc8113d-cb48-43ae-b26a-d053869f5821

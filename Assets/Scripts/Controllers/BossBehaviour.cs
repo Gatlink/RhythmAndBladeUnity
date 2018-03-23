@@ -14,12 +14,12 @@ namespace Controllers
         private CompoundBehavioursDictionary _compoundBehaviours = new CompoundBehavioursDictionary();
 
         [ SerializeField ]
-        private string _mainBehaviourGuid;
+        public string MainBehaviourGuid;
 
         public BehaviourNode MainBehaviour
         {
-            get { return GetBehaviourNode( _mainBehaviourGuid ); }
-            set { _mainBehaviourGuid = value.Guid; }
+            get { return GetBehaviourNode( MainBehaviourGuid ); }
+            set { MainBehaviourGuid = value.Guid; }
         }
 
         public IEnumerable<BehaviourNode> GetAllBehaviourNodes()
@@ -89,7 +89,7 @@ namespace Controllers
             {
                 return compoundNode;
             }
-
+            
             throw new ArgumentException( "No node found with Guid " + nodeGuid );
         }
 

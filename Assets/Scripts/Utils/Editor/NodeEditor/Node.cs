@@ -19,6 +19,7 @@ namespace NodeEditor
         private const int defaultHeight = 60;
         private bool _isDragged;
         private bool _isSelected;
+        private bool _isMainNode;
 
         private readonly Action<Node> _onRemoveNode;
         private readonly Action<Node> _onDoubleClickNode;
@@ -27,8 +28,14 @@ namespace NodeEditor
         private readonly GUIStyle _defaultNodeStyle;
         private readonly GUIStyle _selectedNodeStyle;
         private static GUIStyle _titleLabelStyle;
-        private Func<Node, bool> _onClickNode;
+        private readonly Func<Node, bool> _onClickNode;
+        private readonly Action<Node> _onClickMainNode;
 
+        public void SetMainNode( bool isMainNode )
+        {
+            _isMainNode = isMainNode;
+        }
+        
         private static GUIStyle TitleLabelStyle
         {
             get
@@ -44,7 +51,7 @@ namespace NodeEditor
         }
 
         public Node( BehaviourNode behaviourNode, Vector2 position, GUIStyle nodeStyle, GUIStyle selectedStyle,
-            GUIStyle inPointStyle, Action<ConnectionPoint> onClickInPoint, Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode, Func<Node, bool> onClickNode )
+            GUIStyle inPointStyle, Action<ConnectionPoint> onClickInPoint, Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode, Func<Node, bool> onClickNode, Action<Node> onClickMainNode )
         {
             BehaviourNode = behaviourNode;
             Rect = new Rect( position.x - defaultWidth / 2f, position.y - defaultHeight / 2f, defaultWidth,
@@ -57,6 +64,7 @@ namespace NodeEditor
             _onRemoveNode = onClickRemoveNode;
             _onDoubleClickNode = onDoubleClickNode;
             _onClickNode = onClickNode;
+            _onClickMainNode = onClickMainNode;
         }
 
         public void Drag( Vector2 delta )
@@ -66,6 +74,7 @@ namespace NodeEditor
 
         public virtual void Draw()
         {
+            // todo main node
             using ( new GUI.GroupScope( Rect, _style ) )
             {
                 var rect = new Rect( Rect );
@@ -143,7 +152,16 @@ namespace NodeEditor
         {
             var genericMenu = new GenericMenu();
             genericMenu.AddItem( new GUIContent( "Remove node" ), false, OnClickRemoveNode );
+            genericMenu.AddItem( new GUIContent( "Make node main node" ), false, OnClickMainNode );
             genericMenu.ShowAsContext();
+        }
+
+        private void OnClickMainNode()
+        {
+            if ( _onClickMainNode != null )
+            {
+                _onClickMainNode( this );
+            }
         }
 
         private void OnClickRemoveNode()
@@ -174,6 +192,6 @@ namespace NodeEditor
         public virtual IEnumerable<ConnectionPoint> EnumerateConnectionPoints()
         {
             yield return InPoint;
-        }
+        }        
     }
 }

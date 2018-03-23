@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Gamelogic.Extensions.Algorithms;
 
@@ -26,16 +25,16 @@ namespace Controllers
             {
                 foreach ( var unused in GetOneLoopResolver( node ) )
                 {
-                    if ( node.HealthEndCondition.UseValue )
+                    if ( node.UseHealthEndCondition )
                     {
                         var currentHealth = actor.GetComponent<ActorHealth>().CurrentHitCount;
-                        if ( !_actorCriticalHurtFlagSet && currentHealth <= node.HealthEndCondition.Value + 1 )
+                        if ( !_actorCriticalHurtFlagSet && currentHealth <= node.HealthEndConditionLimit + 1 )
                         {
                             _actorCriticalHurtFlagSet = true;
                             actor.SetNextHurtIsCritical();
                         }
 
-                        if ( currentHealth <= node.HealthEndCondition.Value )
+                        if ( currentHealth <= node.HealthEndConditionLimit )
                         {
                             yield break;
                         }

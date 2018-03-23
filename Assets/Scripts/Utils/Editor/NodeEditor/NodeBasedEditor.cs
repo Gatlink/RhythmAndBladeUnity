@@ -492,7 +492,7 @@ namespace NodeEditor
         {
             var node = new CompoundNode( compoundNode, mousePosition, _compoundNodeStyle, _selectedCompoundNodeStyle,
                 _inPointStyle, _outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, OnDoubleClickNode,
-                OnClickRemoveConnectionPoint, OnClickNode );
+                OnClickRemoveConnectionPoint, OnClickNode, OnClickMainNode );
 
             _nodes.Add( compoundNode.Guid, node );
             nodeCount++;
@@ -502,11 +502,23 @@ namespace NodeEditor
         private Node CreateNode( Vector2 mousePosition, ActionBehaviourNode actionNode )
         {
             var node = new Node( actionNode, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
-                OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode, OnClickNode );
+                OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode, OnClickNode, OnClickMainNode );
 
             _nodes.Add( actionNode.Guid, node );
             nodeCount++;
             return node;
+        }
+
+        private void OnClickMainNode( Node node )
+        {
+            var oldMainNodeGuid = _target.MainBehaviourGuid;
+            Node oldMainNode;
+            if ( oldMainNodeGuid != null && _nodes.TryGetValue( oldMainNodeGuid, out oldMainNode ) )
+            {
+                oldMainNode.SetMainNode( false );
+            }
+            _target.MainBehaviour = node.BehaviourNode;
+            node.SetMainNode( true );
         }
 
         private void OnClickRemoveConnectionPoint( ConnectionPoint connectionPoint )
