@@ -41,6 +41,7 @@ GameObject:
   - component: {fileID: 114210730153343898}
   - component: {fileID: 114366331282936172}
   - component: {fileID: 114360097638799396}
+  - component: {fileID: 114380243697126562}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Boss
@@ -379,6 +380,20 @@ MonoBehaviour:
     value: {x: -1, y: 1}
   _passiveHurt: 0
   _teleportToLastCheckpoint: 0
+--- !u!114 &114380243697126562
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1493278349051608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab6d762178f64bb6886d048657447239, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  Behaviour: {fileID: 11400000, guid: 7b8804aec1702c74a83ac8eca5f62c86, type: 2}
+  Player: {fileID: 0}
 --- !u!114 &114500015476263518
 MonoBehaviour:
   m_ObjectHideFlags: 1
