@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,10 +77,35 @@ namespace NodeEditor
             _connectionColor = Color.black;
 
             autoRepaintOnSceneChange = true;
+
+            Selection.selectionChanged += OnSelectionChangeHandler;
+        }
+
+        private void OnDisable()
+        {
+            Selection.selectionChanged -= OnSelectionChangeHandler;
+        }
+
+        private void OnSelectionChangeHandler()
+        {
+            var selection = Selection.activeObject as BossBehaviour;
+            if ( selection == null )
+            {
+                _target = null;
+                ClearGraph();
+                return;
+            }
+
+            if ( selection != _target )
+            {
+                _target = selection;
+                PopulateGraph();
+            }
         }
 
         private void PopulateGraph()
         {
+            ClearGraph();
             var actionBehaviourNodes = _target.GetActionBehaviourNodes().ToArray();
 
             var stepX = Mathf.Max( 100, position.width / actionBehaviourNodes.Length );
@@ -117,7 +141,7 @@ namespace NodeEditor
                 }
             }
 
-            GUI.changed = true;
+            Repaint();
         }
 
         private void OnGUI()
@@ -133,14 +157,8 @@ namespace NodeEditor
             ProcessNodeEvents( Event.current );
             ProcessEvents( Event.current );
 
-            if ( GUI.Button( new Rect( 10, 10, 50, 20 ), "Reload" ) )
+            if ( _target != null && GUI.Button( new Rect( 10, 10, 50, 20 ), "Reload" ) )
             {
-                if ( _inspectorPopup != null )
-                {
-                    _inspectorPopup.Close();
-                }
-
-                ClearGraph();
                 PopulateGraph();
             }
 
@@ -445,6 +463,13 @@ namespace NodeEditor
         private void ClearGraph()
         {
             _nodes.Clear();
+            if ( _inspectorPopup != null )
+            {
+                _inspectorPopup.Close();
+                _inspectorPopup = null;
+            }
+
+            Repaint();
         }
 
         private Node CreateCompoundNode( Vector2 mousePosition, CompoundBehaviourNode compoundNode )

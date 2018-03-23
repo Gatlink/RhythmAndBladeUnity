@@ -7,7 +7,8 @@ namespace Controllers
     [ Serializable ]
     public class ActionBehaviourNode : BehaviourNode
     {
-        public List<BossBehaviour.Action> Script;
+//        public List<BossBehaviour.Action> Script;
+        public ActionList Script;
 
         public ActionBehaviourNode( string name ) : base( name )
         {

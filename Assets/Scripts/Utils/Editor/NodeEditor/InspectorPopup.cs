@@ -99,7 +99,21 @@ namespace NodeEditor
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            var property = serializedObject.FindProperty( _targetPropertyPath );
+
+            var iterator = serializedObject.FindProperty( _targetPropertyPath );
+            iterator.isExpanded = true;
+            //iterator.
+//            Debug.Log( iterator.propertyPath );
+//            while ( iterator.NextVisible( true ) )
+//            {
+//                EditorGUILayout.PropertyField( iterator );                
+//            }
+//            for ( var enterChildren = true; iterator.NextVisible( enterChildren ); enterChildren = false )
+//            {
+//                //using ( new EditorGUI.DisabledScope( "m_Script" == iterator.propertyPath ) )
+                //EditorGUILayout.InspectorTitlebar( false, target, false);
+                EditorGUILayout.PropertyField( iterator, true );
+//            }
 
 //            var prop = serializedObject.GetIterator();
 //            using ( var scrollView = new EditorGUILayout.ScrollViewScope( _scrollPos ) )
@@ -111,7 +125,9 @@ namespace NodeEditor
 //                }
 //            }
 
-            EditorGUILayout.PropertyField( property, GUIContent.none, true );
+//            var property = serializedObject.FindProperty( _targetPropertyPath );
+//            EditorGUILayout.PropertyField( property, GUIContent.none, true );
+
             serializedObject.ApplyModifiedProperties();
         }
 
