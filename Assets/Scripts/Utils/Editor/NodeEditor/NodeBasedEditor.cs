@@ -22,8 +22,6 @@ namespace NodeEditor
         private GUIStyle _inPointStyle;
         private GUIStyle _outPointStyle;
 
-        private GUIStyle _mainNodeStyle;
-
         private ConnectionPoint _selectedInPoint;
         private ConnectionPoint _selectedOutPoint;
 
@@ -49,7 +47,7 @@ namespace NodeEditor
 
             _selectedNodeStyle = new GUIStyle();
             _selectedNodeStyle.normal.background =
-                EditorGUIUtility.Load( "builtin skins/lightskin/images/node1 on@2x.png" ) as Texture2D;
+                EditorGUIUtility.Load( "builtin skins/lightskin/images/node1 on.png" ) as Texture2D;
             _selectedNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
 
             _compoundNodeStyle = new GUIStyle();
@@ -76,10 +74,7 @@ namespace NodeEditor
             _outPointStyle.active.background =
                 EditorGUIUtility.Load( "builtin skins/lightskin/images/btn act.png" ) as Texture2D;
             _outPointStyle.border = new RectOffset( 2, 2, 2, 2 );
-
-            _mainNodeStyle.normal.background =
-                EditorGUIUtility.Load( "builtin skins/lightskin/images/PlayButton.png" ) as Texture2D;
-
+            
             _connectionColor = Color.black;
 
             autoRepaintOnSceneChange = true;
@@ -501,8 +496,7 @@ namespace NodeEditor
         private Node CreateCompoundNode( Vector2 mousePosition, CompoundBehaviourNode compoundNode )
         {
             var node = new CompoundNode( compoundNode, mousePosition, _compoundNodeStyle, _selectedCompoundNodeStyle,
-                _inPointStyle, _outPointStyle, _mainNodeStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode,
-                OnDoubleClickNode,
+                _inPointStyle, _outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, OnDoubleClickNode,
                 OnClickRemoveConnectionPoint, OnClickNode, OnClickMainNode );
 
             _nodes.Add( compoundNode.Guid, node );
@@ -513,7 +507,7 @@ namespace NodeEditor
         private Node CreateNode( Vector2 mousePosition, ActionBehaviourNode actionNode )
         {
             var node = new Node( actionNode, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
-                _mainNodeStyle, OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode, OnClickNode, OnClickMainNode );
+                OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode, OnClickNode, OnClickMainNode );
 
             _nodes.Add( actionNode.Guid, node );
             nodeCount++;
