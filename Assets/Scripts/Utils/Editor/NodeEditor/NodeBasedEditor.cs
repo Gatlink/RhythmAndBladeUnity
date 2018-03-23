@@ -22,6 +22,8 @@ namespace NodeEditor
         private GUIStyle _inPointStyle;
         private GUIStyle _outPointStyle;
 
+        private GUIStyle _mainNodeStyle;
+
         private ConnectionPoint _selectedInPoint;
         private ConnectionPoint _selectedOutPoint;
 
@@ -47,17 +49,17 @@ namespace NodeEditor
 
             _selectedNodeStyle = new GUIStyle();
             _selectedNodeStyle.normal.background =
-                EditorGUIUtility.Load( "builtin skins/lightskin/images/node1 on.png" ) as Texture2D;
+                EditorGUIUtility.Load( "builtin skins/lightskin/images/node1 on@2x.png" ) as Texture2D;
             _selectedNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
 
             _compoundNodeStyle = new GUIStyle();
             _compoundNodeStyle.normal.background =
-                EditorGUIUtility.Load( "builtin skins/lightskin/images/node1.png" ) as Texture2D;
+                EditorGUIUtility.Load( "builtin skins/lightskin/images/node2.png" ) as Texture2D;
             _compoundNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
 
             _selectedCompoundNodeStyle = new GUIStyle();
             _selectedCompoundNodeStyle.normal.background =
-                EditorGUIUtility.Load( "builtin skins/lightskin/images/node1 on.png" ) as Texture2D;
+                EditorGUIUtility.Load( "builtin skins/lightskin/images/node2 on.png" ) as Texture2D;
             _selectedCompoundNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
 
 
@@ -74,6 +76,9 @@ namespace NodeEditor
             _outPointStyle.active.background =
                 EditorGUIUtility.Load( "builtin skins/lightskin/images/btn act.png" ) as Texture2D;
             _outPointStyle.border = new RectOffset( 2, 2, 2, 2 );
+
+            _mainNodeStyle.normal.background =
+                EditorGUIUtility.Load( "builtin skins/lightskin/images/PlayButton.png" ) as Texture2D;
 
             _connectionColor = Color.black;
 
@@ -126,6 +131,11 @@ namespace NodeEditor
             {
                 CreateCompoundNode( mousePosition, compoundBehaviourNode );
                 mousePosition.x += stepX;
+            }
+
+            if ( _target.MainBehaviourGuid != null )
+            {
+                _nodes[ _target.MainBehaviourGuid ].SetMainNode( true );
             }
 
             foreach ( var compoundBehaviourNode in compoundBehaviourNodes )
@@ -491,7 +501,8 @@ namespace NodeEditor
         private Node CreateCompoundNode( Vector2 mousePosition, CompoundBehaviourNode compoundNode )
         {
             var node = new CompoundNode( compoundNode, mousePosition, _compoundNodeStyle, _selectedCompoundNodeStyle,
-                _inPointStyle, _outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, OnDoubleClickNode,
+                _inPointStyle, _outPointStyle, _mainNodeStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode,
+                OnDoubleClickNode,
                 OnClickRemoveConnectionPoint, OnClickNode, OnClickMainNode );
 
             _nodes.Add( compoundNode.Guid, node );
@@ -502,7 +513,7 @@ namespace NodeEditor
         private Node CreateNode( Vector2 mousePosition, ActionBehaviourNode actionNode )
         {
             var node = new Node( actionNode, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
-                OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode, OnClickNode, OnClickMainNode );
+                _mainNodeStyle, OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode, OnClickNode, OnClickMainNode );
 
             _nodes.Add( actionNode.Guid, node );
             nodeCount++;
@@ -517,6 +528,7 @@ namespace NodeEditor
             {
                 oldMainNode.SetMainNode( false );
             }
+
             _target.MainBehaviour = node.BehaviourNode;
             node.SetMainNode( true );
         }

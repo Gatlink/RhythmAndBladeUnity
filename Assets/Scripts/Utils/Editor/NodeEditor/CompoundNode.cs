@@ -16,12 +16,12 @@ namespace NodeEditor
         private readonly Action<ConnectionPoint> _onClickRemoveConnectionPoint;
 
         public CompoundNode( CompoundBehaviourNode behaviourNode, Vector2 position, GUIStyle nodeStyle,
-            GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle,
+            GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, GUIStyle mainNodeStyle,
             Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint,
             Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode,
-            Action<ConnectionPoint> onClickRemoveConnectionPoint, Func<Node, bool> onClickNode, Action<Node> onClickMainNode ) : base( behaviourNode, position, nodeStyle,
-            selectedStyle, inPointStyle,
-            onClickInPoint, onClickRemoveNode, onDoubleClickNode, onClickNode, onClickMainNode )
+            Action<ConnectionPoint> onClickRemoveConnectionPoint, Func<Node, bool> onClickNode,
+            Action<Node> onClickMainNode ) : base( behaviourNode, position, nodeStyle, selectedStyle, inPointStyle,
+            mainNodeStyle, onClickInPoint, onClickRemoveNode, onDoubleClickNode, onClickNode, onClickMainNode )
         {
             BehaviourNode = behaviourNode;
             OutPoints = new List<ConnectionPoint>();

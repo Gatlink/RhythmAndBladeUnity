@@ -30,6 +30,7 @@ namespace NodeEditor
         private static GUIStyle _titleLabelStyle;
         private readonly Func<Node, bool> _onClickNode;
         private readonly Action<Node> _onClickMainNode;
+        private GUIStyle _mainNodeStyle;
 
         public void SetMainNode( bool isMainNode )
         {
@@ -51,7 +52,7 @@ namespace NodeEditor
         }
 
         public Node( BehaviourNode behaviourNode, Vector2 position, GUIStyle nodeStyle, GUIStyle selectedStyle,
-            GUIStyle inPointStyle, Action<ConnectionPoint> onClickInPoint, Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode, Func<Node, bool> onClickNode, Action<Node> onClickMainNode )
+            GUIStyle inPointStyle, GUIStyle mainNodeStyle, Action<ConnectionPoint> onClickInPoint, Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode, Func<Node, bool> onClickNode, Action<Node> onClickMainNode )
         {
             BehaviourNode = behaviourNode;
             Rect = new Rect( position.x - defaultWidth / 2f, position.y - defaultHeight / 2f, defaultWidth,
@@ -61,6 +62,8 @@ namespace NodeEditor
 
             _defaultNodeStyle = nodeStyle;
             _selectedNodeStyle = selectedStyle;
+            _mainNodeStyle = mainNodeStyle;
+
             _onRemoveNode = onClickRemoveNode;
             _onDoubleClickNode = onDoubleClickNode;
             _onClickNode = onClickNode;
@@ -74,7 +77,6 @@ namespace NodeEditor
 
         public virtual void Draw()
         {
-            // todo main node
             using ( new GUI.GroupScope( Rect, _style ) )
             {
                 var rect = new Rect( Rect );
@@ -83,6 +85,11 @@ namespace NodeEditor
                 rect.y = 10;
                 rect.height -= 20;
                 GUI.Label( rect, BehaviourNode.Name, TitleLabelStyle );
+
+                if ( _isMainNode )
+                {
+                    GUI.Box( new Rect(10, 10, 12, 12), EditorGUIUtility.FindTexture( "PlayButton" ), GUIStyle.none );
+                }
             }
 
             InPoint.Draw();
