@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Gamelogic.Extensions.Algorithms;
 
@@ -8,7 +9,7 @@ namespace Controllers
     {
         private readonly BossBehaviourController _controller;
         private bool _actorCriticalHurtFlagSet;
-        private List<BehaviourNode> _behaviours;
+        private List<string> _behaviours;
 
         public CompoundBehaviourResolver( BossBehaviourController controller )
         {
@@ -18,7 +19,7 @@ namespace Controllers
         public IEnumerable GetResolver( CompoundBehaviourNode node )
         {
             var actor = _controller.GetComponent<BossActor>();
-            _behaviours = new List<BehaviourNode>();
+            _behaviours = new List<string>();
             _behaviours.AddRange( node.ChildNodes );
 
             do
@@ -52,9 +53,9 @@ namespace Controllers
                 _behaviours.Shuffle();
             }
 
-            foreach ( var behaviourNode in _behaviours )
+            foreach ( var behaviourNodeGuid in _behaviours )
             {
-                foreach ( var unused in _controller.GetBehaviourNodeResolver( behaviourNode ) )
+                foreach ( var unused in _controller.GetBehaviourNodeResolver( behaviourNodeGuid ) )
                 {
                     yield return null;
                 }

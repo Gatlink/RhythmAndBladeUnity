@@ -11,10 +11,14 @@ namespace NodeEditor
     {
         private BossBehaviour _target;
 
-        private readonly Dictionary<BehaviourNode, Node> _nodes = new Dictionary<BehaviourNode, Node>();
+        private readonly Dictionary<string, Node> _nodes = new Dictionary<string, Node>();
 
         private GUIStyle _nodeStyle;
         private GUIStyle _selectedNodeStyle;
+
+        private GUIStyle _compoundNodeStyle;
+        private GUIStyle _selectedCompoundNodeStyle;
+
         private GUIStyle _inPointStyle;
         private GUIStyle _outPointStyle;
 
@@ -46,6 +50,17 @@ namespace NodeEditor
                 EditorGUIUtility.Load( "builtin skins/lightskin/images/node1 on.png" ) as Texture2D;
             _selectedNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
 
+            _compoundNodeStyle = new GUIStyle();
+            _compoundNodeStyle.normal.background =
+                EditorGUIUtility.Load( "builtin skins/lightskin/images/node1.png" ) as Texture2D;
+            _compoundNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
+
+            _selectedCompoundNodeStyle = new GUIStyle();
+            _selectedCompoundNodeStyle.normal.background =
+                EditorGUIUtility.Load( "builtin skins/lightskin/images/node1 on.png" ) as Texture2D;
+            _selectedCompoundNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
+
+
             _inPointStyle = new GUIStyle();
             _inPointStyle.normal.background =
                 EditorGUIUtility.Load( "builtin skins/lightskin/images/btn.png" ) as Texture2D;
@@ -67,7 +82,7 @@ namespace NodeEditor
 
         private void PopulateGraph()
         {
-            var actionBehaviourNodes = _target.Behaviours.OfType<ActionBehaviourNode>().ToArray();
+            var actionBehaviourNodes = _target.GetActionBehaviourNodes().ToArray();
 
             var stepX = Mathf.Max( 100, position.width / actionBehaviourNodes.Length );
             var mousePosition = new Vector2( stepX / 2, position.height - 100 );
@@ -77,7 +92,7 @@ namespace NodeEditor
                 mousePosition.x += stepX;
             }
 
-            var compoundBehaviourNodes = _target.Behaviours.OfType<CompoundBehaviourNode>().ToArray();
+            var compoundBehaviourNodes = _target.GetCompoundBehaviourNodes().ToArray();
             stepX = Mathf.Max( 100, position.width / compoundBehaviourNodes.Length );
             mousePosition = new Vector2( stepX / 2, mousePosition.y - 100 );
             foreach ( var compoundBehaviourNode in compoundBehaviourNodes )
@@ -88,15 +103,15 @@ namespace NodeEditor
 
             foreach ( var compoundBehaviourNode in compoundBehaviourNodes )
             {
-                foreach ( var childNode in compoundBehaviourNode.ChildNodes )
-                {
-                    var node = (CompoundNode) _nodes[ compoundBehaviourNode ];
-                    node.AddOutConnectionPoint();
+                var topNode = (CompoundNode) _nodes[ compoundBehaviourNode.Guid ];
 
-                    if ( childNode is CompoundBehaviourNode )
+                foreach ( var childNodeGuid in compoundBehaviourNode.ChildNodes )
+                {
+                    topNode.AddOutConnectionPoint();
+
+                    var bottomNode = _nodes[ childNodeGuid ];
+                    if ( bottomNode is CompoundNode )
                     {
-                        var topNode = _nodes[ compoundBehaviourNode ];
-                        var bottomNode = _nodes[ childNode ];
                         topNode.Rect.y = Mathf.Min( bottomNode.Rect.y - 100, topNode.Rect.y );
                     }
                 }
@@ -296,14 +311,14 @@ namespace NodeEditor
 
         private void OnClickAddCoumpoudNode( Vector2 mousePosition )
         {
-            var behaviourNode = new CompoundBehaviourNode();
+            var behaviourNode = BehaviourNode.CreateCompoundBehaviourNode();
             _target.AddBehaviour( behaviourNode );
             CreateCompoundNode( mousePosition, behaviourNode );
         }
 
         private void OnClickAddNode( Vector2 mousePosition )
         {
-            var behaviourNode = new ActionBehaviourNode();
+            var behaviourNode = BehaviourNode.CreateActionBehaviourNode();
             _target.AddBehaviour( behaviourNode );
             CreateNode( mousePosition, behaviourNode );
         }
@@ -349,7 +364,7 @@ namespace NodeEditor
                 }
             }
         }
-        
+
         private bool OnClickNode( Node node )
         {
             if ( _selectedInPoint != null )
@@ -375,8 +390,8 @@ namespace NodeEditor
                     ClearConnectionSelection();
                     return false;
                 }
-            } 
-            else if (_selectedOutPoint != null)
+            }
+            else if ( _selectedOutPoint != null )
             {
                 if ( _selectedOutPoint.Node != node )
                 {
@@ -404,13 +419,13 @@ namespace NodeEditor
         {
             var connectionsToRemove = new List<ConnectionPoint>();
 
-            var behaviourNode = node.BehaviourNode;
+            var behaviourNodeGuid = node.BehaviourNode.Guid;
             foreach ( var compoundNode in _nodes.Values.OfType<CompoundNode>() )
             {
                 var compound = compoundNode.BehaviourNode;
                 for ( int i = 0; i < compound.ChildNodes.Count; i++ )
                 {
-                    if ( compound.ChildNodes[ i ] == behaviourNode )
+                    if ( compound.ChildNodes[ i ] == behaviourNodeGuid )
                     {
                         compound.ChildNodes[ i ] = null;
                         connectionsToRemove.Add( compoundNode.OutPoints[ i ] );
@@ -423,7 +438,7 @@ namespace NodeEditor
                 OnClickRemoveConnectionPoint( connectionPoint );
             }
 
-            _nodes.Remove( node.BehaviourNode );
+            _nodes.Remove( node.BehaviourNode.Guid );
             _target.RemoveBehaviour( node.BehaviourNode );
         }
 
@@ -434,11 +449,11 @@ namespace NodeEditor
 
         private Node CreateCompoundNode( Vector2 mousePosition, CompoundBehaviourNode compoundNode )
         {
-            var node = new CompoundNode( compoundNode, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
-                _outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, OnDoubleClickNode,
+            var node = new CompoundNode( compoundNode, mousePosition, _compoundNodeStyle, _selectedCompoundNodeStyle,
+                _inPointStyle, _outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, OnDoubleClickNode,
                 OnClickRemoveConnectionPoint, OnClickNode );
 
-            _nodes.Add( node.BehaviourNode, node );
+            _nodes.Add( compoundNode.Guid, node );
             return node;
         }
 
@@ -447,7 +462,7 @@ namespace NodeEditor
             var node = new Node( actionNode, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
                 OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode, OnClickNode );
 
-            _nodes.Add( node.BehaviourNode, node );
+            _nodes.Add( actionNode.Guid, node );
             return node;
         }
 
@@ -478,11 +493,11 @@ namespace NodeEditor
             var index = outNode.OutPoints.IndexOf( outPoint );
             if ( index < outNode.BehaviourNode.ChildNodes.Count )
             {
-                outNode.BehaviourNode.ChildNodes[ index ] = inNode.BehaviourNode;
+                outNode.BehaviourNode.ChildNodes[ index ] = inNode.BehaviourNode.Guid;
             }
             else
             {
-                outNode.BehaviourNode.ChildNodes.Add( inNode.BehaviourNode );
+                outNode.BehaviourNode.ChildNodes.Add( inNode.BehaviourNode.Guid );
             }
         }
 

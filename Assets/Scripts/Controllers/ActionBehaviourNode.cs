@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Gamelogic.Extensions;
 
 namespace Controllers
@@ -6,7 +7,15 @@ namespace Controllers
     [ Serializable ]
     public class ActionBehaviourNode : BehaviourNode
     {
-        public ActionList Script;
+        public List<BossBehaviour.Action> Script;
+
+        public ActionBehaviourNode( string name ) : base( name )
+        {
+        }
+
+        public ActionBehaviourNode( string name, string guid ) : base( name, guid )
+        {
+        }
     }
     
     [ Serializable ]

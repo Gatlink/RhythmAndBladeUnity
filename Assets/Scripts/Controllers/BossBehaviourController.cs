@@ -95,5 +95,10 @@ namespace Controllers
 
             throw new ArgumentException( "Invalid behaviour node type" );
         }
+
+        public IEnumerable GetBehaviourNodeResolver( string nodeGuid )
+        {
+            return GetBehaviourNodeResolver( Behaviour.GetBehaviourNode( nodeGuid ) );
+        }
     }
 }
