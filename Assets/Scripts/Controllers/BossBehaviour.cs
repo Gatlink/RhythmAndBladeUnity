@@ -13,7 +13,7 @@ namespace Controllers
         [ SerializeField ]
         private CompoundBehavioursDictionary _compoundBehaviours = new CompoundBehavioursDictionary();
 
-        [ SerializeField ]
+        [ HideInInspector ]
         public string MainBehaviourGuid;
 
         public BehaviourNode MainBehaviour

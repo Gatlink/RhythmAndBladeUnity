@@ -14,7 +14,5 @@ public class BossBehaviourEditor : Editor
         {
             NodeBasedEditor.EditBossBehaviour( bossBehaviour );
         }
-        
-        base.OnInspectorGUI();
     }
 }

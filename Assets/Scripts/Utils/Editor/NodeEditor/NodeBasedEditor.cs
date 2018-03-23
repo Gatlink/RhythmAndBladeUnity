@@ -1,8 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers;
+using UnityEngine.Assertions;
 
 namespace NodeEditor
 {
@@ -60,21 +63,20 @@ namespace NodeEditor
                 EditorGUIUtility.Load( "builtin skins/lightskin/images/node2 on.png" ) as Texture2D;
             _selectedCompoundNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
 
-
             _inPointStyle = new GUIStyle();
-            _inPointStyle.normal.background =
-                EditorGUIUtility.Load( "builtin skins/lightskin/images/btn.png" ) as Texture2D;
-            _inPointStyle.active.background =
-                EditorGUIUtility.Load( "builtin skins/lightskin/images/btn act.png" ) as Texture2D;
-            _inPointStyle.border = new RectOffset( 2, 2, 2, 2 );
+            _inPointStyle.normal.background = 
+                EditorGUIUtility.Load( "builtin skins/lightskin/images/node1 hex.png" ) as Texture2D;
+//            _inPointStyle.active.background =
+//                EditorGUIUtility.Load( "builtin skins/lightskin/images/btn act.png" ) as Texture2D;
+            _inPointStyle.border = new RectOffset( 1, 1, 1, 1 );
 
             _outPointStyle = new GUIStyle();
             _outPointStyle.normal.background =
-                EditorGUIUtility.Load( "builtin skins/lightskin/images/btn.png" ) as Texture2D;
-            _outPointStyle.active.background =
-                EditorGUIUtility.Load( "builtin skins/lightskin/images/btn act.png" ) as Texture2D;
+                EditorGUIUtility.Load( "builtin skins/lightskin/images/node2 hex.png" ) as Texture2D;
+//            _outPointStyle.active.background =
+//                EditorGUIUtility.Load( "builtin skins/lightskin/images/btn act.png" ) as Texture2D;
             _outPointStyle.border = new RectOffset( 2, 2, 2, 2 );
-            
+
             _connectionColor = Color.black;
 
             autoRepaintOnSceneChange = true;
@@ -164,7 +166,6 @@ namespace NodeEditor
                 nodeCount = _nodes.Count;
             }
 
-
             DrawGrid( 20, 0.2f, Color.gray );
             DrawGrid( 100, 0.4f, Color.gray );
 
@@ -228,6 +229,8 @@ namespace NodeEditor
 
         private void DrawConnections()
         {
+            if ( Event.current.type != EventType.Repaint ) return;
+
             foreach ( var node in _nodes.Values.OfType<CompoundNode>() )
             {
                 for ( var index = 0; index < node.OutPoints.Count; index++ )
@@ -287,6 +290,8 @@ namespace NodeEditor
 
         private void DrawConnectionLine( Event e )
         {
+            if ( Event.current.type != EventType.Repaint ) return;
+
             if ( _selectedInPoint != null && _selectedOutPoint == null )
             {
                 var fromPosition = _selectedInPoint.Rect.center;
@@ -497,11 +502,27 @@ namespace NodeEditor
         {
             var node = new CompoundNode( compoundNode, mousePosition, _compoundNodeStyle, _selectedCompoundNodeStyle,
                 _inPointStyle, _outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, OnDoubleClickNode,
-                OnClickRemoveConnectionPoint, OnClickNode, OnClickMainNode );
+                OnClickRemoveConnectionPoint, OnClickMoveConnectionPoint, OnClickNode, OnClickMainNode );
 
             _nodes.Add( compoundNode.Guid, node );
             nodeCount++;
             return node;
+        }
+
+        private void OnClickMoveConnectionPoint( ConnectionPoint point, int direction )
+        {
+            var node = (CompoundNode) point.Node;
+            var index = node.OutPoints.IndexOf( point );
+            Assert.IsFalse( index == 0 && direction == -1 || index == node.OutPoints.Count - 1 && direction == 1 );
+            Swap( node.OutPoints, index, index + direction );
+            Swap( node.BehaviourNode.ChildNodes, index, index + direction );
+        }
+
+        private void Swap( IList list, int i1, int i2 )
+        {
+            var tmp = list[ i1 ];
+            list[ i1 ] = list[ i2 ];
+            list[ i2 ] = tmp;
         }
 
         private Node CreateNode( Vector2 mousePosition, ActionBehaviourNode actionNode )

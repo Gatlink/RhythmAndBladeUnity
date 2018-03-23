@@ -29,6 +29,14 @@ MonoBehaviour:
           DurationParameter: 0.5
           CountParameter: 0
           TargetTypeParameter: 0
+        - Type: 0
+          DurationParameter: 0.5
+          CountParameter: 0
+          TargetTypeParameter: 0
+        - Type: 0
+          DurationParameter: 0.5
+          CountParameter: 0
+          TargetTypeParameter: 0
     - Name: ATTACK 1
       Guid: f15bf45f-cc77-4d8c-bccc-b1255163f3ee
       Script:

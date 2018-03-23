@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Controllers;
 using UnityEditor;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace NodeEditor
         {
             _isMainNode = isMainNode;
         }
-        
+
         private static GUIStyle TitleLabelStyle
         {
             get
@@ -50,17 +51,18 @@ namespace NodeEditor
         }
 
         public Node( BehaviourNode behaviourNode, Vector2 position, GUIStyle nodeStyle, GUIStyle selectedStyle,
-            GUIStyle inPointStyle, Action<ConnectionPoint> onClickInPoint, Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode, Func<Node, bool> onClickNode, Action<Node> onClickMainNode )
+            GUIStyle inPointStyle, Action<ConnectionPoint> onClickInPoint, Action<Node> onClickRemoveNode,
+            Action<Node> onDoubleClickNode, Func<Node, bool> onClickNode, Action<Node> onClickMainNode )
         {
             BehaviourNode = behaviourNode;
             Rect = new Rect( position.x - defaultWidth / 2f, position.y - defaultHeight / 2f, defaultWidth,
                 defaultHeight );
             _style = nodeStyle;
-            InPoint = new ConnectionPoint( this, ConnectionPointType.In, inPointStyle, onClickInPoint, null );
+            InPoint = new ConnectionPoint( this, ConnectionPointType.In, inPointStyle, onClickInPoint, null, null );
 
             _defaultNodeStyle = nodeStyle;
             _selectedNodeStyle = selectedStyle;
-            
+
             _onRemoveNode = onClickRemoveNode;
             _onDoubleClickNode = onDoubleClickNode;
             _onClickNode = onClickNode;
@@ -74,6 +76,7 @@ namespace NodeEditor
 
         public virtual void Draw()
         {
+            InPoint.Draw();
             using ( new GUI.GroupScope( Rect, _style ) )
             {
                 var rect = new Rect( Rect );
@@ -85,11 +88,26 @@ namespace NodeEditor
 
                 if ( _isMainNode )
                 {
-                    GUI.DrawTexture( new Rect(12, 10, 16, 16), EditorGUIUtility.Load( "start.png" ) as Texture, ScaleMode.ScaleAndCrop, true );
+                    GUI.DrawTexture( new Rect( 12, 10, 16, 16 ), EditorGUIUtility.Load( "start.png" ) as Texture,
+                        ScaleMode.ScaleToFit, true );
+                }
+
+                var actionBehaviourNode = BehaviourNode as ActionBehaviourNode;
+                if ( actionBehaviourNode != null )
+                {
+                    var style = new GUIStyle( GUI.skin.label );
+                    style.alignment = TextAnchor.MiddleCenter;
+                    var content = new GUIContent( string.Join( "\n",
+                        actionBehaviourNode.Script.Select( action => action.Type.ToString() ).ToArray() ) );
+
+                    Rect.height = defaultHeight + style.CalcHeight( content, rect.width ) - 2 * style.lineHeight;
+                    
+                    rect.y += TitleLabelStyle.lineHeight;
+                    rect.height -= TitleLabelStyle.lineHeight;
+                    
+                    GUI.Label( rect, content, style );
                 }
             }
-
-            InPoint.Draw();
         }
 
         public bool ProcessEvents( Event e )
@@ -190,12 +208,13 @@ namespace NodeEditor
             {
                 return GetInConnectionPointPosition();
             }
+
             throw new ArgumentException( "Connection point not found" );
         }
 
         public virtual IEnumerable<ConnectionPoint> EnumerateConnectionPoints()
         {
             yield return InPoint;
-        }        
+        }
     }
 }
