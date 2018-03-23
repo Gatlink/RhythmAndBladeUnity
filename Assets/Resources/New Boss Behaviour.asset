@@ -15,17 +15,18 @@ MonoBehaviour:
     _keys:
     - c577555b-7753-4fc0-9b14-50b4909f43f5
     _values:
-    - Name: WAIT
+    - Name: WAIT3
       Guid: c577555b-7753-4fc0-9b14-50b4909f43f5
       Script:
-      - Type: 0
-        DurationParameter: 0
-        CountParameter: 0
-        TargetTypeParameter: 0
-      - Type: 2
-        DurationParameter: 0
-        CountParameter: 0
-        TargetTypeParameter: 0
+        values:
+        - Type: 3
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 0
+        - Type: 1
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 0
   _compoundBehaviours:
     _keys:
     - 5bc8113d-cb48-43ae-b26a-d053869f5821
