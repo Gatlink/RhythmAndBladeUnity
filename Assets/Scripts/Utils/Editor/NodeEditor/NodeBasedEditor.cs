@@ -33,7 +33,7 @@ namespace NodeEditor
         public static void EditBossBehaviour( BossBehaviour target )
         {
             var window = GetWindow<NodeBasedEditor>();
-            window.titleContent = new GUIContent( "Node Based Boss Controller Editor" );
+            window.titleContent = new GUIContent( target.name );
             window._target = target;
             window.PopulateGraph();
         }
@@ -92,6 +92,7 @@ namespace NodeEditor
             var selection = Selection.activeObject as BossBehaviour;
             if ( selection == null )
             {
+                titleContent = new GUIContent( "Boss Behaviour" );
                 _target = null;
                 ClearGraph();
                 return;
@@ -100,6 +101,7 @@ namespace NodeEditor
             if ( selection != _target )
             {
                 _target = selection;
+                titleContent = new GUIContent( selection.name );
                 PopulateGraph();
             }
         }
