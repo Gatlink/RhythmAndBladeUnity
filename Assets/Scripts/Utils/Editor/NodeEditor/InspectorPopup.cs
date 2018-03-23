@@ -15,7 +15,7 @@ namespace NodeEditor
         public static InspectorPopup ShowInspectorPopup( BossBehaviour behaviour, BehaviourNode node )
         {
             var window = GetWindow<InspectorPopup>();
-            window.titleContent = new GUIContent( node.Name );
+            window.titleContent = new GUIContent( "Node Editor" );
             window._editor =
                 BehaviourNodeEditor.CreateEditorForProperty( behaviour, window.GetNodePath( behaviour, node ) );
             return window;
@@ -100,20 +100,9 @@ namespace NodeEditor
         {
             serializedObject.Update();
 
-            var iterator = serializedObject.FindProperty( _targetPropertyPath );
-            iterator.isExpanded = true;
-            //iterator.
-//            Debug.Log( iterator.propertyPath );
-//            while ( iterator.NextVisible( true ) )
-//            {
-//                EditorGUILayout.PropertyField( iterator );                
-//            }
-//            for ( var enterChildren = true; iterator.NextVisible( enterChildren ); enterChildren = false )
-//            {
-//                //using ( new EditorGUI.DisabledScope( "m_Script" == iterator.propertyPath ) )
-                //EditorGUILayout.InspectorTitlebar( false, target, false);
-                EditorGUILayout.PropertyField( iterator, true );
-//            }
+            var property = serializedObject.FindProperty( _targetPropertyPath );
+            property.isExpanded = true;
+            EditorGUILayout.PropertyField( property, true );
 
 //            var prop = serializedObject.GetIterator();
 //            using ( var scrollView = new EditorGUILayout.ScrollViewScope( _scrollPos ) )
@@ -124,9 +113,6 @@ namespace NodeEditor
 //                    EditorGUILayout.LabelField( prop.propertyPath );
 //                }
 //            }
-
-//            var property = serializedObject.FindProperty( _targetPropertyPath );
-//            EditorGUILayout.PropertyField( property, GUIContent.none, true );
 
             serializedObject.ApplyModifiedProperties();
         }

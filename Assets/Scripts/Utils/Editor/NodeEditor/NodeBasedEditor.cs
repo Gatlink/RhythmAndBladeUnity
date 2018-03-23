@@ -10,7 +10,8 @@ namespace NodeEditor
     {
         private BossBehaviour _target;
 
-        private readonly Dictionary<string, Node> _nodes = new Dictionary<string, Node>();
+        private Dictionary<string, Node> _nodes = new Dictionary<string, Node>();
+        private int nodeCount;
 
         private GUIStyle _nodeStyle;
         private GUIStyle _selectedNodeStyle;
@@ -146,6 +147,17 @@ namespace NodeEditor
 
         private void OnGUI()
         {
+            if ( _nodes.Count == 0 && nodeCount != 0 )
+            {
+                PopulateGraph();
+            }
+            else if ( _nodes.Count != nodeCount )
+            {
+                Debug.LogError( "nodeCount lost sync : " + ( _nodes.Count - nodeCount ) );
+                nodeCount = _nodes.Count;
+            }
+
+
             DrawGrid( 20, 0.2f, Color.gray );
             DrawGrid( 100, 0.4f, Color.gray );
 
@@ -457,12 +469,14 @@ namespace NodeEditor
             }
 
             _nodes.Remove( node.BehaviourNode.Guid );
+            nodeCount--;
             _target.RemoveBehaviour( node.BehaviourNode );
         }
 
         private void ClearGraph()
         {
             _nodes.Clear();
+            nodeCount = 0;
             if ( _inspectorPopup != null )
             {
                 _inspectorPopup.Close();
@@ -479,6 +493,7 @@ namespace NodeEditor
                 OnClickRemoveConnectionPoint, OnClickNode );
 
             _nodes.Add( compoundNode.Guid, node );
+            nodeCount++;
             return node;
         }
 
@@ -488,6 +503,7 @@ namespace NodeEditor
                 OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode, OnClickNode );
 
             _nodes.Add( actionNode.Guid, node );
+            nodeCount++;
             return node;
         }
 
