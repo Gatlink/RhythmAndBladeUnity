@@ -64,14 +64,14 @@ namespace Controllers
             BossBehaviour.Log( actor + " attacks " + count + " times", actor );
             for ( var i = count; i > 0; i-- )
             {
-                foreach ( var unused in WaitForStateEnter<AttackState>( actor ) )
+                foreach ( var unused in _controller.WaitForStateEnter<AttackState>( actor ) )
                 {
                     actor.DesiredAttack = true;
                     yield return null;
                 }
             }
 
-            foreach ( var unused in WaitForStateExit<AttackState>( actor ) )
+            foreach ( var unused in _controller.WaitForStateExit<AttackState>( actor ) )
             {
                 yield return null;
             }
@@ -94,10 +94,14 @@ namespace Controllers
             var targetPositionX = GetTargetPositionX( type, mob );
 //            var targetPositionX = Mathf.Clamp( Player.BodyPosition.x, GetHotSpotPosition( TargetType.LeftCorner ).x,
 //                GetHotSpotPosition( TargetType.RightCorner ).x );
+                                   
             var delta = targetPositionX - actor.Mobile.BodyPosition.x;
 
             foreach ( var unused in JumpAttackAndWaitForCompletion( actor, delta ) )
             {
+                DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX - delta ), Vector3.up );
+
+                DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down );
                 yield return null;
             }
         }
@@ -193,13 +197,13 @@ namespace Controllers
 
         private IEnumerable ChargeAndWaitForCompletion( BossActor actor )
         {
-            foreach ( var unused in WaitForStateEnter<ChargeAttackState>( actor ) )
+            foreach ( var unused in _controller.WaitForStateEnter<ChargeAttackState>( actor ) )
             {
                 actor.DesiredCharge = true;
                 yield return null;
             }
 
-            foreach ( var unused in WaitForStateExit<ChargeAttackState>( actor ) )
+            foreach ( var unused in _controller.WaitForStateExit<ChargeAttackState>( actor ) )
             {
                 yield return null;
             }
@@ -207,14 +211,14 @@ namespace Controllers
 
         private IEnumerable JumpAttackAndWaitForCompletion( BossActor actor, float toTarget )
         {
-            foreach ( var unused in WaitForStateEnter<JumpAttackState>( actor ) )
+            foreach ( var unused in _controller.WaitForStateEnter<JumpAttackState>( actor ) )
             {
                 actor.DesiredJumpAttack = true;
                 actor.DesiredJumpMovement = toTarget;
                 yield return null;
             }
 
-            foreach ( var unused in WaitForStateExit<StrikeGroundState>( actor ) )
+            foreach ( var unused in _controller.WaitForStateExit<StrikeGroundState>( actor ) )
             {
                 yield return null;
             }
@@ -222,56 +226,17 @@ namespace Controllers
 
         private IEnumerable JumpAndWaitForCompletion( BossActor actor, float toTarget )
         {
-            foreach ( var unused in WaitForStateEnter<JumpState>( actor ) )
+            foreach ( var unused in _controller.WaitForStateEnter<JumpState>( actor ) )
             {
                 actor.DesiredJump = true;
                 actor.DesiredJumpMovement = toTarget;
                 yield return null;
             }
 
-            foreach ( var unused in WaitForStateExit<JumpState>( actor ) )
+            foreach ( var unused in _controller.WaitForStateExit<JumpState>( actor ) )
             {
                 yield return null;
             }
-        }
-
-        private IEnumerable WaitForStateEnter<TBossState>( BossActor actor ) where TBossState : IActorState
-        {
-            var stateEntered = false;
-            var handler = new Action<IActorState, IActorState>( ( prev, next ) =>
-            {
-                if ( next is TBossState )
-                {
-                    stateEntered = true;
-                }
-            } );
-
-            actor.StateChangeEvent += handler;
-            while ( !stateEntered )
-            {
-                yield return null;
-            }
-
-            actor.StateChangeEvent -= handler;
-        }
-
-        private IEnumerable WaitForStateExit<TBossState>( BossActor actor ) where TBossState : IActorState
-        {
-            var stateExited = false;
-            var handler = new Action<IActorState, IActorState>( ( prev, next ) =>
-            {
-                if ( prev is TBossState )
-                {
-                    stateExited = true;
-                }
-            } );
-            actor.StateChangeEvent += handler;
-            while ( !stateExited )
-            {
-                yield return null;
-            }
-
-            actor.StateChangeEvent -= handler;
         }
     }
 }

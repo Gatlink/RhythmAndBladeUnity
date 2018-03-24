@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ActorStates;
 using Gamelogic.Extensions;
 using UnityEngine;
 
@@ -103,6 +104,45 @@ namespace Controllers
         public IEnumerable GetBehaviourNodeResolver( string nodeGuid )
         {
             return GetBehaviourNodeResolver( Behaviour.GetBehaviourNode( nodeGuid ) );
+        }
+
+        public IEnumerable WaitForStateEnter<TBossState>( BossActor actor ) where TBossState : IActorState
+        {
+            var stateEntered = false;
+            var handler = new Action<IActorState, IActorState>( ( prev, next ) =>
+            {
+                if ( next is TBossState )
+                {
+                    stateEntered = true;
+                }
+            } );
+
+            actor.StateChangeEvent += handler;
+            while ( !stateEntered )
+            {
+                yield return null;
+            }
+
+            actor.StateChangeEvent -= handler;
+        }
+
+        public IEnumerable WaitForStateExit<TBossState>( BossActor actor ) where TBossState : IActorState
+        {
+            var stateExited = false;
+            var handler = new Action<IActorState, IActorState>( ( prev, next ) =>
+            {
+                if ( prev is TBossState )
+                {
+                    stateExited = true;
+                }
+            } );
+            actor.StateChangeEvent += handler;
+            while ( !stateExited )
+            {
+                yield return null;
+            }
+
+            actor.StateChangeEvent -= handler;
         }
     }
 }

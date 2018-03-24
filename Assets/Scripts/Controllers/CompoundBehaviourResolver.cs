@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using ActorStates.Boss;
 using Gamelogic.Extensions.Algorithms;
 
 namespace Controllers
@@ -38,6 +39,11 @@ namespace Controllers
 
                         if ( currentHealth <= node.HealthEndConditionLimit )
                         {
+                            // wait for actor to go out of next hurt state
+                            foreach ( var unused1 in _controller.WaitForStateExit<CriticalHurtState>( actor ) )
+                            {
+                                yield return null;
+                            }
                             yield break;
                         }
                     }
