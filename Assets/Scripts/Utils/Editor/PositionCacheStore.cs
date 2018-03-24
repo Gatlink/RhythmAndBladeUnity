@@ -14,13 +14,25 @@ public class PositionCacheStore : ScriptableObject
 
     public PositionCache GetCache( string path )
     {
+        AssetDatabase.Refresh();
+
         PositionCache cache;
         if ( !_cachedDictionnaries.TryGetValue( path, out cache ) )
         {
-            cache = CreateInstance<PositionCache>();
+            Debug.Log( "Creating cache for " + path );
+
+            cache = new PositionCache();
             _cachedDictionnaries[ path ] = cache;
-            AssetDatabase.SaveAssets();
+            EditorUtility.SetDirty( this );
+            AssetDatabase.SaveAssets();            
         }
+        
+        if ( cache == null )
+        {
+            Debug.Log( "cache is null !" + path );                
+        }
+
+        Debug.Log( "Got cache for " + path );
 
         return cache;
     }

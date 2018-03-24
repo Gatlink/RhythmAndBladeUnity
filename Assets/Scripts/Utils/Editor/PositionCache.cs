@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
-public class PositionCache : ScriptableObject
+[ Serializable ]
+public class PositionCache
 {
     [ Serializable ]
     private class PositionDictionary : SerializableDictionary<string, Vector2>
