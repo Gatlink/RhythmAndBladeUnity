@@ -11,6 +11,12 @@ namespace ActorStates.Boss
 
         public override IActorState Update()
         {
+            var hurtState = Actor.GetHurtState();
+            if ( hurtState != null )
+            {
+                return hurtState;
+            }
+            
             var mob = Actor.Mobile;
 
             Vector2 normal;

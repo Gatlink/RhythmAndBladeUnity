@@ -1,4 +1,6 @@
-﻿namespace ActorStates.Boss
+﻿using UnityEngine;
+
+namespace ActorStates.Boss
 {
     public class HurtState : BossFixedHorizontalMovementBase
     {
@@ -35,6 +37,12 @@
         {
             ApplyHorizontalMovement();
 
+            // apply gravity
+            var verticalVelocity = Mobile.CurrentVelocity.y - Settings.Gravity * Time.deltaTime;
+            verticalVelocity = Mathf.Max( verticalVelocity, -Settings.MaxFallVelocity );
+            Mobile.SetVerticalVelocity( verticalVelocity );
+
+            // default move
             Mobile.Move();
 
             return base.Update();

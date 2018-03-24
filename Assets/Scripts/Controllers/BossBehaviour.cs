@@ -96,7 +96,7 @@ namespace Controllers
         }
 
         [ Conditional( "DEBUG_BOSS_BEHAVIOR" ) ]
-        public static void Log( object message, Object context )
+        public static void Log( object message, Object context = null )
         {
             Debug.Log( message, context );
         }

@@ -44,6 +44,12 @@ namespace ActorStates.Boss
 
         public override IActorState Update()
         {
+            var hurtState = Actor.GetHurtState();
+            if ( hurtState != null )
+            {
+                return hurtState;
+            }
+
             ApplyVerticalMovement();
 
             ApplyHorizontalMovement();

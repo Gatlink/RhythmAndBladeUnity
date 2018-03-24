@@ -44,5 +44,16 @@ namespace ActorStates.Boss
                     Settings.ShockWaveTrajectory, v => wave.position = pos + Vector3.right * v )
                 .Then( () => Object.Destroy( wave.gameObject ) );
         }
+
+        public override IActorState Update()
+        {
+            var hurtState = Actor.GetHurtState();
+            if ( hurtState != null )
+            {
+                return hurtState;
+            }
+
+            return base.Update();
+        }
     }
 }

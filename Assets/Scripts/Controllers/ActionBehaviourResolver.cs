@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using ActorStates;
 using ActorStates.Boss;
 using Gamelogic.Extensions;
 using UnityEngine;
@@ -61,18 +60,21 @@ namespace Controllers
 
         private IEnumerable AttackResolver( BossActor actor, int count )
         {
-            BossBehaviour.Log( actor + " attacks " + count + " times", actor );
+            BossBehaviour.Log( Time.frameCount + " " + actor + " attacks " + count + " times", actor );
             for ( var i = count; i > 0; i-- )
             {
                 foreach ( var unused in _controller.WaitForStateEnter<AttackState>( actor ) )
                 {
+                    BossBehaviour.Log( Time.frameCount + " waiting attack state enter", actor );
                     actor.DesiredAttack = true;
                     yield return null;
                 }
             }
-
+            BossBehaviour.Log( Time.frameCount + " attack state entered", actor );
+            
             foreach ( var unused in _controller.WaitForStateExit<AttackState>( actor ) )
             {
+                BossBehaviour.Log( Time.frameCount + " waiting attack state exit", actor );
                 yield return null;
             }
         }
@@ -118,20 +120,25 @@ namespace Controllers
 
             if ( Mathf.Abs( toTarget ) < _settings.CloseRangeThreshold )
             {
+                BossBehaviour.Log( Time.frameCount + " actor will walk to targetX", actor );
+
                 while ( Mathf.Abs( targetPositionX - mob.BodyPosition.x ) > MovementEpsilon )
                 {
                     DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down );
-
+                    BossBehaviour.Log( Time.frameCount + " wait for actor to reach targetX", actor );
+                    
                     actor.DesiredMovement = Mathf.Sign( targetPositionX - mob.BodyPosition.x );
                     yield return null;
                 }
             }
             else if ( Mathf.Abs( toTarget ) < _settings.MidRangeThreshold )
             {
+                BossBehaviour.Log( Time.frameCount + " actor will jump to targetX", actor );
+
                 foreach ( var unused in JumpAndWaitForCompletion( actor, toTarget ) )
                 {
                     DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down );
-
+                    
                     yield return null;
                 }
             }
@@ -140,14 +147,18 @@ namespace Controllers
                 const float LongRangeWalkDistance = 2;
                 var movementDirection = Mathf.Sign( toTarget );
                 var walkTargetX = ClampPositionX( mob.BodyPosition.x + movementDirection * LongRangeWalkDistance );
+                BossBehaviour.Log( Time.frameCount + " actor will first walk to walkTargetX", actor );
+                
                 while ( Mathf.Abs( walkTargetX - mob.BodyPosition.x ) > MovementEpsilon )
                 {
                     DebugExtension.DebugArrow( mob.BodyPosition.WithX( walkTargetX ), Vector3.down );
+                    BossBehaviour.Log( Time.frameCount + " wait for actor to reach walkTargetX", actor );
 
                     actor.DesiredMovement = Mathf.Sign( walkTargetX - mob.BodyPosition.x );
                     yield return null;
                 }
 
+                BossBehaviour.Log( Time.frameCount + " then actor will jump to targetX", actor );
                 foreach ( var unused in JumpAndWaitForCompletion( actor, targetPositionX - mob.BodyPosition.x ) )
                 {
                     DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down );
@@ -196,47 +207,57 @@ namespace Controllers
         }
 
         private IEnumerable ChargeAndWaitForCompletion( BossActor actor )
-        {
+        {            
             foreach ( var unused in _controller.WaitForStateEnter<ChargeAttackState>( actor ) )
             {
+                BossBehaviour.Log( Time.frameCount + " wait for charge state enter", actor );
                 actor.DesiredCharge = true;
                 yield return null;
             }
-
+            BossBehaviour.Log( Time.frameCount + " charge state entered", actor );
             foreach ( var unused in _controller.WaitForStateExit<ChargeAttackState>( actor ) )
             {
+                BossBehaviour.Log( Time.frameCount + " wait for charge state exit", actor );
                 yield return null;
             }
+            BossBehaviour.Log( Time.frameCount + " charge state exited", actor );
         }
 
         private IEnumerable JumpAttackAndWaitForCompletion( BossActor actor, float toTarget )
         {
             foreach ( var unused in _controller.WaitForStateEnter<JumpAttackState>( actor ) )
             {
+                BossBehaviour.Log( Time.frameCount + " wait for jumpattack state enter", actor );
                 actor.DesiredJumpAttack = true;
                 actor.DesiredJumpMovement = toTarget;
                 yield return null;
             }
-
+            BossBehaviour.Log( Time.frameCount + " jumpattack state entered", actor );
             foreach ( var unused in _controller.WaitForStateExit<StrikeGroundState>( actor ) )
             {
+                BossBehaviour.Log( Time.frameCount + " wait for strike ground state exit", actor );
                 yield return null;
             }
+            BossBehaviour.Log( Time.frameCount + " strike ground state exited", actor );
         }
 
         private IEnumerable JumpAndWaitForCompletion( BossActor actor, float toTarget )
         {
             foreach ( var unused in _controller.WaitForStateEnter<JumpState>( actor ) )
             {
+                BossBehaviour.Log( Time.frameCount + " wait for jump state enter", actor );
                 actor.DesiredJump = true;
                 actor.DesiredJumpMovement = toTarget;
                 yield return null;
             }
+            BossBehaviour.Log( Time.frameCount + " jump state entered", actor );
 
             foreach ( var unused in _controller.WaitForStateExit<JumpState>( actor ) )
             {
+                BossBehaviour.Log( Time.frameCount + " wait for jump state exit", actor );
                 yield return null;
             }
+            BossBehaviour.Log( Time.frameCount + " jump state exited", actor );
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using ActorStates;
 using Controllers;
 using Gamelogic.Extensions;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
 
 [ SelectionBase ]
 public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBase<TActor>
@@ -66,9 +69,8 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
 
     protected void TransitionToState( IActorState nextState )
     {
-#if DEBUG_ACTOR_STATE
-        Debug.Log( string.Format( "{0} Going from {1} to {2}", this, CurrentState.Name, nextState.Name ), this );
-#endif
+        Log( string.Format( Time.frameCount+ " {0} Going from {1} to {2}", this, CurrentState.Name, nextState.Name ), this );
+
         CurrentState.OnExit();
         OnStateChangeEvent( CurrentState, nextState );
         nextState.OnEnter();
@@ -76,6 +78,12 @@ public abstract class ActorBase<TActor> : GLMonoBehaviour where TActor : ActorBa
         StateName = CurrentState.Name;
     }
 
+    [ Conditional( "DEBUG_ACTOR_STATE" ) ]
+    public static void Log( object message, Object context = null )
+    {
+        Debug.Log( message, context );
+    }
+    
     public void RestartToIinitialState()
     {
         TransitionToState( CreateInitialState() );
