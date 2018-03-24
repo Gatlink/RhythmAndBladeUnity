@@ -17,11 +17,12 @@ namespace Controllers
             _controller = controller;
             _settings = Boss1Settings.Instance;
         }
-
+               
         public IEnumerable GetResolver( ActionBehaviourNode node )
         {
             var actor = _controller.GetComponent<BossActor>();
-
+         
+            BossBehaviour.Log( actor + " starts behaviour " + node.Name, actor );
             foreach ( var action in node.Script )
             {
                 foreach ( var unused in ActionResolver( actor, action ) )
@@ -52,6 +53,7 @@ namespace Controllers
                     return ChargeResolver( actor );
                 case BossBehaviour.ActionType.Attack:
                     return AttackResolver( actor, action.CountParameter );
+                case BossBehaviour.ActionType.Count:
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -59,11 +61,8 @@ namespace Controllers
 
         private IEnumerable AttackResolver( BossActor actor, int count )
         {
-#if DEBUG_CONTROLLER_ACTION
-            Debug.Log( actor + " attacks " + count + " times", actor );
-#endif
-
-            for ( int i = count; i > 0; i-- )
+            BossBehaviour.Log( actor + " attacks " + count + " times", actor );
+            for ( var i = count; i > 0; i-- )
             {
                 foreach ( var unused in WaitForStateEnter<AttackState>( actor ) )
                 {
@@ -80,9 +79,7 @@ namespace Controllers
 
         private IEnumerable ChargeResolver( BossActor actor )
         {
-#if DEBUG_CONTROLLER_ACTION
-            Debug.Log( actor + " charges", actor );
-#endif
+            BossBehaviour.Log( actor + " charges", actor );
             foreach ( var unused in ChargeAndWaitForCompletion( actor ) )
             {
                 yield return null;
@@ -91,9 +88,7 @@ namespace Controllers
 
         private IEnumerable JumpAttackResolver( BossActor actor, BossBehaviour.TargetType type )
         {
-#if DEBUG_CONTROLLER_ACTION
-            Debug.Log( actor + " jump attacks", actor );
-#endif
+            BossBehaviour.Log( actor + " jump attacks", actor );
             var mob = actor.Mobile;
 
             var targetPositionX = GetTargetPositionX( type, mob );
@@ -109,9 +104,7 @@ namespace Controllers
 
         private IEnumerable MoveResolver( BossActor actor, BossBehaviour.TargetType type )
         {
-#if DEBUG_CONTROLLER_ACTION
-            Debug.Log( actor + " moves to " + type, actor );
-#endif
+            BossBehaviour.Log( actor + " moves to " + type, actor );
             const float MovementEpsilon = 0.1f;
             var mob = actor.Mobile;
 
@@ -178,6 +171,8 @@ namespace Controllers
                 case BossBehaviour.TargetType.OntoPlayer:
                     return ClampPositionX( _controller.Player.BodyPosition.x );
 
+                case BossBehaviour.TargetType.LeftPlatform:
+                case BossBehaviour.TargetType.RightPlatform:
                 case BossBehaviour.TargetType.LeftCorner:
                 case BossBehaviour.TargetType.Center:
                 case BossBehaviour.TargetType.RightCorner:
@@ -188,10 +183,7 @@ namespace Controllers
 
         private IEnumerable WaitResolver( BossActor actor, float duration )
         {
-#if DEBUG_CONTROLLER_ACTION
-            Debug.Log( actor + " waits for " + duration + " seconds", actor );
-#endif
-
+            BossBehaviour.Log( actor + " waits for " + duration + " seconds", actor );
             while ( duration > 0 )
             {
                 yield return null;

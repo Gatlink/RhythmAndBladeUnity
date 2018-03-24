@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
 
 namespace Controllers
 {
@@ -90,6 +93,12 @@ namespace Controllers
             }
             
             throw new ArgumentException( "No node found with Guid " + nodeGuid );
+        }
+
+        [ Conditional( "DEBUG_BOSS_BEHAVIOR" ) ]
+        public static void Log( object message, Object context )
+        {
+            Debug.Log( message, context );
         }
 
         public enum ActionType

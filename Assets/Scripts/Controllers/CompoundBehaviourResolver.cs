@@ -21,6 +21,8 @@ namespace Controllers
             _behaviours = new List<string>();
             _behaviours.AddRange( node.ChildNodes );
 
+            BossBehaviour.Log( actor + " starts behaviour " + node.Name, actor );
+
             do
             {
                 foreach ( var unused in GetOneLoopResolver( node ) )
