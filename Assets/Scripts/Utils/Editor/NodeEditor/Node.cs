@@ -19,63 +19,41 @@ namespace NodeEditor
         private const int defaultHeight = 60;
         private bool _isDragged;
         private bool _isSelected;
-        private bool _isMainNode;
-
-        private readonly Action<Node> _onRemoveNode;
-        private readonly Action<Node> _onDoubleClickNode;
+        
+        protected readonly NodeBasedEditor Editor;
 
         private GUIStyle _style;
-        private readonly GUIStyle _defaultNodeStyle;
-        private readonly GUIStyle _selectedNodeStyle;
-        private static GUIStyle _titleLabelStyle;
-        private readonly Func<Node, bool> _onClickNode;
-        private readonly Action<Node> _onClickMainNode;
 
-        public void SetMainNode( bool isMainNode )
+        protected virtual GUIStyle DefaultNodeStyle
         {
-            _isMainNode = isMainNode;
+            get { return Editor.ActionNodeStyle; }
         }
 
-        private static GUIStyle TitleLabelStyle
+        protected virtual GUIStyle SelectedNodeStyle
         {
-            get
-            {
-                if ( _titleLabelStyle == null )
-                {
-                    _titleLabelStyle = new GUIStyle( "Label" );
-                    _titleLabelStyle.alignment = TextAnchor.UpperCenter;
-                }
-
-                return _titleLabelStyle;
-            }
+            get { return Editor.SelectedActionNodeStyle; }
         }
 
-        public Node( BehaviourNode behaviourNode, Vector2 position, GUIStyle nodeStyle, GUIStyle selectedStyle,
-            GUIStyle inPointStyle, Action<ConnectionPoint> onClickInPoint, Action<Node> onClickRemoveNode,
-            Action<Node> onDoubleClickNode, Func<Node, bool> onClickNode, Action<Node> onClickMainNode )
+        public Node( NodeBasedEditor editor, BehaviourNode behaviourNode, Vector2 position )
         {
+            Editor = editor;
             BehaviourNode = behaviourNode;
-            Rect = new Rect( position.x - defaultWidth / 2f, position.y - defaultHeight / 2f, defaultWidth,
-                defaultHeight );
-            _style = nodeStyle;
-            InPoint = new ConnectionPoint( this, ConnectionPointType.In, inPointStyle, onClickInPoint, null, null );
-
-            _defaultNodeStyle = nodeStyle;
-            _selectedNodeStyle = selectedStyle;
-
-            _onRemoveNode = onClickRemoveNode;
-            _onDoubleClickNode = onDoubleClickNode;
-            _onClickNode = onClickNode;
-            _onClickMainNode = onClickMainNode;
+            Rect = new Rect( position.x - defaultWidth / 2f, position.y, defaultWidth, defaultHeight );
+            InPoint = new ConnectionPoint( this, ConnectionPointType.In, Editor.InPointStyle, Editor.OnClickInPoint,
+                null, null );
         }
 
         public void Drag( Vector2 delta )
         {
             Rect.position += delta;
+            Editor.UpdateCacheNodePosition( this );
         }
 
         public virtual void Draw()
         {
+            if ( _style == null )
+                _style = DefaultNodeStyle;
+
             InPoint.Draw();
             using ( new GUI.GroupScope( Rect, _style ) )
             {
@@ -84,9 +62,9 @@ namespace NodeEditor
                 rect.width -= 20;
                 rect.y = 10;
                 rect.height -= 20;
-                GUI.Label( rect, BehaviourNode.Name, TitleLabelStyle );
+                GUI.Label( rect, BehaviourNode.Name, Editor.TitleLabelStyle );
 
-                if ( _isMainNode )
+                if ( Editor.IsMainNode( this ) )
                 {
                     GUI.DrawTexture( new Rect( 12, 10, 16, 16 ), EditorGUIUtility.Load( "start.png" ) as Texture,
                         ScaleMode.ScaleToFit, true );
@@ -95,16 +73,15 @@ namespace NodeEditor
                 var actionBehaviourNode = BehaviourNode as ActionBehaviourNode;
                 if ( actionBehaviourNode != null )
                 {
-                    var style = new GUIStyle( GUI.skin.label );
-                    style.alignment = TextAnchor.MiddleCenter;
                     var content = new GUIContent( string.Join( "\n",
                         actionBehaviourNode.Script.Select( action => action.Type.ToString() ).ToArray() ) );
+                    var style = Editor.ActionNodeContentStyle;
 
                     Rect.height = defaultHeight + style.CalcHeight( content, rect.width ) - 2 * style.lineHeight;
-                    
-                    rect.y += TitleLabelStyle.lineHeight;
-                    rect.height -= TitleLabelStyle.lineHeight;
-                    
+
+                    rect.y += Editor.TitleLabelStyle.lineHeight;
+                    rect.height -= Editor.TitleLabelStyle.lineHeight;
+
                     GUI.Label( rect, content, style );
                 }
             }
@@ -119,7 +96,7 @@ namespace NodeEditor
                     {
                         if ( Rect.Contains( e.mousePosition ) )
                         {
-                            if ( _onClickNode( this ) )
+                            if ( Editor.OnClickNode( this ) )
                             {
                                 e.Use();
                             }
@@ -128,10 +105,10 @@ namespace NodeEditor
                                 _isDragged = true;
                                 GUI.changed = true;
                                 _isSelected = true;
-                                _style = _selectedNodeStyle;
+                                _style = SelectedNodeStyle;
                                 if ( e.clickCount > 1 )
                                 {
-                                    _onDoubleClickNode( this );
+                                    Editor.OnDoubleClickNode( this );
                                     e.Use();
                                 }
                             }
@@ -140,7 +117,7 @@ namespace NodeEditor
                         {
                             GUI.changed = true;
                             _isSelected = false;
-                            _style = _defaultNodeStyle;
+                            _style = DefaultNodeStyle;
                         }
                     }
 
@@ -173,25 +150,9 @@ namespace NodeEditor
         private void ProcessContextMenu()
         {
             var genericMenu = new GenericMenu();
-            genericMenu.AddItem( new GUIContent( "Remove node" ), false, OnClickRemoveNode );
-            genericMenu.AddItem( new GUIContent( "Make node main node" ), false, OnClickMainNode );
+            genericMenu.AddItem( new GUIContent( "Remove node" ), false, () => Editor.OnClickRemoveNode( this ) );
+            genericMenu.AddItem( new GUIContent( "Make node main node" ), false, () => Editor.OnClickMainNode( this ) );
             genericMenu.ShowAsContext();
-        }
-
-        private void OnClickMainNode()
-        {
-            if ( _onClickMainNode != null )
-            {
-                _onClickMainNode( this );
-            }
-        }
-
-        private void OnClickRemoveNode()
-        {
-            if ( _onRemoveNode != null )
-            {
-                _onRemoveNode( this );
-            }
         }
 
         protected Vector2 GetInConnectionPointPosition()

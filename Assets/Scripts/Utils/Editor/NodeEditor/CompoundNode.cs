@@ -12,26 +12,21 @@ namespace NodeEditor
 
         public readonly List<ConnectionPoint> OutPoints;
 
-        private readonly GUIStyle _outPointStyle;
-        private readonly Action<ConnectionPoint> _onClickOutPoint;
-        private readonly Action<ConnectionPoint> _onClickRemoveConnectionPoint;
-        private readonly Action<ConnectionPoint, int> _onClickMoveConnectionPoint;
+        protected override GUIStyle DefaultNodeStyle
+        {
+            get { return Editor.CompoundNodeStyle; }
+        }
 
-        public CompoundNode( CompoundBehaviourNode behaviourNode, Vector2 position, GUIStyle nodeStyle,
-            GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle,
-            Action<ConnectionPoint> onClickInPoint, Action<ConnectionPoint> onClickOutPoint,
-            Action<Node> onClickRemoveNode, Action<Node> onDoubleClickNode,
-            Action<ConnectionPoint> onClickRemoveConnectionPoint, Action<ConnectionPoint, int> onClickMoveConnectionPoint, Func<Node, bool> onClickNode,
-            Action<Node> onClickMainNode )
-            : base( behaviourNode, position, nodeStyle, selectedStyle, inPointStyle, onClickInPoint, onClickRemoveNode,
-                onDoubleClickNode, onClickNode, onClickMainNode )
+        protected override GUIStyle SelectedNodeStyle
+        {
+            get { return Editor.SelectedCompoundNodeStyle; }
+        }
+
+        public CompoundNode( NodeBasedEditor editor, CompoundBehaviourNode behaviourNode, Vector2 position )
+            : base( editor, behaviourNode, position )
         {
             BehaviourNode = behaviourNode;
             OutPoints = new List<ConnectionPoint>();
-            _outPointStyle = outPointStyle;
-            _onClickOutPoint = onClickOutPoint;
-            _onClickRemoveConnectionPoint = onClickRemoveConnectionPoint;
-            _onClickMoveConnectionPoint = onClickMoveConnectionPoint;
         }
 
         public override void Draw()
@@ -112,8 +107,8 @@ namespace NodeEditor
 
         public ConnectionPoint AddOutConnectionPoint()
         {
-            var connectionPoint = new ConnectionPoint( this, ConnectionPointType.Out, _outPointStyle, _onClickOutPoint,
-                _onClickRemoveConnectionPoint, _onClickMoveConnectionPoint );
+            var connectionPoint = new ConnectionPoint( this, ConnectionPointType.Out, Editor.OutPointStyle, Editor.OnClickOutPoint,
+                Editor.OnClickRemoveConnectionPoint, Editor.OnClickMoveConnectionPoint );
             OutPoints.Add( connectionPoint );
             return connectionPoint;
         }

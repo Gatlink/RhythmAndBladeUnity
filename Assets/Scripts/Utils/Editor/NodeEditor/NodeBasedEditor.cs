@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers;
+using Gamelogic.Extensions;
 using UnityEngine.Assertions;
 
 namespace NodeEditor
@@ -14,16 +14,21 @@ namespace NodeEditor
         private BossBehaviour _target;
 
         private Dictionary<string, Node> _nodes = new Dictionary<string, Node>();
-        private int nodeCount;
+        private int _nodeCount;
 
-        private GUIStyle _nodeStyle;
-        private GUIStyle _selectedNodeStyle;
+        public GUIStyle ActionNodeStyle;
+        public GUIStyle SelectedActionNodeStyle;
 
-        private GUIStyle _compoundNodeStyle;
-        private GUIStyle _selectedCompoundNodeStyle;
+        public GUIStyle CompoundNodeStyle;
+        public GUIStyle SelectedCompoundNodeStyle;
 
-        private GUIStyle _inPointStyle;
-        private GUIStyle _outPointStyle;
+        public GUIStyle InPointStyle;
+        public GUIStyle OutPointStyle;
+
+        public GUIStyle TitleLabelStyle;
+        public GUIStyle ActionNodeContentStyle;
+
+        private PositionCacheStore _cacheStore;
 
         private ConnectionPoint _selectedInPoint;
         private ConnectionPoint _selectedOutPoint;
@@ -32,70 +37,89 @@ namespace NodeEditor
         private Vector2 _drag;
         private Color _connectionColor;
         private InspectorPopup _inspectorPopup;
+        private PositionCache _nodePositionCache;
 
         public static void EditBossBehaviour( BossBehaviour target )
         {
             var window = GetWindow<NodeBasedEditor>();
             window.titleContent = new GUIContent( target.name );
-            window._target = target;
-            window.PopulateGraph();
         }
 
         private void OnEnable()
         {
-            _nodeStyle = new GUIStyle();
-            _nodeStyle.normal.background =
+            ActionNodeStyle = new GUIStyle();
+            ActionNodeStyle.normal.background =
                 EditorGUIUtility.Load( "builtin skins/lightskin/images/node1.png" ) as Texture2D;
-            _nodeStyle.border = new RectOffset( 12, 12, 12, 12 );
+            ActionNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
 
-            _selectedNodeStyle = new GUIStyle();
-            _selectedNodeStyle.normal.background =
+            SelectedActionNodeStyle = new GUIStyle();
+            SelectedActionNodeStyle.normal.background =
                 EditorGUIUtility.Load( "builtin skins/lightskin/images/node1 on.png" ) as Texture2D;
-            _selectedNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
+            SelectedActionNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
 
-            _compoundNodeStyle = new GUIStyle();
-            _compoundNodeStyle.normal.background =
+            CompoundNodeStyle = new GUIStyle();
+            CompoundNodeStyle.normal.background =
                 EditorGUIUtility.Load( "builtin skins/lightskin/images/node2.png" ) as Texture2D;
-            _compoundNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
+            CompoundNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
 
-            _selectedCompoundNodeStyle = new GUIStyle();
-            _selectedCompoundNodeStyle.normal.background =
+            SelectedCompoundNodeStyle = new GUIStyle();
+            SelectedCompoundNodeStyle.normal.background =
                 EditorGUIUtility.Load( "builtin skins/lightskin/images/node2 on.png" ) as Texture2D;
-            _selectedCompoundNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
+            SelectedCompoundNodeStyle.border = new RectOffset( 12, 12, 12, 12 );
 
-            _inPointStyle = new GUIStyle();
-            _inPointStyle.normal.background = 
+            InPointStyle = new GUIStyle();
+            InPointStyle.normal.background =
                 EditorGUIUtility.Load( "builtin skins/lightskin/images/node1 hex.png" ) as Texture2D;
 //            _inPointStyle.active.background =
 //                EditorGUIUtility.Load( "builtin skins/lightskin/images/btn act.png" ) as Texture2D;
-            _inPointStyle.border = new RectOffset( 1, 1, 1, 1 );
+            InPointStyle.border = new RectOffset( 1, 1, 1, 1 );
 
-            _outPointStyle = new GUIStyle();
-            _outPointStyle.normal.background =
+            OutPointStyle = new GUIStyle();
+            OutPointStyle.normal.background =
                 EditorGUIUtility.Load( "builtin skins/lightskin/images/node2 hex.png" ) as Texture2D;
 //            _outPointStyle.active.background =
 //                EditorGUIUtility.Load( "builtin skins/lightskin/images/btn act.png" ) as Texture2D;
-            _outPointStyle.border = new RectOffset( 2, 2, 2, 2 );
+            OutPointStyle.border = new RectOffset( 2, 2, 2, 2 );
+
+
+            TitleLabelStyle = new GUIStyle();
+            TitleLabelStyle.alignment = TextAnchor.UpperCenter;
+
+            ActionNodeContentStyle = new GUIStyle();
+            ActionNodeContentStyle.alignment = TextAnchor.MiddleCenter;
 
             _connectionColor = Color.black;
 
             autoRepaintOnSceneChange = true;
 
-            Selection.selectionChanged += OnSelectionChangeHandler;
+            const string cacheName = "NodeEditorCache";
+            _cacheStore = EditorGUIUtility.Load( cacheName + ".asset" ) as PositionCacheStore;
+            if ( _cacheStore == null )
+            {
+                _cacheStore = CreateInstance<PositionCacheStore>();
+                _cacheStore.name = cacheName;
+                AssetDatabase.CreateAsset( _cacheStore,
+                    "Assets/Editor Default Resources/" + cacheName + ".asset" );
+                AssetDatabase.SaveAssets();
+            }
+
+            Selection.selectionChanged += UpdateTarget;
         }
 
         private void OnDisable()
         {
-            Selection.selectionChanged -= OnSelectionChangeHandler;
+            AssetDatabase.SaveAssets();
+            Selection.selectionChanged -= UpdateTarget;
         }
 
-        private void OnSelectionChangeHandler()
+        private void UpdateTarget()
         {
             var selection = Selection.activeObject as BossBehaviour;
             if ( selection == null )
             {
                 titleContent = new GUIContent( "Boss Behaviour" );
                 _target = null;
+                _nodePositionCache = null;
                 ClearGraph();
                 return;
             }
@@ -103,6 +127,7 @@ namespace NodeEditor
             if ( selection != _target )
             {
                 _target = selection;
+                _nodePositionCache = _cacheStore.GetCache( _target.name );
                 titleContent = new GUIContent( selection.name );
                 PopulateGraph();
             }
@@ -110,29 +135,39 @@ namespace NodeEditor
 
         private void PopulateGraph()
         {
+            var loadFromCache =
+                _nodePositionCache.ValidateCache( _target.GetAllBehaviourNodes()
+                    .Select( behaviour => behaviour.Guid ) );
+
             ClearGraph();
             var actionBehaviourNodes = _target.GetActionBehaviourNodes().ToArray();
 
             var stepX = Mathf.Max( 100, position.width / actionBehaviourNodes.Length );
-            var mousePosition = new Vector2( stepX / 2, position.height - 100 );
+            var nodePosition = new Vector2( stepX / 2, position.height - 100 );
+
             foreach ( var actionBehaviourNode in actionBehaviourNodes )
             {
-                CreateNode( mousePosition, actionBehaviourNode );
-                mousePosition.x += stepX;
+                if ( loadFromCache )
+                {
+                    nodePosition = _nodePositionCache.GetCachedPosition( actionBehaviourNode.Guid );
+                }
+
+                CreateNode( nodePosition, actionBehaviourNode );
+                nodePosition.x += stepX;
             }
 
             var compoundBehaviourNodes = _target.GetCompoundBehaviourNodes().ToArray();
             stepX = Mathf.Max( 100, position.width / compoundBehaviourNodes.Length );
-            mousePosition = new Vector2( stepX / 2, mousePosition.y - 100 );
+            nodePosition = new Vector2( stepX / 2, nodePosition.y - 100 );
             foreach ( var compoundBehaviourNode in compoundBehaviourNodes )
             {
-                CreateCompoundNode( mousePosition, compoundBehaviourNode );
-                mousePosition.x += stepX;
-            }
+                if ( loadFromCache )
+                {
+                    nodePosition = _nodePositionCache.GetCachedPosition( compoundBehaviourNode.Guid );
+                }
 
-            if ( _target.MainBehaviourGuid != null )
-            {
-                _nodes[ _target.MainBehaviourGuid ].SetMainNode( true );
+                CreateCompoundNode( nodePosition, compoundBehaviourNode );
+                nodePosition.x += stepX;
             }
 
             foreach ( var compoundBehaviourNode in compoundBehaviourNodes )
@@ -143,10 +178,14 @@ namespace NodeEditor
                 {
                     topNode.AddOutConnectionPoint();
 
-                    var bottomNode = _nodes[ childNodeGuid ];
-                    if ( bottomNode is CompoundNode )
+                    if ( !loadFromCache )
                     {
-                        topNode.Rect.y = Mathf.Min( bottomNode.Rect.y - 100, topNode.Rect.y );
+                        var bottomNode = _nodes[ childNodeGuid ];
+                        if ( bottomNode is CompoundNode )
+                        {
+                            topNode.Rect.y = Mathf.Min( bottomNode.Rect.y - 100, topNode.Rect.y );
+                            UpdateCacheNodePosition( topNode );
+                        }
                     }
                 }
             }
@@ -156,14 +195,19 @@ namespace NodeEditor
 
         private void OnGUI()
         {
-            if ( _nodes.Count == 0 && nodeCount != 0 )
+            if ( _target == null )
+            {
+                UpdateTarget();
+            }
+
+            if ( _nodes.Count == 0 && _nodeCount != 0 )
             {
                 PopulateGraph();
             }
-            else if ( _nodes.Count != nodeCount )
+            else if ( _nodes.Count != _nodeCount )
             {
-                Debug.LogError( "nodeCount lost sync : " + ( _nodes.Count - nodeCount ) );
-                nodeCount = _nodes.Count;
+                Debug.LogError( "nodeCount lost sync : " + ( _nodes.Count - _nodeCount ) );
+                _nodeCount = _nodes.Count;
             }
 
             DrawGrid( 20, 0.2f, Color.gray );
@@ -174,13 +218,27 @@ namespace NodeEditor
 
             DrawConnectionLine( Event.current );
 
+            var size = new Vector2( 100, 20 );
+            const int spacing = 5;
+            const int buttonCount = 2;
+            using ( new GUI.GroupScope( new Rect( 5, 5, size.x, 2 * size.y + (buttonCount - 1) * spacing ) ) )
+            {
+                var rect = new Rect( Vector2.zero, size );
+                if ( _target != null && GUI.Button( rect, "Reload" ) )
+                {
+                    PopulateGraph();
+                }
+
+                rect.y += size.y + spacing;
+                if ( _target != null && GUI.Button( rect, "Reset Layout" ) )
+                {
+                    _nodePositionCache.InvalidateCache();
+                    PopulateGraph();
+                }
+            }
+
             ProcessNodeEvents( Event.current );
             ProcessEvents( Event.current );
-
-            if ( _target != null && GUI.Button( new Rect( 10, 10, 50, 20 ), "Reload" ) )
-            {
-                PopulateGraph();
-            }
 
             if ( GUI.changed )
             {
@@ -198,7 +256,7 @@ namespace NodeEditor
             var heightDivs = Mathf.CeilToInt( position.height / gridSpacing ) + 1;
 
             Handles.BeginGUI();
-            using ( new Handles.DrawingScope( new Color( gridColor.r, gridColor.g, gridColor.b, gridOpacity ) ) )
+            using ( new Handles.DrawingScope( gridColor.WithAlpha( gridOpacity ) ) )
             {
                 _offset += _drag * 0.5f;
                 var newOffset = new Vector3( _offset.x % gridSpacing, _offset.y % gridSpacing, 0 );
@@ -365,7 +423,7 @@ namespace NodeEditor
             CreateNode( mousePosition, behaviourNode );
         }
 
-        private void OnClickInPoint( ConnectionPoint inPoint )
+        public void OnClickInPoint( ConnectionPoint inPoint )
         {
             _selectedInPoint = inPoint;
 
@@ -386,7 +444,7 @@ namespace NodeEditor
             }
         }
 
-        private void OnClickOutPoint( ConnectionPoint outPoint )
+        public void OnClickOutPoint( ConnectionPoint outPoint )
         {
             _selectedOutPoint = outPoint;
 
@@ -407,7 +465,7 @@ namespace NodeEditor
             }
         }
 
-        private bool OnClickNode( Node node )
+        public bool OnClickNode( Node node )
         {
             if ( _selectedInPoint != null )
             {
@@ -457,7 +515,7 @@ namespace NodeEditor
             }
         }
 
-        private void OnClickRemoveNode( Node node )
+        public void OnClickRemoveNode( Node node )
         {
             var connectionsToRemove = new List<ConnectionPoint>();
 
@@ -481,14 +539,14 @@ namespace NodeEditor
             }
 
             _nodes.Remove( node.BehaviourNode.Guid );
-            nodeCount--;
+            _nodeCount--;
             _target.RemoveBehaviour( node.BehaviourNode );
         }
 
         private void ClearGraph()
         {
             _nodes.Clear();
-            nodeCount = 0;
+            _nodeCount = 0;
             if ( _inspectorPopup != null )
             {
                 _inspectorPopup.Close();
@@ -500,16 +558,25 @@ namespace NodeEditor
 
         private Node CreateCompoundNode( Vector2 mousePosition, CompoundBehaviourNode compoundNode )
         {
-            var node = new CompoundNode( compoundNode, mousePosition, _compoundNodeStyle, _selectedCompoundNodeStyle,
-                _inPointStyle, _outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, OnDoubleClickNode,
-                OnClickRemoveConnectionPoint, OnClickMoveConnectionPoint, OnClickNode, OnClickMainNode );
+            var node = new CompoundNode( this, compoundNode, mousePosition );
+            UpdateCacheNodePosition( node );
 
             _nodes.Add( compoundNode.Guid, node );
-            nodeCount++;
+            _nodeCount++;
             return node;
         }
 
-        private void OnClickMoveConnectionPoint( ConnectionPoint point, int direction )
+        private Node CreateNode( Vector2 mousePosition, ActionBehaviourNode actionNode )
+        {
+            var node = new Node( this, actionNode, mousePosition );
+            UpdateCacheNodePosition( node );
+
+            _nodes.Add( actionNode.Guid, node );
+            _nodeCount++;
+            return node;
+        }
+
+        public void OnClickMoveConnectionPoint( ConnectionPoint point, int direction )
         {
             var node = (CompoundNode) point.Node;
             var index = node.OutPoints.IndexOf( point );
@@ -525,30 +592,17 @@ namespace NodeEditor
             list[ i2 ] = tmp;
         }
 
-        private Node CreateNode( Vector2 mousePosition, ActionBehaviourNode actionNode )
+        public void OnClickMainNode( Node node )
         {
-            var node = new Node( actionNode, mousePosition, _nodeStyle, _selectedNodeStyle, _inPointStyle,
-                OnClickInPoint, OnClickRemoveNode, OnDoubleClickNode, OnClickNode, OnClickMainNode );
-
-            _nodes.Add( actionNode.Guid, node );
-            nodeCount++;
-            return node;
-        }
-
-        private void OnClickMainNode( Node node )
-        {
-            var oldMainNodeGuid = _target.MainBehaviourGuid;
-            Node oldMainNode;
-            if ( oldMainNodeGuid != null && _nodes.TryGetValue( oldMainNodeGuid, out oldMainNode ) )
-            {
-                oldMainNode.SetMainNode( false );
-            }
-
             _target.MainBehaviour = node.BehaviourNode;
-            node.SetMainNode( true );
         }
 
-        private void OnClickRemoveConnectionPoint( ConnectionPoint connectionPoint )
+        public bool IsMainNode( Node node )
+        {
+            return _target.MainBehaviourGuid == node.BehaviourNode.Guid;
+        }
+
+        public void OnClickRemoveConnectionPoint( ConnectionPoint connectionPoint )
         {
             if ( connectionPoint.Type == ConnectionPointType.In )
             {
@@ -562,7 +616,7 @@ namespace NodeEditor
             node.BehaviourNode.ChildNodes.RemoveAt( index );
         }
 
-        private void OnDoubleClickNode( Node node )
+        public void OnDoubleClickNode( Node node )
         {
             _inspectorPopup = InspectorPopup.ShowInspectorPopup( _target, node.BehaviourNode );
         }
@@ -595,6 +649,11 @@ namespace NodeEditor
             var index = outNode.OutPoints.IndexOf( outPoint );
 
             outNode.BehaviourNode.ChildNodes[ index ] = null;
+        }
+
+        public void UpdateCacheNodePosition( Node node )
+        {
+            _nodePositionCache.CachePosition( node.BehaviourNode.Guid, new Vector2( node.Rect.center.x, node.Rect.y ) );
         }
     }
 }
