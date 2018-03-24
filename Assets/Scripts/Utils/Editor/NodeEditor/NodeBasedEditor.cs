@@ -76,7 +76,7 @@ namespace NodeEditor
 
             OutPointStyle = new GUIStyle();
             OutPointStyle.normal.background =
-                EditorGUIUtility.Load( "builtin skins/lightskin/images/node2 hex.png" ) as Texture2D;
+                EditorGUIUtility.Load( "builtin skins/lightskin/images/node1 hex.png" ) as Texture2D;
 //            _outPointStyle.active.background =
 //                EditorGUIUtility.Load( "builtin skins/lightskin/images/btn act.png" ) as Texture2D;
             OutPointStyle.border = new RectOffset( 2, 2, 2, 2 );
