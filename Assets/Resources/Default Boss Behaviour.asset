@@ -146,8 +146,8 @@ MonoBehaviour:
       - d2e8bdf6-9670-455f-b5f4-3dbb29a32661
     - Name: PHASE 2
       Guid: e8d7395c-01be-415b-81af-eda3fc1a78ab
-      Randomize: 0
-      LoopRepeat: 0
+      Randomize: 1
+      LoopRepeat: 1
       UseHealthEndCondition: 0
       HealthEndConditionLimit: 0
       ChildNodes:
