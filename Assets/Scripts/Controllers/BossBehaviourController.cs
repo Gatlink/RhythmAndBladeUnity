@@ -18,9 +18,8 @@ namespace Controllers
 
         private Dictionary<BossBehaviour.TargetType, Vector2> _hotSpotsPositions;
 
-        private void Start()
+        private void Awake()
         {
-            Player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>();
             _hotSpotsPositions = GameObject.FindGameObjectsWithTag( Tags.HotSpot )
                 .ToDictionary(
                     go => (BossBehaviour.TargetType) Array.FindIndex(
@@ -31,6 +30,11 @@ namespace Controllers
             {
                 Debug.LogError( "Missing hot spots!" );
             }
+        }
+
+        private void Start()
+        {
+            Player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>();            
         }
 
         public Vector2 GetHotSpotPosition( BossBehaviour.TargetType type )

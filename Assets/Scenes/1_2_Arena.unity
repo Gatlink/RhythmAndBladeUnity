@@ -152,6 +152,17 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 114380243697126562, guid: 5a98adfc416e1ed4492d0cccc5322176,
+        type: 2}
+      propertyPath: Behaviour
+      value: 
+      objectReference: {fileID: 11400000, guid: c7acfff374c8311408b79b6a4f8d8422,
+        type: 2}
+    - target: {fileID: 114380243697126562, guid: 5a98adfc416e1ed4492d0cccc5322176,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5a98adfc416e1ed4492d0cccc5322176, type: 2}
   m_IsPrefabParent: 0
@@ -406,26 +417,26 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114416932557953588, guid: 94bd3ff2693f8684e81eb5fb9a461235,
-        type: 2}
-      propertyPath: TargetBehaviours.Array.data[1]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114416932557953588, guid: 94bd3ff2693f8684e81eb5fb9a461235,
-        type: 2}
-      propertyPath: TrackingTarget
-      value: 
-      objectReference: {fileID: 915712548}
-    - target: {fileID: 114476736183637976, guid: 94bd3ff2693f8684e81eb5fb9a461235,
-        type: 2}
-      propertyPath: TrackingTarget
-      value: 
-      objectReference: {fileID: 1541109978}
     - target: {fileID: 114576736439933108, guid: 94bd3ff2693f8684e81eb5fb9a461235,
         type: 2}
       propertyPath: TargetHealth
       value: 
       objectReference: {fileID: 1562674714}
+    - target: {fileID: 114476736183637976, guid: 94bd3ff2693f8684e81eb5fb9a461235,
+        type: 2}
+      propertyPath: TrackingTarget
+      value: 
+      objectReference: {fileID: 1541109978}
+    - target: {fileID: 114416932557953588, guid: 94bd3ff2693f8684e81eb5fb9a461235,
+        type: 2}
+      propertyPath: TargetBehaviours.Array.data[1]
+      value: 
+      objectReference: {fileID: 1824720343}
+    - target: {fileID: 114416932557953588, guid: 94bd3ff2693f8684e81eb5fb9a461235,
+        type: 2}
+      propertyPath: TrackingTarget
+      value: 
+      objectReference: {fileID: 915712548}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 94bd3ff2693f8684e81eb5fb9a461235, type: 2}
   m_IsPrefabParent: 0
@@ -576,3 +587,9 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 539897185}
   m_Script: {fileID: 11500000, guid: 4a843a0aafa2492d9ba64352e592a7a6, type: 3}
+--- !u!114 &1824720343 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114380243697126562, guid: 5a98adfc416e1ed4492d0cccc5322176,
+    type: 2}
+  m_PrefabInternal: {fileID: 539897185}
+  m_Script: {fileID: 11500000, guid: ab6d762178f64bb6886d048657447239, type: 3}
