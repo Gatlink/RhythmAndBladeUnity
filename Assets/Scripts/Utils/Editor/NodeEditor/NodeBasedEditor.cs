@@ -177,7 +177,7 @@ namespace NodeEditor
             {
                 var topNode = (CompoundNode) _nodes[ compoundBehaviourNode.Guid ];
 
-                foreach ( var childNodeGuid in compoundBehaviourNode.ChildNodes )
+                foreach ( var childNodeGuid in compoundBehaviourNode.GetChildNodes() )
                 {
                     topNode.AddOutConnectionPoint();
 
@@ -224,7 +224,7 @@ namespace NodeEditor
             var size = new Vector2( 100, 20 );
             const int spacing = 5;
             const int buttonCount = 2;
-            using ( new GUI.GroupScope( new Rect( 5, 5, size.x, 2 * size.y + (buttonCount - 1) * spacing ) ) )
+            using ( new GUI.GroupScope( new Rect( 5, 5, size.x, 2 * size.y + ( buttonCount - 1 ) * spacing ) ) )
             {
                 var rect = new Rect( Vector2.zero, size );
                 if ( _target != null && GUI.Button( rect, "Reload" ) )
@@ -296,7 +296,7 @@ namespace NodeEditor
             {
                 for ( var index = 0; index < node.OutPoints.Count; index++ )
                 {
-                    var connectedController = node.BehaviourNode.ChildNodes[ index ];
+                    var connectedController = node.BehaviourNode.GetChildAt( index );
                     if ( connectedController != null )
                     {
                         var inPoint = _nodes[ connectedController ].InPoint;
@@ -526,11 +526,11 @@ namespace NodeEditor
             foreach ( var compoundNode in _nodes.Values.OfType<CompoundNode>() )
             {
                 var compound = compoundNode.BehaviourNode;
-                for ( int i = 0; i < compound.ChildNodes.Count; i++ )
+                for ( int i = 0; i < compound.GetChildCount(); i++ )
                 {
-                    if ( compound.ChildNodes[ i ] == behaviourNodeGuid )
+                    if ( compound.GetChildAt( i ) == behaviourNodeGuid )
                     {
-                        compound.ChildNodes[ i ] = null;
+                        compound.SetChild( i, null );
                         connectionsToRemove.Add( compoundNode.OutPoints[ i ] );
                     }
                 }
@@ -585,7 +585,7 @@ namespace NodeEditor
             var index = node.OutPoints.IndexOf( point );
             Assert.IsFalse( index == 0 && direction == -1 || index == node.OutPoints.Count - 1 && direction == 1 );
             Swap( node.OutPoints, index, index + direction );
-            Swap( node.BehaviourNode.ChildNodes, index, index + direction );
+            node.BehaviourNode.SwapChildren( index, index + direction );
         }
 
         private void Swap( IList list, int i1, int i2 )
@@ -616,7 +616,7 @@ namespace NodeEditor
             var node = (CompoundNode) connectionPoint.Node;
             var index = node.OutPoints.IndexOf( connectionPoint );
             node.RemoveConnectionPoint( connectionPoint );
-            node.BehaviourNode.ChildNodes.RemoveAt( index );
+            node.BehaviourNode.RemoveChildAt( index );
         }
 
         public void OnDoubleClickNode( Node node )
@@ -630,13 +630,13 @@ namespace NodeEditor
             var outNode = (CompoundNode) outPoint.Node;
 
             var index = outNode.OutPoints.IndexOf( outPoint );
-            if ( index < outNode.BehaviourNode.ChildNodes.Count )
+            if ( index < outNode.BehaviourNode.GetChildCount() )
             {
-                outNode.BehaviourNode.ChildNodes[ index ] = inNode.BehaviourNode.Guid;
+                outNode.BehaviourNode.SetChild( index, inNode.BehaviourNode.Guid );
             }
             else
             {
-                outNode.BehaviourNode.ChildNodes.Add( inNode.BehaviourNode.Guid );
+                outNode.BehaviourNode.AddChild( inNode.BehaviourNode.Guid );
             }
         }
 
@@ -651,7 +651,7 @@ namespace NodeEditor
             var outNode = (CompoundNode) outPoint.Node;
             var index = outNode.OutPoints.IndexOf( outPoint );
 
-            outNode.BehaviourNode.ChildNodes[ index ] = null;
+            outNode.BehaviourNode.SetChild( index, null );
         }
 
         public void UpdateCacheNodePosition( Node node )

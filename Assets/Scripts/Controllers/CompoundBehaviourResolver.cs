@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using ActorStates.Boss;
 using Gamelogic.Extensions.Algorithms;
 
@@ -20,7 +23,15 @@ namespace Controllers
         {
             var actor = _controller.GetComponent<BossActor>();
             _behaviours = new List<string>();
-            _behaviours.AddRange( node.ChildNodes );
+            if ( node.Randomize )
+            {
+                _behaviours.AddRange( node.GetChildNodes().Zip( node.GetChildMultiplicators(), Enumerable.Repeat )
+                    .SelectMany( enumerable => enumerable ) );
+            }
+            else
+            {
+                _behaviours.AddRange( node.GetChildNodes() );
+            }
 
             BossBehaviour.Log( actor + " starts behaviour " + node.Name, actor );
 
@@ -44,6 +55,7 @@ namespace Controllers
                             {
                                 yield return null;
                             }
+
                             yield break;
                         }
                     }

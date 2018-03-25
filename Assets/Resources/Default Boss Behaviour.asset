@@ -129,7 +129,8 @@ MonoBehaviour:
       LoopRepeat: 0
       UseHealthEndCondition: 0
       HealthEndConditionLimit: 0
-      ChildNodes:
+      _childMultiplicators: 01000000010000000100000001000000
+      _childNodes:
       - e17c03ed-c6c6-4fe0-8c7c-c0666d4621a7
       - d5d50f6d-0e4d-4af8-bf8b-83cfc843885c
       - 94e51477-211c-424c-9c97-0db6786068ee
@@ -140,7 +141,8 @@ MonoBehaviour:
       LoopRepeat: 1
       UseHealthEndCondition: 1
       HealthEndConditionLimit: 10
-      ChildNodes:
+      _childMultiplicators: 010000000100000001000000
+      _childNodes:
       - e2f47d4b-c230-4c22-810b-f01d3229c32c
       - 854f1500-8573-4714-a121-11d8238aee8d
       - d2e8bdf6-9670-455f-b5f4-3dbb29a32661
@@ -150,7 +152,8 @@ MonoBehaviour:
       LoopRepeat: 1
       UseHealthEndCondition: 0
       HealthEndConditionLimit: 0
-      ChildNodes:
+      _childMultiplicators: 0100000001000000010000000100000001000000
+      _childNodes:
       - e2f47d4b-c230-4c22-810b-f01d3229c32c
       - 854f1500-8573-4714-a121-11d8238aee8d
       - d2e8bdf6-9670-455f-b5f4-3dbb29a32661
