@@ -108,7 +108,6 @@ namespace NodeEditor
 
         private void OnDisable()
         {
-            Debug.Log( "Disable called" );
             AssetDatabase.Refresh();
             EditorUtility.SetDirty( _cacheStore );
             AssetDatabase.SaveAssets();
