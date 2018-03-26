@@ -20,6 +20,7 @@ MonoBehaviour:
     - d2e8bdf6-9670-455f-b5f4-3dbb29a32661
     - 62be9429-4ca0-483f-8602-127f613a3151
     - 0db71883-24e4-43bc-b9ec-ccdf88f88e9a
+    - a957879e-c94b-4a1f-b336-183cf08a1408
     _values:
     - Name: INTRO
       Guid: e17c03ed-c6c6-4fe0-8c7c-c0666d4621a7
@@ -117,6 +118,22 @@ MonoBehaviour:
           DurationParameter: 0
           CountParameter: 0
           TargetTypeParameter: 5
+    - Name: DOUBLE CHARGE
+      Guid: a957879e-c94b-4a1f-b336-183cf08a1408
+      Script:
+        values:
+        - Type: 1
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 4
+        - Type: 3
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 4
+        - Type: 3
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 4
   _compoundBehaviours:
     _keys:
     - 3f1e63bf-7dcd-45da-8e6a-dad633e34533
@@ -152,11 +169,11 @@ MonoBehaviour:
       LoopRepeat: 1
       UseHealthEndCondition: 0
       HealthEndConditionLimit: 0
-      _childMultiplicators: 0100000001000000010000000100000001000000
+      _childMultiplicators: 0100000002000000010000000200000001000000
       _childNodes:
-      - e2f47d4b-c230-4c22-810b-f01d3229c32c
       - 854f1500-8573-4714-a121-11d8238aee8d
       - d2e8bdf6-9670-455f-b5f4-3dbb29a32661
       - 62be9429-4ca0-483f-8602-127f613a3151
       - 0db71883-24e4-43bc-b9ec-ccdf88f88e9a
+      - a957879e-c94b-4a1f-b336-183cf08a1408
   MainBehaviourGuid: 3f1e63bf-7dcd-45da-8e6a-dad633e34533
