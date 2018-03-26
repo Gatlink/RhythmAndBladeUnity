@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eb19b95f65045f2a47cfcca1cbdcb8c, type: 3}
+  m_Name: NodeEditorCache
+  m_EditorClassIdentifier: 
+  _cachedDictionnaries:
+    _keys:
+    - Default Boss Behaviour
+    _values:
+    - _cachedPositions:
+        _keys:
+        - e17c03ed-c6c6-4fe0-8c7c-c0666d4621a7
+        - 94e51477-211c-424c-9c97-0db6786068ee
+        - e2f47d4b-c230-4c22-810b-f01d3229c32c
+        - 854f1500-8573-4714-a121-11d8238aee8d
+        - d2e8bdf6-9670-455f-b5f4-3dbb29a32661
+        - 62be9429-4ca0-483f-8602-127f613a3151
+        - 0db71883-24e4-43bc-b9ec-ccdf88f88e9a
+        - 3f1e63bf-7dcd-45da-8e6a-dad633e34533
+        - d5d50f6d-0e4d-4af8-bf8b-83cfc843885c
+        - e8d7395c-01be-415b-81af-eda3fc1a78ab
+        _values:
+        - {x: 287.0714, y: 200}
+        - {x: 572.2143, y: 205}
+        - {x: 216.35712, y: 367}
+        - {x: 364.5, y: 374}
+        - {x: 517.6428, y: 366}
+        - {x: 686.78564, y: 362}
+        - {x: 835.92847, y: 382}
+        - {x: 508.8333, y: 46}
+        - {x: 434.5, y: 202}
+        - {x: 741.1666, y: 200}

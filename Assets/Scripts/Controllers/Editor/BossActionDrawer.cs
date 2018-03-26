@@ -3,7 +3,7 @@ using Controllers;
 using UnityEditor;
 using UnityEngine;
 
-[ CustomPropertyDrawer( typeof( BossActionControllerBase.Action ) ) ]
+[ CustomPropertyDrawer( typeof( BossBehaviour.Action ) ) ]
 public class BossActionDrawer : PropertyDrawer
 {
     public override void OnGUI( Rect position, SerializedProperty property, GUIContent label )
@@ -17,18 +17,18 @@ public class BossActionDrawer : PropertyDrawer
 
             EditorGUI.indentLevel = 0;
             var typeProp = property.FindPropertyRelative( "Type" );
-            var typeValue = (BossActionControllerBase.ActionType) typeProp.enumValueIndex;
+            var typeValue = (BossBehaviour.ActionType) typeProp.enumValueIndex;
 
-            if ( typeValue != BossActionControllerBase.ActionType.Charge )
+            if ( typeValue != BossBehaviour.ActionType.Charge )
             {
                 contentPosition.width = typeWidth;
             }
 
-            typeValue = (BossActionControllerBase.ActionType) EditorGUI.EnumPopup( contentPosition, GUIContent.none,
+            typeValue = (BossBehaviour.ActionType) EditorGUI.EnumPopup( contentPosition, GUIContent.none,
                 typeValue );
             typeProp.enumValueIndex = (int) typeValue;
 
-            if ( typeValue == BossActionControllerBase.ActionType.Charge )
+            if ( typeValue == BossBehaviour.ActionType.Charge )
             {
                 return;
             }
@@ -40,21 +40,21 @@ public class BossActionDrawer : PropertyDrawer
 
             switch ( typeValue )
             {
-                case BossActionControllerBase.ActionType.Wait:
+                case BossBehaviour.ActionType.Wait:
                     EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "DurationParameter" ),
                         new GUIContent( "Duration" ) );
                     break;
-                case BossActionControllerBase.ActionType.JumpAttack:
-                case BossActionControllerBase.ActionType.Move:
+                case BossBehaviour.ActionType.JumpAttack:
+                case BossBehaviour.ActionType.Move:
                     EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "TargetTypeParameter" ),
                         new GUIContent( "Target" ) );
                     break;
-                case BossActionControllerBase.ActionType.Attack:
+                case BossBehaviour.ActionType.Attack:
                     EditorGUI.PropertyField( contentPosition, property.FindPropertyRelative( "CountParameter" ),
                         new GUIContent( "Count" ) );
                     break;
-                case BossActionControllerBase.ActionType.Count:
-                case BossActionControllerBase.ActionType.Charge:
+                case BossBehaviour.ActionType.Count:
+                case BossBehaviour.ActionType.Charge:
                 default:
                     throw new ArgumentOutOfRangeException();
             }

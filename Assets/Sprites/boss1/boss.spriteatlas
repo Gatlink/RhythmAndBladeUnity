@@ -38,6 +38,7 @@ SpriteAtlas:
     - {fileID: 102900000, guid: 57085556703e7c0448f2844b23bb3afe, type: 3}
     - {fileID: 102900000, guid: c6855cd38d6c5c84b8c7d99d00ac0a56, type: 3}
     - {fileID: 102900000, guid: ddad84b60cb1fe042b33cff7e9477791, type: 3}
+    - {fileID: 102900000, guid: 72f0a7ebdf7669c4793b723173d0ead3, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -63,6 +64,15 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 80962f05c7a56904d8ee6439517bf032, type: 3}
   - {fileID: 21300000, guid: 708ac082ca0e4c5478177fdaeb6d975b, type: 3}
   - {fileID: 21300000, guid: ddc81fc10b30bea479c449108fb9d1c3, type: 3}
+  - {fileID: 21300000, guid: 5ebbeb8ba756b7f40a04a4073537a1e3, type: 3}
+  - {fileID: 21300000, guid: 281371a6f81c9324db6f5fad7d19ad11, type: 3}
+  - {fileID: 21300000, guid: 24c546f9c8b47614d941f6227bbf489e, type: 3}
+  - {fileID: 21300000, guid: 3d0a68b9d2ab5ff43baf235c0d9ae6fb, type: 3}
+  - {fileID: 21300000, guid: c815ab1d3e1a54b4f8f6791edf59e432, type: 3}
+  - {fileID: 21300000, guid: a4b9e010afe7ee74abb4ebc245f74e18, type: 3}
+  - {fileID: 21300000, guid: 054cfeac2b469904c818a240fd4ed3d9, type: 3}
+  - {fileID: 21300000, guid: 3dd09ceb79c791941b5ad400552af830, type: 3}
+  - {fileID: 21300000, guid: 1312fe99fb89fa84489adca41b45e85a, type: 3}
   - {fileID: 21300000, guid: 42e03587423ee2948a75b29c6e3da919, type: 3}
   - {fileID: 21300000, guid: ffb6d779866d7dc4b896069848775836, type: 3}
   - {fileID: 21300000, guid: 80f09f8bbdbc2324fb843f8250cf0068, type: 3}
@@ -116,6 +126,15 @@ SpriteAtlas:
   - attack1002
   - attack1003
   - idle001
+  - fall2006
+  - fall2007
+  - fall2004
+  - fall2005
+  - fall2002
+  - fall2003
+  - fall2001
+  - fall2008
+  - fall2009
   - jump005
   - jump004
   - jump007

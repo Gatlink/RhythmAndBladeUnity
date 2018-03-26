@@ -1,0 +1,162 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7f444e13f2a4b55bb129d6b71e595d3, type: 3}
+  m_Name: Default Boss Behaviour
+  m_EditorClassIdentifier: 
+  _actionBehaviours:
+    _keys:
+    - e17c03ed-c6c6-4fe0-8c7c-c0666d4621a7
+    - 94e51477-211c-424c-9c97-0db6786068ee
+    - e2f47d4b-c230-4c22-810b-f01d3229c32c
+    - 854f1500-8573-4714-a121-11d8238aee8d
+    - d2e8bdf6-9670-455f-b5f4-3dbb29a32661
+    - 62be9429-4ca0-483f-8602-127f613a3151
+    - 0db71883-24e4-43bc-b9ec-ccdf88f88e9a
+    _values:
+    - Name: INTRO
+      Guid: e17c03ed-c6c6-4fe0-8c7c-c0666d4621a7
+      Script:
+        values:
+        - Type: 1
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 3
+        - Type: 0
+          DurationParameter: 0.7
+          CountParameter: 0
+          TargetTypeParameter: 3
+    - Name: JUMP THRICE
+      Guid: 94e51477-211c-424c-9c97-0db6786068ee
+      Script:
+        values:
+        - Type: 2
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 6
+        - Type: 2
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 7
+        - Type: 2
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 2
+    - Name: SIMPLE ATTACK
+      Guid: e2f47d4b-c230-4c22-810b-f01d3229c32c
+      Script:
+        values:
+        - Type: 1
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 0
+        - Type: 4
+          DurationParameter: 0
+          CountParameter: 1
+          TargetTypeParameter: 0
+        - Type: 1
+          DurationParameter: 0
+          CountParameter: 1
+          TargetTypeParameter: 4
+    - Name: CHARGE
+      Guid: 854f1500-8573-4714-a121-11d8238aee8d
+      Script:
+        values:
+        - Type: 1
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 4
+        - Type: 3
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 4
+    - Name: DOUBLE ATTACK
+      Guid: d2e8bdf6-9670-455f-b5f4-3dbb29a32661
+      Script:
+        values:
+        - Type: 1
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 0
+        - Type: 4
+          DurationParameter: 0
+          CountParameter: 2
+          TargetTypeParameter: 0
+        - Type: 0
+          DurationParameter: 0.5
+          CountParameter: 0
+          TargetTypeParameter: 0
+    - Name: TRIPLE ATTACK
+      Guid: 62be9429-4ca0-483f-8602-127f613a3151
+      Script:
+        values:
+        - Type: 1
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 0
+        - Type: 4
+          DurationParameter: 0
+          CountParameter: 3
+          TargetTypeParameter: 0
+        - Type: 0
+          DurationParameter: 0.5
+          CountParameter: 3
+          TargetTypeParameter: 0
+    - Name: JUMP DIVE
+      Guid: 0db71883-24e4-43bc-b9ec-ccdf88f88e9a
+      Script:
+        values:
+        - Type: 2
+          DurationParameter: 0
+          CountParameter: 0
+          TargetTypeParameter: 5
+  _compoundBehaviours:
+    _keys:
+    - 3f1e63bf-7dcd-45da-8e6a-dad633e34533
+    - d5d50f6d-0e4d-4af8-bf8b-83cfc843885c
+    - e8d7395c-01be-415b-81af-eda3fc1a78ab
+    _values:
+    - Name: MAIN
+      Guid: 3f1e63bf-7dcd-45da-8e6a-dad633e34533
+      Randomize: 0
+      LoopRepeat: 0
+      UseHealthEndCondition: 0
+      HealthEndConditionLimit: 0
+      _childMultiplicators: 01000000010000000100000001000000
+      _childNodes:
+      - e17c03ed-c6c6-4fe0-8c7c-c0666d4621a7
+      - d5d50f6d-0e4d-4af8-bf8b-83cfc843885c
+      - 94e51477-211c-424c-9c97-0db6786068ee
+      - e8d7395c-01be-415b-81af-eda3fc1a78ab
+    - Name: PHASE 1
+      Guid: d5d50f6d-0e4d-4af8-bf8b-83cfc843885c
+      Randomize: 1
+      LoopRepeat: 1
+      UseHealthEndCondition: 1
+      HealthEndConditionLimit: 10
+      _childMultiplicators: 010000000100000001000000
+      _childNodes:
+      - e2f47d4b-c230-4c22-810b-f01d3229c32c
+      - 854f1500-8573-4714-a121-11d8238aee8d
+      - d2e8bdf6-9670-455f-b5f4-3dbb29a32661
+    - Name: PHASE 2
+      Guid: e8d7395c-01be-415b-81af-eda3fc1a78ab
+      Randomize: 1
+      LoopRepeat: 1
+      UseHealthEndCondition: 0
+      HealthEndConditionLimit: 0
+      _childMultiplicators: 0100000001000000010000000100000001000000
+      _childNodes:
+      - e2f47d4b-c230-4c22-810b-f01d3229c32c
+      - 854f1500-8573-4714-a121-11d8238aee8d
+      - d2e8bdf6-9670-455f-b5f4-3dbb29a32661
+      - 62be9429-4ca0-483f-8602-127f613a3151
+      - 0db71883-24e4-43bc-b9ec-ccdf88f88e9a
+  MainBehaviourGuid: 3f1e63bf-7dcd-45da-8e6a-dad633e34533

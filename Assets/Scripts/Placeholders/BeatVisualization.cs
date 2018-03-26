@@ -48,8 +48,6 @@ public class BeatVisualization : GLMonoBehaviour
         _beatActionGroup = transform.Find( "Background" ).GetComponent<CanvasGroup>();
         _buttonImage = _beatActionGroup.transform.Find( "Button" ).GetComponent<Image>();
 
-        Debug.Log( _beatActionGroup.GetComponent<RectTransform>().rect.center);
-        
         var beatManager = BeatManager.Instance;
         if ( beatManager == null )
         {

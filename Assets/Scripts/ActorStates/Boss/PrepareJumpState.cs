@@ -24,6 +24,17 @@ namespace ActorStates.Boss
             get { return Settings.PrepareJumpDuration; }
         }
 
+        public override IActorState Update()
+        {
+            var hurtState = Actor.GetHurtState();
+            if ( hurtState != null )
+            {
+                return hurtState;
+            }
+
+            return base.Update();
+        }
+
         protected override IActorState GetNextState()
         {
             var delta = Actor.DesiredJumpMovement;

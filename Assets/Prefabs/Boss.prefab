@@ -41,16 +41,7 @@ GameObject:
   - component: {fileID: 114210730153343898}
   - component: {fileID: 114366331282936172}
   - component: {fileID: 114360097638799396}
-  - component: {fileID: 114857901565293242}
-  - component: {fileID: 114869539019253904}
-  - component: {fileID: 114087273222478318}
-  - component: {fileID: 114160681239681238}
-  - component: {fileID: 114348487104214108}
-  - component: {fileID: 114015259441325164}
-  - component: {fileID: 114766096786587608}
-  - component: {fileID: 114362559218957544}
-  - component: {fileID: 114960022854529408}
-  - component: {fileID: 114466402028377612}
+  - component: {fileID: 114380243697126562}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Boss
@@ -323,93 +314,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114015259441325164
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af439054e36484e9c8f65938a61c10c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: DOUBLE ATTACK
-  HealthEndCondition:
-    useValue: 0
-    value: 0
-  Randomize: 0
-  LoopRepeat: 0
-  Script:
-    values:
-    - Type: 1
-      DurationParameter: 0
-      CountParameter: 0
-      TargetTypeParameter: 0
-    - Type: 4
-      DurationParameter: 0
-      CountParameter: 2
-      TargetTypeParameter: 0
-    - Type: 0
-      DurationParameter: 0.5
-      CountParameter: 2
-      TargetTypeParameter: 0
---- !u!114 &114087273222478318
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67a485f6e51644beb57b9030fdd8edde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: PHASE 1
-  HealthEndCondition:
-    useValue: 1
-    value: 10
-  Randomize: 1
-  LoopRepeat: 1
-  SubControllers:
-    values:
-    - {fileID: 114160681239681238}
-    - {fileID: 114348487104214108}
-    - {fileID: 114015259441325164}
---- !u!114 &114160681239681238
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af439054e36484e9c8f65938a61c10c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: SIMPLE ATTACK
-  HealthEndCondition:
-    useValue: 0
-    value: 0
-  Randomize: 0
-  LoopRepeat: 0
-  Script:
-    values:
-    - Type: 1
-      DurationParameter: 0
-      CountParameter: 0
-      TargetTypeParameter: 0
-    - Type: 4
-      DurationParameter: 0
-      CountParameter: 1
-      TargetTypeParameter: 0
-    - Type: 1
-      DurationParameter: 0
-      CountParameter: 1
-      TargetTypeParameter: 4
 --- !u!114 &114166970997549666
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -442,34 +346,6 @@ MonoBehaviour:
   DesiredJump: 0
   DesiredCharge: 0
   DesiredJumpMovement: 0
---- !u!114 &114348487104214108
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af439054e36484e9c8f65938a61c10c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: CHARGE
-  HealthEndCondition:
-    useValue: 0
-    value: 0
-  Randomize: 0
-  LoopRepeat: 0
-  Script:
-    values:
-    - Type: 1
-      DurationParameter: 0
-      CountParameter: 0
-      TargetTypeParameter: 4
-    - Type: 3
-      DurationParameter: 0
-      CountParameter: 0
-      TargetTypeParameter: 1
 --- !u!114 &114360097638799396
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -486,30 +362,6 @@ MonoBehaviour:
   PlayerIndex: 0
   DeadZone: 0.3
   Step: 1
---- !u!114 &114362559218957544
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af439054e36484e9c8f65938a61c10c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: JUMP DIVE
-  HealthEndCondition:
-    useValue: 0
-    value: 0
-  Randomize: 0
-  LoopRepeat: 0
-  Script:
-    values:
-    - Type: 2
-      DurationParameter: 0
-      CountParameter: 0
-      TargetTypeParameter: 5
 --- !u!114 &114366331282936172
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -528,7 +380,7 @@ MonoBehaviour:
     value: {x: -1, y: 1}
   _passiveHurt: 0
   _teleportToLastCheckpoint: 0
---- !u!114 &114466402028377612
+--- !u!114 &114380243697126562
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -536,23 +388,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1493278349051608}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67a485f6e51644beb57b9030fdd8edde, type: 3}
+  m_Script: {fileID: 11500000, guid: ab6d762178f64bb6886d048657447239, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
-  Name: PHASE 2
-  HealthEndCondition:
-    useValue: 0
-    value: 4
-  Randomize: 1
-  LoopRepeat: 1
-  SubControllers:
-    values:
-    - {fileID: 114160681239681238}
-    - {fileID: 114348487104214108}
-    - {fileID: 114015259441325164}
-    - {fileID: 114960022854529408}
-    - {fileID: 114362559218957544}
+  Behaviour: {fileID: 11400000, guid: c7acfff374c8311408b79b6a4f8d8422, type: 2}
+  Player: {fileID: 0}
 --- !u!114 &114500015476263518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -598,122 +439,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e294d598a9fb4df490068257819970e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114766096786587608
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af439054e36484e9c8f65938a61c10c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: JUMP THRICE
-  HealthEndCondition:
-    useValue: 0
-    value: 0
-  Randomize: 0
-  LoopRepeat: 0
-  Script:
-    values:
-    - Type: 2
-      DurationParameter: 0
-      CountParameter: 0
-      TargetTypeParameter: 6
-    - Type: 2
-      DurationParameter: 0
-      CountParameter: 0
-      TargetTypeParameter: 7
-    - Type: 2
-      DurationParameter: 0
-      CountParameter: 0
-      TargetTypeParameter: 2
---- !u!114 &114857901565293242
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67a485f6e51644beb57b9030fdd8edde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: MAIN
-  HealthEndCondition:
-    useValue: 0
-    value: 0
-  Randomize: 0
-  LoopRepeat: 0
-  SubControllers:
-    values:
-    - {fileID: 114869539019253904}
-    - {fileID: 114087273222478318}
-    - {fileID: 114766096786587608}
-    - {fileID: 114466402028377612}
---- !u!114 &114869539019253904
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af439054e36484e9c8f65938a61c10c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: INTRO
-  HealthEndCondition:
-    useValue: 0
-    value: 0
-  Randomize: 0
-  LoopRepeat: 0
-  Script:
-    values:
-    - Type: 1
-      DurationParameter: 0.5
-      CountParameter: 0
-      TargetTypeParameter: 3
-    - Type: 0
-      DurationParameter: 0.7
-      CountParameter: 0
-      TargetTypeParameter: 0
---- !u!114 &114960022854529408
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1493278349051608}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af439054e36484e9c8f65938a61c10c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  Name: TRIPLE ATTACK
-  HealthEndCondition:
-    useValue: 0
-    value: 0
-  Randomize: 0
-  LoopRepeat: 0
-  Script:
-    values:
-    - Type: 1
-      DurationParameter: 0
-      CountParameter: 0
-      TargetTypeParameter: 0
-    - Type: 4
-      DurationParameter: 0
-      CountParameter: 3
-      TargetTypeParameter: 0
-    - Type: 0
-      DurationParameter: 0.5
-      CountParameter: 2
-      TargetTypeParameter: 0
 --- !u!212 &212236192487580474
 SpriteRenderer:
   m_ObjectHideFlags: 1

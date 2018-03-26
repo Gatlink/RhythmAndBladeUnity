@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Runtime.InteropServices;
 using ActorStates;
 using ActorStates.Boss;
 using Controllers;
@@ -30,7 +31,8 @@ public class BossActor : ActorBase<BossActor>
 
     public ActorHealth Health { get; private set; }
 
-    private bool _hurtThisFrame;
+    private bool _hurtPending;
+    private bool _criticalHurtPending;
     private bool _canTransitionToHurt;
     private float _hurtDirection;
     private bool _nextHurtIsCritical;
@@ -55,13 +57,19 @@ public class BossActor : ActorBase<BossActor>
         return DesiredCharge;
     }
 
-    public bool CheckHurt()
+    public IActorState GetHurtState()
     {
-        return _hurtThisFrame && ( _canTransitionToHurt
-                                   || !Health.IsAlive
-                                   || _nextHurtIsCritical );
-    }
+        if ( !_hurtPending ) return null;        
+        _hurtPending = false;
+        
+        if ( !_canTransitionToHurt && Health.IsAlive && !_criticalHurtPending ) return null;
 
+        if ( !_criticalHurtPending ) return new HurtState( this, _hurtDirection );        
+        _criticalHurtPending = false;
+        
+        return new CriticalHurtState( this, _hurtDirection );
+    }
+    
     public void SetCanTransitionToHurt( bool state )
     {
         _canTransitionToHurt = state;
@@ -74,19 +82,18 @@ public class BossActor : ActorBase<BossActor>
 
     private void HitHandler( ActorHealth health, GameObject source )
     {
-        _hurtThisFrame = true;
+        _hurtPending = true;
         _hurtDirection = -Mathf.Sign( source.transform.position.x - Mobile.transform.position.x );
+        if ( _nextHurtIsCritical )
+        {
+            _nextHurtIsCritical = false;
+            _criticalHurtPending = true;
+        }
     }
 
     protected override IActorState CreateInitialState()
     {
         return new FallState( this );
-    }
-
-    protected override void Update()
-    {
-        _hurtThisFrame = false;
-        base.Update();
     }
 
     private void Awake()
@@ -97,26 +104,14 @@ public class BossActor : ActorBase<BossActor>
         Health.HitEvent += HitHandler;
     }
 
+#if UNITY_EDITOR
     private void LateUpdate()
     {
-        if ( CheckHurt() )
-        {
-            if ( _nextHurtIsCritical )
-            {
-                _nextHurtIsCritical = false;
-                TransitionToState( new CriticalHurtState( this, _hurtDirection ) );
-            }
-            else
-            {
-                TransitionToState( new HurtState( this, _hurtDirection ) );
-            }
-        }
-#if UNITY_EDITOR
         foreach ( var hitbox in GetComponentsInChildren<Collider2D>().Where( col =>
             col.enabled && col.gameObject.layer == LayerMask.NameToLayer( Layers.Harmfull ) ) )
         {
             GeometryUtils.DebugCollider( hitbox );
         }
-#endif
     }
+#endif
 }
