@@ -25,6 +25,8 @@ public class MovingObject : MonoBehaviour, IMoving
 
     private Vector2 _initialPosition;
 
+    private float _localTime;
+
     public bool Enabled
     {
         get { return enabled; }
@@ -38,7 +40,7 @@ public class MovingObject : MonoBehaviour, IMoving
             float sign = 1;
             if ( Loop == LoopType.PingPong )
             {
-                sign = Mathf.Sign( 0.5f - Mathf.Repeat( Time.time + Phase, 2 * LoopPeriod ) / ( 2 * LoopPeriod ) );
+                sign = Mathf.Sign( 0.5f - Mathf.Repeat( _localTime, 2 * LoopPeriod ) / ( 2 * LoopPeriod ) );
             }
 
             return sign * slope;
@@ -55,23 +57,29 @@ public class MovingObject : MonoBehaviour, IMoving
     private void Start()
     {
         _initialPosition = transform.position;
+        _localTime = Phase;
     }
 
     private void Update()
     {
+        float time;
         switch ( Loop )
         {
             case LoopType.PingPong:
-                transform.position = Vector2.Lerp( _initialPosition, _initialPosition + Displacement,
-                    Mathf.PingPong( Time.time + Phase, LoopPeriod ) / LoopPeriod );
+                time = Mathf.PingPong( _localTime, LoopPeriod );
                 break;
             case LoopType.Repeat:
-                transform.position = Vector2.Lerp( _initialPosition, _initialPosition + Displacement,
-                    Mathf.Repeat( Time.time + Phase, LoopPeriod ) / LoopPeriod );
+                time = Mathf.Repeat( _localTime, LoopPeriod );
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
+        transform.position = Vector2.Lerp( _initialPosition, _initialPosition + Displacement, time / LoopPeriod );
+
+        _localTime += Time.deltaTime;
+        // reset local time to 0 every two loops for ping pong
+        _localTime = Mathf.Repeat( _localTime, LoopPeriod * 2 );
     }
 
 #if UNITY_EDITOR
