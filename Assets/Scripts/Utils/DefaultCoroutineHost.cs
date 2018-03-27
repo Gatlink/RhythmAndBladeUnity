@@ -16,7 +16,6 @@ public class DefaultCoroutineHost : GLMonoBehaviour
                 {
                     _instance = new GameObject( "Default Coroutine Host", typeof( DefaultCoroutineHost ) )
                         .GetComponent<DefaultCoroutineHost>();
-                    _instance.hideFlags = HideFlags.HideAndDontSave;
                 }
             }
 

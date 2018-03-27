@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-public class CollisionTrigger : EventTrigger
+public class CollisionTrigger : EventTriggerBase
 {
     [ Tooltip( "Defaults to Player transform when null" ) ]
     public Transform TrackingTarget;

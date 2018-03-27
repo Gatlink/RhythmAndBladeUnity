@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class ActorDeathTrigger : EventTrigger
+public class ActorDeathTrigger : EventTriggerBase
 {
     [ Tooltip( "Defaults to Player health when null" ) ]
     public ActorHealth TargetHealth;
