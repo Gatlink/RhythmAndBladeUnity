@@ -1006,7 +1006,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 1
   _recoil: 4
+  _recoilDirectionOverride:
+    useValue: 0
+    value: {x: 0, y: 0}
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114262498981570008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1033,7 +1037,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 100
   _recoil: 0
+  _recoilDirectionOverride:
+    useValue: 0
+    value: {x: 0, y: 0}
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114348711588289006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1079,7 +1087,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 1
   _recoil: 4
+  _recoilDirectionOverride:
+    useValue: 0
+    value: {x: 0, y: 0}
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114393739918944224
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1124,8 +1136,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Displacement: {x: 0, y: 9}
-  Period: 6
+  LoopPeriod: 3
   Phase: 0
+  Loop: 0
 --- !u!114 &114778285537610130
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1139,7 +1152,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 100
   _recoil: 0
+  _recoilDirectionOverride:
+    useValue: 0
+    value: {x: 0, y: 0}
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114890887415474770
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1179,7 +1196,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 1
   _recoil: 4
+  _recoilDirectionOverride:
+    useValue: 0
+    value: {x: 0, y: 0}
   _passiveHurt: 0
+  _teleportToLastCheckpoint: 0
 --- !u!212 &212108310401061622
 SpriteRenderer:
   m_ObjectHideFlags: 1
