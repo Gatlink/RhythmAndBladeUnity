@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a843a0aafa2492d9ba64352e592a7a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TotalHitCount: 20
+  TotalHitCount: 30
   CurrentHitCount: 3
 --- !u!114 &114210730153343898
 MonoBehaviour:
