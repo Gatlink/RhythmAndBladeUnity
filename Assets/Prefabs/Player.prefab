@@ -231,8 +231,9 @@ GameObject:
   - component: {fileID: 114721990602752794}
   - component: {fileID: 114624738396991014}
   - component: {fileID: 114143317058885136}
-  - component: {fileID: 114072904148929840}
   - component: {fileID: 114429194854247330}
+  - component: {fileID: 114488571826022510}
+  - component: {fileID: 114664298527893276}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -579,22 +580,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HorizontalSpeedThreshold: 0.1
---- !u!114 &114072904148929840
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1963247483546628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df47c9828364238a8c4df94619d805e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  AutoFindPlayer: 0
-  PlayerIndex: 0
-  DeadZone: 0.3
-  Step: 1
 --- !u!114 &114143317058885136
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -659,6 +644,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damage: 1
+--- !u!114 &114488571826022510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1963247483546628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5df47c9828364238a8c4df94619d805e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  AutoFindPlayer: 0
+  PlayerIndex: 0
+  DeadZone: 0.3
+  Step: 1
 --- !u!114 &114624738396991014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -672,6 +673,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TotalHitCount: 3
   CurrentHitCount: 3
+--- !u!114 &114664298527893276
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1963247483546628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02e2de36d06a3aa4fbfbeb18da15128c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  DeadZone: 0.3
+  Step: 1
 --- !u!114 &114721990602752794
 MonoBehaviour:
   m_ObjectHideFlags: 1

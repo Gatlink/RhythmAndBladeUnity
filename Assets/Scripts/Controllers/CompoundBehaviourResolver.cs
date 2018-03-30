@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using ActorStates.Boss;
 using Gamelogic.Extensions.Algorithms;
+using Gamelogic.Extensions.Internal;
+using UnityEngine;
 
 namespace Controllers
 {
