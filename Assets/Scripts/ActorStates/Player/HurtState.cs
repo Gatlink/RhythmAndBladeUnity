@@ -29,6 +29,7 @@ namespace ActorStates.Player
                 // todo simplify using sign(x)
                 _recoil.x *= sign;
             }
+
             _teleportToCheckpointOnComplete = harmfull.TeleportToLastCheckpoint;
         }
 
@@ -43,10 +44,7 @@ namespace ActorStates.Player
         {
             var mob = _actor.Mobile;
 
-            // apply gravity
-            var verticalVelocity = mob.CurrentVelocity.y - _playerSettings.Gravity * Time.deltaTime;
-            verticalVelocity = Mathf.Max( verticalVelocity, -_playerSettings.MaxFallVelocity );
-            mob.SetVerticalVelocity( verticalVelocity );
+            mob.ApplyGravity( _playerSettings.Gravity, _playerSettings.MaxFallVelocity );
 
             // default move
             mob.Move();
