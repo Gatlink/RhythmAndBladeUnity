@@ -62,6 +62,11 @@ namespace ActorStates.Player
                 return new JumpState( Actor, _playerSettings.DashJump );
             }
 
+            if ( NormalizedTime >= _playerSettings.DashAttackTiming && Actor.CheckAttack() )
+            {
+                return new AttackState( Actor );
+            }
+
             return base.Update();
         }
     }

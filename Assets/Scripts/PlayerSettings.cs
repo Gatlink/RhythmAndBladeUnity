@@ -71,7 +71,13 @@ public class PlayerSettings : ScriptableObject
 
     [ Range( 0, 1 ) ]
     [ FormerlySerializedAs( "_dashJumpTiming" ) ]
+    [ Tooltip( "Time after which it is possible to do a dash jump" ) ]
     public float DashJumpTiming;
+    
+    [ Range( 0, 1 ) ]
+    [ Tooltip( "Time after which it is possible to do an attack" ) ]
+    public float DashAttackTiming = 1;
+
 
     [ Header( "Jumps" ) ]
     public JumpSetting NormalJump;
@@ -85,8 +91,9 @@ public class PlayerSettings : ScriptableObject
 
     public float AttackMoveInertia = 0.2f;
 
-    [FormerlySerializedAs("AirAttackMoveInertia")]
+    [ FormerlySerializedAs( "AirAttackMoveInertia" ) ]
     public float AirAttackMoveDownwardInertia = 0.3f;
+
     public float AirAttackMoveUpwardInertia = 0.3f;
 
     public AttackSetting Attack1;
@@ -143,6 +150,6 @@ public struct JumpSetting
     [ Tooltip( "Movement speed before air control is enabled" ) ]
     public float InitialMovementSpeed;
 
-    [Tooltip("Can transition to wall slide state during jump")]
+    [ Tooltip( "Can transition to wall slide state during jump" ) ]
     public bool CheckWallSlide;
 }
