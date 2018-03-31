@@ -3247,7 +3247,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4661702309018904}
   - component: {fileID: 114786822014571474}
-  - component: {fileID: 114462550967672876}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Boss
@@ -13326,25 +13325,6 @@ MonoBehaviour:
   LoopPeriod: 2.5
   Phase: 2.5
   Loop: 0
---- !u!114 &114462550967672876
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1646687913042654}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb90f1b136e64521864a42456b872c8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  __messageText: 
-  StateName: 
-  DesiredMovement: 0
-  DesiredAttack: 0
-  DesiredJumpAttack: 0
-  DesiredJump: 0
-  DesiredCharge: 0
-  DesiredJumpMovement: 0
 --- !u!114 &114463959014150778
 MonoBehaviour:
   m_ObjectHideFlags: 1
