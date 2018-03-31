@@ -1,5 +1,4 @@
-﻿using Gamelogic.Extensions;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ActorStates.Player
 {
@@ -27,6 +26,7 @@ namespace ActorStates.Player
                 // reference recoil direction is left
                 _recoil = harmfull.RecoilDirectionOverride.Value.normalized * harmfull.Recoil;
                 var sign = Mathf.Sign( Vector2.Dot( recoil, Vector2.left ) );
+                // todo simplify using sign(x)
                 _recoil.x *= sign;
             }
             _teleportToCheckpointOnComplete = harmfull.TeleportToLastCheckpoint;
@@ -36,6 +36,7 @@ namespace ActorStates.Player
         {
             base.OnEnter();
             _actor.Mobile.CurrentVelocity = _recoil;
+            _actor.Mobile.UpdateDirection( -_recoil.x );
         }
 
         public override IActorState Update()

@@ -81,7 +81,13 @@ public class PlayerSettings : ScriptableObject
     public JumpSetting DashJump;
 
     [ Header( "Attacks" ) ]
-    public float MaxAirAttackHorizontalMovement = 4;
+    public float MaxAirAttackVelocity = 4;
+
+    public float AttackMoveInertia = 0.2f;
+
+    [FormerlySerializedAs("AirAttackMoveInertia")]
+    public float AirAttackMoveDownwardInertia = 0.3f;
+    public float AirAttackMoveUpwardInertia = 0.3f;
 
     public AttackSetting Attack1;
 
