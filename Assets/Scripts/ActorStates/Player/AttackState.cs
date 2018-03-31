@@ -61,18 +61,18 @@ namespace ActorStates.Player
             var mob = Actor.Mobile;
 
             var grounded = Actor.Mobile.CheckGround();
-            if ( !grounded )
-            {
-                var inertia = mob.CurrentVelocity.y > 0
-                    ? PlayerSettings.AirAttackMoveUpwardInertia
-                    : PlayerSettings.AirAttackMoveDownwardInertia; 
-                mob.ChangeVelocity( _clampedVelocityOnEnter, inertia );                
-            }
-            else
+            if ( grounded )
             {
                 mob.ChangeHorizontalVelocity( 0, PlayerSettings.AttackMoveInertia );
             }
-            
+            else
+            {
+                var inertia = mob.CurrentVelocity.y > 0
+                    ? PlayerSettings.AirAttackMoveUpwardInertia
+                    : PlayerSettings.AirAttackMoveDownwardInertia;
+                mob.ChangeVelocity( _clampedVelocityOnEnter, inertia );
+            }
+
             mob.Move();
 
             var time = ElapsedTime;
@@ -124,6 +124,11 @@ namespace ActorStates.Player
                 if ( Actor.CheckDash() )
                 {
                     return new DashState( Actor );
+                }
+
+                if ( Actor.DesiredMovement != 0 )
+                {
+                    return new GroundedState( Actor );
                 }
             }
 

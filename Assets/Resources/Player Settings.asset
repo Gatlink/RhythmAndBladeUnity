@@ -19,7 +19,6 @@ MonoBehaviour:
   FallMovementSpeed: 10
   FallMoveInertia: 0.2
   Gravity: 40
-  LinearGravity: 16
   MaxFallVelocity: 60
   WallSlideGravity: 100
   MaxWallSlideVelocity: 3
@@ -167,7 +166,7 @@ MonoBehaviour:
       Function: 21
     Cooldown: 0.3
   Attack2:
-    HitDuration: 0.2
+    HitDuration: 0.1
     ComboDuration: 0.2
     RecoveryDuration: 0.2
     HorizontalMovementLength: 1
