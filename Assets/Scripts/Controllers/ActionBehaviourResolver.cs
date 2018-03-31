@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using ActorStates.Boss;
 using Gamelogic.Extensions;
 using UnityEngine;
@@ -111,7 +112,6 @@ namespace Controllers
         private IEnumerable MoveResolver( BossActor actor, BossBehaviour.TargetType type )
         {
             BossBehaviour.Log( actor + " moves to " + type, actor );
-            const float MovementEpsilon = 0.1f;
             var mob = actor.Mobile;
 
             var targetPositionX = GetTargetPositionX( type, mob );
@@ -120,14 +120,8 @@ namespace Controllers
 
             if ( Mathf.Abs( toTarget ) < _settings.CloseRangeThreshold )
             {
-                BossBehaviour.Log( Time.frameCount + " actor will walk to targetX", actor );
-
-                while ( Mathf.Abs( targetPositionX - mob.BodyPosition.x ) > MovementEpsilon )
+                foreach ( var unused in WalkResolver( actor, targetPositionX ) )
                 {
-                    DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down );
-                    BossBehaviour.Log( Time.frameCount + " wait for actor to reach targetX", actor );
-                    
-                    actor.DesiredMovement = Mathf.Sign( targetPositionX - mob.BodyPosition.x );
                     yield return null;
                 }
             }
@@ -149,15 +143,11 @@ namespace Controllers
                 var walkTargetX = ClampPositionX( mob.BodyPosition.x + movementDirection * LongRangeWalkDistance );
                 BossBehaviour.Log( Time.frameCount + " actor will first walk to walkTargetX", actor );
                 
-                while ( Mathf.Abs( walkTargetX - mob.BodyPosition.x ) > MovementEpsilon )
+                foreach ( var unused in WalkResolver( actor, walkTargetX ) )
                 {
-                    DebugExtension.DebugArrow( mob.BodyPosition.WithX( walkTargetX ), Vector3.down );
-                    BossBehaviour.Log( Time.frameCount + " wait for actor to reach walkTargetX", actor );
-
-                    actor.DesiredMovement = Mathf.Sign( walkTargetX - mob.BodyPosition.x );
                     yield return null;
                 }
-
+                
                 BossBehaviour.Log( Time.frameCount + " then actor will jump to targetX", actor );
                 foreach ( var unused in JumpAndWaitForCompletion( actor, targetPositionX - mob.BodyPosition.x ) )
                 {
@@ -165,6 +155,29 @@ namespace Controllers
 
                     yield return null;
                 }
+            }
+        }
+
+        private static IEnumerable WalkResolver( BossActor actor, float targetPositionX )
+        {
+            var mob = actor.Mobile;
+            const float MovementEpsilon = 0.1f;
+            
+            // set a timeout to prevent player from using properly timed attacks in order to block movement
+            var walkSpeed = Boss1Settings.Instance.GroundedMovementSpeed;
+            var distance = Mathf.Abs( mob.BodyPosition.x - targetPositionX );
+            var duration = distance / walkSpeed;
+
+            BossBehaviour.Log( Time.frameCount + " actor will walk to targetX", actor );
+
+            while ( Mathf.Abs( targetPositionX - mob.BodyPosition.x ) > MovementEpsilon && duration > 0)
+            {
+                DebugExtension.DebugArrow( mob.BodyPosition.WithX( targetPositionX ), Vector3.down );
+                BossBehaviour.Log( Time.frameCount + " wait for actor to reach targetX", actor );
+
+                duration -= Time.deltaTime;
+                actor.DesiredMovement = Mathf.Sign( targetPositionX - mob.BodyPosition.x );
+                yield return null;
             }
         }
 
