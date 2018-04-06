@@ -443,6 +443,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114488571826022510, guid: 47367d681c234da46a7d9eb18be52df1,
+        type: 2}
+      propertyPath: AutoFindPlayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114664298527893276, guid: 47367d681c234da46a7d9eb18be52df1,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 47367d681c234da46a7d9eb18be52df1, type: 2}
   m_IsPrefabParent: 0

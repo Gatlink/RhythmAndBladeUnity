@@ -20,7 +20,7 @@ namespace Controllers
 
         public bool HasPlayer
         {
-            get { return _playerIndexSet && PrevState.IsConnected; }
+            get { return _playerIndexSet && State.IsConnected; }
         }
 
         private void Start()
@@ -33,6 +33,8 @@ namespace Controllers
             {
                 Destroy( this );
             }
+
+            _playerIndexSet = !AutoFindPlayer;
         }
 
         private void FindPlayer()
@@ -65,12 +67,12 @@ namespace Controllers
                 FindPlayer();
             }
 
+            State = GamePad.GetState( PlayerIndex );
+
             if ( !HasPlayer )
             {
                 enabled = false;
             }
-
-            State = GamePad.GetState( PlayerIndex );
         }
     }
 }
