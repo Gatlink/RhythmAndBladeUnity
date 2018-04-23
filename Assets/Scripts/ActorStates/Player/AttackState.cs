@@ -2,7 +2,7 @@
 
 namespace ActorStates.Player
 {
-    public class AttackState : PlayerFixedHorizontalMovementState
+    public class AttackState : PlayerFixedTimeStateBase
     {
         private const int MaxComboCount = 3;
         private uint _hitId;
@@ -15,7 +15,7 @@ namespace ActorStates.Player
         }
 
         private PlayerSettings.AttackSetting _setting;
-        private bool _startedGrounded;
+        private Vector2 _clampedVelocityOnEnter;
 
         public AttackState( PlayerActor actor ) : this( actor, 0 )
         {
@@ -44,48 +44,36 @@ namespace ActorStates.Player
             get { return HitDuration + _setting.ComboDuration + _setting.RecoveryDuration; }
         }
 
-        protected override float MovementLength
-        {
-            get { return _setting.HorizontalMovementLength; }
-        }
-
-        protected override Easing MovementTrajectory
-        {
-            get { return _setting.Trajectory; }
-        }
-
         public override void OnEnter()
         {
             base.OnEnter();
             _hitId = HitInfo.GenerateId();
 
-            _startedGrounded = Actor.Mobile.CheckGround( snap: false );
-            if ( _startedGrounded )
-            {
-                Actor.ConsumeAttack( _setting.Cooldown );
-            }
-            else
-            {
-                Mobile.CancelVerticalMovement();
-                Actor.AddAttackCooldown( _setting.Cooldown );
-            }
+            Actor.AddAttackCooldown( _setting.Cooldown );
+            
+            Actor.Mobile.UpdateDirection( Actor.DesiredMovement );
+
+            _clampedVelocityOnEnter = Actor.Mobile.CurrentVelocity.ClampedMagnitude( PlayerSettings.MaxAirAttackVelocity );
         }
 
         public override IActorState Update()
         {
-            if ( _startedGrounded )
+            var mob = Actor.Mobile;
+
+            var grounded = Actor.Mobile.CheckGround();
+            if ( grounded )
             {
-                ApplyHorizontalMovement();
+                mob.ChangeHorizontalVelocity( 0, PlayerSettings.AttackMoveInertia );
             }
             else
             {
-                var velocity = Mobile.CurrentVelocity.x;
-                var maxVelocity = PlayerSettings.MaxAirAttackHorizontalMovement;
-                velocity = Mathf.Clamp(velocity, -maxVelocity, maxVelocity );
-                Mobile.ChangeHorizontalVelocity( velocity, PlayerSettings.GroundedMoveInertia );
+                var inertia = mob.CurrentVelocity.y > 0
+                    ? PlayerSettings.AirAttackMoveUpwardInertia
+                    : PlayerSettings.AirAttackMoveDownwardInertia;
+                mob.ChangeVelocity( _clampedVelocityOnEnter, inertia );
             }
 
-            Mobile.Move();
+            mob.Move();
 
             var time = ElapsedTime;
 
@@ -136,6 +124,11 @@ namespace ActorStates.Player
                 if ( Actor.CheckDash() )
                 {
                     return new DashState( Actor );
+                }
+
+                if ( Actor.DesiredMovement != 0 )
+                {
+                    return new GroundedState( Actor );
                 }
             }
 

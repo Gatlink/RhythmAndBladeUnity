@@ -215,10 +215,10 @@ namespace NodeEditor
             DrawGrid( 20, 0.2f, Color.gray );
             DrawGrid( 100, 0.4f, Color.gray );
 
-            DrawNodes();
-            DrawConnections();
-
             DrawConnectionLine( Event.current );
+            DrawConnections();
+            DrawNodes();
+
 
             var size = new Vector2( 100, 20 );
             const int spacing = 5;
@@ -320,7 +320,7 @@ namespace NodeEditor
 
                     if ( e.button == 1 )
                     {
-                        ProcessContextMenu( e.mousePosition );
+                        ProcessContextMenu( e );
                     }
 
                     break;
@@ -390,13 +390,14 @@ namespace NodeEditor
             DrawConnection( fromPoint.Rect.center, toPoint.Rect.center );
         }
 
-        private void ProcessContextMenu( Vector2 mousePosition )
+        private void ProcessContextMenu( Event ev )
         {
             var genericMenu = new GenericMenu();
-            genericMenu.AddItem( new GUIContent( "Add Action Node" ), false, () => OnClickAddNode( mousePosition ) );
+            genericMenu.AddItem( new GUIContent( "Add Action Node" ), false, () => OnClickAddNode( ev.mousePosition ) );
             genericMenu.AddItem( new GUIContent( "Add Compound Node" ), false,
-                () => OnClickAddCoumpoudNode( mousePosition ) );
+                () => OnClickAddCoumpoudNode( ev.mousePosition ) );
             genericMenu.ShowAsContext();
+            ev.Use();
         }
 
         private void OnDrag( Vector2 delta )

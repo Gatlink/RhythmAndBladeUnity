@@ -54,10 +54,7 @@ namespace ActorStates.Player
             }
             else
             {
-                // apply gravity
-                var verticalVelocity = mob.CurrentVelocity.y - PlayerSettings.WallSlideGravity * Time.deltaTime;
-                verticalVelocity = Mathf.Max( verticalVelocity, -PlayerSettings.MaxWallSlideVelocity );
-                mob.SetVerticalVelocity( verticalVelocity );
+                mob.ApplyGravity( PlayerSettings.WallSlideGravity, PlayerSettings.MaxWallSlideVelocity );
             }
 
             // default move

@@ -121,7 +121,7 @@ namespace NodeEditor
                         }
                     }
 
-                    if ( e.button == 1 && _isSelected && Rect.Contains( e.mousePosition ) )
+                    if ( e.button == 1 && Rect.Contains( e.mousePosition ) )
                     {
                         ProcessContextMenu();
                         e.Use();
@@ -152,6 +152,7 @@ namespace NodeEditor
             var genericMenu = new GenericMenu();
             genericMenu.AddItem( new GUIContent( "Remove node" ), false, () => Editor.OnClickRemoveNode( this ) );
             genericMenu.AddItem( new GUIContent( "Make node main node" ), false, () => Editor.OnClickMainNode( this ) );
+            genericMenu.AddItem( new GUIContent( "Create connection" ), false, () => Editor.OnClickInPoint( InPoint ) );
             genericMenu.ShowAsContext();
         }
 

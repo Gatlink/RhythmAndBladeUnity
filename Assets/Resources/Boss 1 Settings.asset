@@ -240,7 +240,7 @@ MonoBehaviour:
     ComboWindowStartTime: 0.5
     ComboWindowEndTime: 0.67
   HurtDuration: 0.25
-  HurtDriftLength: 0.6
+  HurtDriftLength: 1
   HurtDriftTrajectory:
     Type: 0
     Curve:

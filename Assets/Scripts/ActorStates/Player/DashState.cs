@@ -42,6 +42,13 @@ namespace ActorStates.Player
             _initiatedGrounded = Mobile.CheckGround();
         }
 
+        public override void OnExit()
+        {
+            base.OnExit();
+            // prevent allowing an air jump using an attack when falling after a dash from a platform border
+            Actor.ConsumeJump();
+        }
+
         public override IActorState Update()
         {
             ApplyHorizontalMovement();
@@ -60,6 +67,11 @@ namespace ActorStates.Player
             {
                 Actor.ResetDash();
                 return new JumpState( Actor, _playerSettings.DashJump );
+            }
+
+            if ( NormalizedTime >= _playerSettings.DashAttackTiming && Actor.CheckAttack() )
+            {
+                return new AttackState( Actor );
             }
 
             return base.Update();

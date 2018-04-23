@@ -10,11 +10,13 @@ namespace Controllers
 
         public bool Step = true;
 
-        public OptionalFloat DebugAxis;
-
         public bool Enabled
         {
             get { return enabled; }
+        }
+
+        private void Start()
+        {            
         }
 
         private void ResetIntent( PlayerActor actor )
@@ -30,11 +32,7 @@ namespace Controllers
         public void UpdateActorIntent( PlayerActor actor )
         {
             ResetIntent( actor );
-            var rawAxis = Input.GetAxis( "Horizontal" );
-            if ( DebugAxis.UseValue )
-            {
-                rawAxis = DebugAxis.Value;
-            }
+            var rawAxis = Input.GetAxisRaw( "Horizontal" );
 
             var amplitude = Mathf.Abs( rawAxis );
             var direction = Mathf.Sign( rawAxis );
@@ -56,7 +54,7 @@ namespace Controllers
             actor.DesiredMovement = direction * amplitude;
             actor.DesiredJump = Input.GetButtonDown( "Jump" );
             actor.DesiredDash = Input.GetButtonDown( "Dash" );
-            actor.DesiredAttack = Input.GetButtonDown( "Fire1" );
+            actor.DesiredAttack = Input.GetButtonDown( "Attack" );
         }
     }
 }

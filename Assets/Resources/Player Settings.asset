@@ -47,6 +47,7 @@ MonoBehaviour:
     Function: 21
   DashLength: 6
   DashJumpTiming: 0
+  DashAttackTiming: 0
   NormalJump:
     Duration: 0.3
     Height: 5
@@ -134,7 +135,10 @@ MonoBehaviour:
     AirControlTiming: 0.66
     InitialMovementSpeed: 25
     CheckWallSlide: 1
-  MaxAirAttackHorizontalMovement: 2
+  MaxAirAttackVelocity: 0.2
+  AttackMoveInertia: 0.1
+  AirAttackMoveDownwardInertia: 0.16
+  AirAttackMoveUpwardInertia: 0.1
   Attack1:
     HitDuration: 0.1
     ComboDuration: 0.2
@@ -163,7 +167,7 @@ MonoBehaviour:
       Function: 21
     Cooldown: 0.3
   Attack2:
-    HitDuration: 0.2
+    HitDuration: 0.1
     ComboDuration: 0.2
     RecoveryDuration: 0.2
     HorizontalMovementLength: 1

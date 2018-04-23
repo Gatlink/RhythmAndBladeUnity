@@ -96,7 +96,28 @@ public class Mobile : MonoBehaviour, IMoving
             float.MaxValue, Time.deltaTime );
     }
 
+    public void ApplyGravity( float gravity, float maxVelocity = Mathf.Infinity )
+    {
+        var verticalVelocity = CurrentVelocity.y - gravity * Time.deltaTime;
+        verticalVelocity = Mathf.Max( verticalVelocity, -maxVelocity );
+        SetVerticalVelocity( verticalVelocity );
+    }
+
+    public void ApplyGravityCubic( float gravity, float maxVelocity = Mathf.Infinity )
+    {
+        CurrentAcceleration = CurrentAcceleration.WithIncY( -gravity * Time.deltaTime );
+        var verticalVelocity = CurrentVelocity.y + CurrentAcceleration.y * Time.deltaTime;
+        verticalVelocity = Mathf.Max( verticalVelocity, -maxVelocity );
+        SetVerticalVelocity( verticalVelocity );
+    }
+
+    public void ApplyLinearGravity( float gravity )
+    {
+        SetVerticalVelocity( -gravity );
+    }
+
     // minimum movement to change direction
+
     private const float MovementEpsilon = 0.01f;
 
     public void UpdateDirection( float direction )
@@ -110,12 +131,19 @@ public class Mobile : MonoBehaviour, IMoving
     #region CACHING
 
     private int _moveBlockingLayerMask;
+
     private int _groundLayerMask;
+
     private int _passThroughLayerMask;
+
     private int _wallLayerMask;
+
     private int _obstacleLayerMask;
+
     private ContactFilter2D _wallCollisionContactFilter2D;
+
     private readonly Collider2D[] _wallColliders = new Collider2D[ 1 ];
+
     private Collider2D _collisionCheckCollider;
 
     #endregion
@@ -350,6 +378,7 @@ public class Mobile : MonoBehaviour, IMoving
     #region GIZMOS
 
 #if UNITY_EDITOR
+
     [ Header( "Gizmos" ) ]
     public OptionalInt TrackPositions = new OptionalInt();
 

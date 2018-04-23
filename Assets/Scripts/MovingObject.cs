@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -26,6 +25,7 @@ public class MovingObject : MonoBehaviour, IMoving
     private Vector2 _initialPosition;
 
     private float _localTime;
+    private Vector3 _lastPosition;
 
     public bool Enabled
     {
@@ -36,14 +36,11 @@ public class MovingObject : MonoBehaviour, IMoving
     {
         get
         {
-            var slope = Displacement / LoopPeriod;
-            float sign = 1;
             if ( Loop == LoopType.PingPong )
             {
-                sign = Mathf.Sign( 0.5f - Mathf.Repeat( _localTime, 2 * LoopPeriod ) / ( 2 * LoopPeriod ) );
+                return ( transform.position - _lastPosition ) / Time.deltaTime;
             }
-
-            return sign * slope;
+            return Displacement / LoopPeriod;
         }
         set { throw new NotSupportedException( "Cannot set current velocity" ); }
     }
@@ -58,6 +55,7 @@ public class MovingObject : MonoBehaviour, IMoving
     {
         _initialPosition = transform.position;
         _localTime = Phase;
+        _lastPosition = transform.position;
     }
 
     private void Update()
@@ -77,9 +75,14 @@ public class MovingObject : MonoBehaviour, IMoving
 
         transform.position = Vector2.Lerp( _initialPosition, _initialPosition + Displacement, time / LoopPeriod );
 
-        _localTime += Time.deltaTime;
         // reset local time to 0 every two loops for ping pong
         _localTime = Mathf.Repeat( _localTime, LoopPeriod * 2 );
+    }
+
+    private void LateUpdate()
+    {
+        _localTime += Time.deltaTime;
+        _lastPosition = transform.position;
     }
 
 #if UNITY_EDITOR

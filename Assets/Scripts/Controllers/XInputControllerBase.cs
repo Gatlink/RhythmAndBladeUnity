@@ -1,4 +1,5 @@
-﻿using Gamelogic.Extensions;
+﻿using System;
+using Gamelogic.Extensions;
 using UnityEngine;
 using XInputDotNetPure;
 
@@ -19,7 +20,21 @@ namespace Controllers
 
         public bool HasPlayer
         {
-            get { return _playerIndexSet && PrevState.IsConnected; }
+            get { return _playerIndexSet && State.IsConnected; }
+        }
+
+        private void Start()
+        {
+            try
+            {
+                GamePad.GetState( PlayerIndex.One );
+            }
+            catch ( DllNotFoundException )
+            {
+                Destroy( this );
+            }
+
+            _playerIndexSet = !AutoFindPlayer;
         }
 
         private void FindPlayer()
@@ -53,6 +68,11 @@ namespace Controllers
             }
 
             State = GamePad.GetState( PlayerIndex );
+
+            if ( !HasPlayer )
+            {
+                enabled = false;
+            }
         }
     }
 }

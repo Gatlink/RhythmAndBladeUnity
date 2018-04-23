@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Gamelogic.Extensions;
+using UnityEngine;
 
 namespace ActorStates.Player
 {
@@ -6,6 +7,12 @@ namespace ActorStates.Player
     {
         public FallState( PlayerActor actor ) : base( actor )
         {
+        }
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            Actor.Mobile.CurrentAcceleration = Actor.Mobile.CurrentAcceleration.WithY( -PlayerSettings.Gravity );
         }
 
         public override IActorState Update()
@@ -17,11 +24,8 @@ namespace ActorStates.Player
 
             // update current horizontal velocity accounting inertia
             mob.ChangeHorizontalVelocity( desiredVelocity, PlayerSettings.FallMoveInertia );
-            
-            // apply gravity
-            var verticalVelocity = mob.CurrentVelocity.y - PlayerSettings.Gravity * Time.deltaTime;
-            verticalVelocity = Mathf.Max( verticalVelocity, -PlayerSettings.MaxFallVelocity );
-            mob.SetVerticalVelocity( verticalVelocity  );
+
+            mob.ApplyGravity( PlayerSettings.Gravity, PlayerSettings.MaxFallVelocity );
 
             // default move
             mob.Move();
@@ -36,7 +40,7 @@ namespace ActorStates.Player
             {
                 return new DeathState( Actor );
             }
-            
+
             Vector2 normal;
             if ( mob.CheckWallProximity( mob.Direction, out normal ) )
             {

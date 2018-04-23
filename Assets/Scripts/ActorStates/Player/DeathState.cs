@@ -13,10 +13,7 @@ namespace ActorStates.Player
             var mob = Actor.Mobile;
             if ( !mob.CheckGround() )
             {
-                // apply gravity
-                var verticalVelocity = mob.CurrentVelocity.y - PlayerSettings.Gravity * Time.deltaTime;
-                verticalVelocity = Mathf.Max( verticalVelocity, -PlayerSettings.MaxFallVelocity );
-                mob.SetVerticalVelocity( verticalVelocity );
+                mob.ApplyGravity( PlayerSettings.Gravity, PlayerSettings.MaxFallVelocity );
 
                 // default move
                 mob.Move();
