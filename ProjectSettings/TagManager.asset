@@ -12,6 +12,7 @@ TagManager:
   - Collisionbox
   - HotSpot
   - Checkpoint
+  - PermanentCheckpoint
   layers:
   - Default
   - TransparentFX

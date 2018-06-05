@@ -21,4 +21,5 @@ public static class Tags
     public const string PreviewCamera = "PreviewCamera";
     public const string HotSpot = "HotSpot";
     public const string Checkpoint = "Checkpoint";
+    public const string PermanentCheckpoint = "PermanentCheckpoint";
 }
