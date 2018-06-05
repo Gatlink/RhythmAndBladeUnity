@@ -8,10 +8,23 @@ public class SceneLoader : Singleton<SceneLoader>
     private PlayerActor _player;
     private LayerMask _levelTriggerLayer;
 
+    private RespawnPoint _respawnPoint;
+
     private void Start()
     {
-        _player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<PlayerActor>();
         _levelTriggerLayer = 1 << LayerMask.NameToLayer( Layers.LevelTrigger );
+        _player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<PlayerActor>();
+
+        _respawnPoint = RespawnPoint.Instance;
+        if ( !_respawnPoint.HasSpawnInfo )
+        {
+            _respawnPoint.SetRespawn( _player.transform.position, _player.Mobile.Direction );
+        }
+        else
+        {
+            _player.transform.position = _respawnPoint.Position;
+            _player.Mobile.Direction = _respawnPoint.Direction;
+        }
     }
 
     private void LateUpdate()
@@ -26,6 +39,9 @@ public class SceneLoader : Singleton<SceneLoader>
         if ( Physics2D.OverlapPoint( _player.transform.position, _levelTriggerLayer ) != null )
         {
             // load next scene
+            Debug.Log( "Destroying respawn" );
+            Destroy( _respawnPoint );
+
             LoadScene( SceneManager.GetActiveScene().buildIndex + 1 );
         }
     }

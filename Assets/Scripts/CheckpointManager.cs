@@ -16,6 +16,7 @@ public class CheckpointManager : Singleton<CheckpointManager>
         _player = GameObject.FindGameObjectWithTag( Tags.Player ).GetComponent<Mobile>();
 
         _checkpoints = GameObject.FindGameObjectsWithTag( Tags.Checkpoint )
+            .Union( GameObject.FindGameObjectsWithTag( Tags.PermanentCheckpoint ) )
             .Select( go => go.GetComponent<Collider2D>() ).ToList();
     }
 
@@ -48,6 +49,9 @@ public class CheckpointManager : Singleton<CheckpointManager>
             {
                 _lastCheckpoint = checkpoint;
                 _directionAtCheckpoint = _player.Direction;
+
+                RespawnPoint.Instance.SetRespawn( _lastCheckpoint.transform.position, _directionAtCheckpoint );
+
                 _checkpoints.RemoveAt( i );
                 break;
             }

@@ -36,16 +36,16 @@ SpriteAtlas:
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 21300000, guid: a418630c711142145b5372bbfa7a09a4, type: 3}
-  - {fileID: 21300000, guid: 585d569898d195044a2d56bb3d288853, type: 3}
-  - {fileID: 21300000, guid: 182c3b5f1ce097c43811b8e391c37b1b, type: 3}
   - {fileID: 21300000, guid: ca28e94960efa9444975004d7847c5b9, type: 3}
   - {fileID: 21300000, guid: 3b91996ce91bdb140b4f42ef3ae321fb, type: 3}
+  - {fileID: 21300000, guid: 585d569898d195044a2d56bb3d288853, type: 3}
+  - {fileID: 21300000, guid: a418630c711142145b5372bbfa7a09a4, type: 3}
+  - {fileID: 21300000, guid: 182c3b5f1ce097c43811b8e391c37b1b, type: 3}
   m_PackedSpriteNamesToIndex:
-  - Left
-  - Right
-  - Up
   - disk
   - Down
+  - Right
+  - Left
+  - Up
   m_Tag: Buttons
   m_IsVariant: 0
