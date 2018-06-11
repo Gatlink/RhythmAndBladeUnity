@@ -5,10 +5,22 @@ using UnityEngine;
 
 public class CheckpointManager : Singleton<CheckpointManager>
 {
-    private List<Collider2D> _checkpoints;
+    private struct Checkpoint
+    {
+        public Collider2D Collider;
+        public bool IsPermanent;
+
+        public Checkpoint( Collider2D collider, bool isPermanent )
+        {
+            Collider = collider;
+            IsPermanent = isPermanent;
+        }
+    } 
+    
+    private List<Checkpoint> _checkpoints;
     private Mobile _player;
 
-    private Collider2D _lastCheckpoint;
+    private Checkpoint? _lastCheckpoint;
     private float _directionAtCheckpoint;
 
     private void Awake()
@@ -17,13 +29,14 @@ public class CheckpointManager : Singleton<CheckpointManager>
 
         _checkpoints = GameObject.FindGameObjectsWithTag( Tags.Checkpoint )
             .Union( GameObject.FindGameObjectsWithTag( Tags.PermanentCheckpoint ) )
-            .Select( go => go.GetComponent<Collider2D>() ).ToList();
+            .Select( go => new Checkpoint(go.GetComponent<Collider2D>(), go.CompareTag( Tags.PermanentCheckpoint ) ) )
+            .ToList();
     }
 
     public static void TeleportPlayerToLastCheckpoint()
     {
         var checkpoint = Instance._lastCheckpoint;
-        if ( checkpoint == null )
+        if ( !checkpoint.HasValue )
         {
             SceneLoader.Instance.ReloadCurrentScene();
         }
@@ -32,7 +45,7 @@ public class CheckpointManager : Singleton<CheckpointManager>
             CameraFade.FadeTo( 1, 0.5f, () =>
             {
                 var player = Instance._player;
-                player.transform.position = checkpoint.transform.position;
+                player.transform.position = checkpoint.Value.Collider.transform.position;
                 player.GetComponent<PlayerActor>().RestartToIinitialState();
                 player.UpdateDirection( Instance._directionAtCheckpoint );
                 CameraFade.FadeFrom( 1, 0.5f, null, false );
@@ -45,12 +58,15 @@ public class CheckpointManager : Singleton<CheckpointManager>
         for ( var i = _checkpoints.Count - 1; i >= 0; i-- )
         {
             var checkpoint = _checkpoints[ i ];
-            if ( checkpoint.OverlapPoint( _player.BodyPosition ) )
+            if ( checkpoint.Collider.OverlapPoint( _player.BodyPosition ) )
             {
                 _lastCheckpoint = checkpoint;
                 _directionAtCheckpoint = _player.Direction;
 
-                RespawnPoint.Instance.SetRespawn( _lastCheckpoint.transform.position, _directionAtCheckpoint );
+                if ( checkpoint.IsPermanent )
+                {
+                    RespawnPoint.Instance.SetRespawn( checkpoint.Collider.transform.position, _directionAtCheckpoint );
+                }
 
                 _checkpoints.RemoveAt( i );
                 break;
