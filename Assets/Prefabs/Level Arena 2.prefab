@@ -3605,7 +3605,7 @@ GameObject:
   - component: {fileID: 61933784001246646}
   m_Layer: 0
   m_Name: Checkpoint1
-  m_TagString: Checkpoint
+  m_TagString: PermanentCheckpoint
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4439,7 +4439,7 @@ GameObject:
   - component: {fileID: 61421604596140530}
   m_Layer: 0
   m_Name: Checkpoint1
-  m_TagString: Checkpoint
+  m_TagString: PermanentCheckpoint
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
