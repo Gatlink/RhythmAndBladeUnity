@@ -4471,7 +4471,7 @@ GameObject:
   - component: {fileID: 61600658842850818}
   m_Layer: 0
   m_Name: Checkpoint3
-  m_TagString: Checkpoint
+  m_TagString: PermanentCheckpoint
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7245,7 +7245,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1015850017135304}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12, y: 137, z: 0}
+  m_LocalPosition: {x: 13, y: 137, z: 0}
   m_LocalScale: {x: 2, y: 6, z: 1}
   m_Children:
   - {fileID: 4120560144851056}
@@ -7650,7 +7650,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1393150759906226}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 13, y: 140, z: 0}
+  m_LocalPosition: {x: 14, y: 140, z: 0}
   m_LocalScale: {x: 0.29999998, y: 6, z: 1}
   m_Children:
   - {fileID: 4493442689534804}
@@ -15514,7 +15514,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1e729c8c7ada84085917b1cddd6e98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Displacement: {x: 17, y: 0}
+  Displacement: {x: 16, y: 0}
   LoopPeriod: 0.9
   Phase: 0
   Loop: 0
