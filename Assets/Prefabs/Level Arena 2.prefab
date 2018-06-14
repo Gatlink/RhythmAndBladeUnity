@@ -525,7 +525,7 @@ GameObject:
   - component: {fileID: 61287328491772088}
   m_Layer: 0
   m_Name: Checkpoint
-  m_TagString: Checkpoint
+  m_TagString: PermanentCheckpoint
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1795,7 +1795,7 @@ GameObject:
   - component: {fileID: 61349146346235472}
   m_Layer: 0
   m_Name: Checkpoint2
-  m_TagString: Checkpoint
+  m_TagString: PermanentCheckpoint
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4922,7 +4922,7 @@ GameObject:
   - component: {fileID: 61763687654786460}
   m_Layer: 0
   m_Name: Checkpoint
-  m_TagString: Checkpoint
+  m_TagString: PermanentCheckpoint
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5041,7 +5041,7 @@ GameObject:
   - component: {fileID: 61951183503559586}
   m_Layer: 0
   m_Name: Checkpoint2
-  m_TagString: Checkpoint
+  m_TagString: PermanentCheckpoint
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11293,7 +11293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -11542,7 +11542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -11632,7 +11632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -11691,7 +11691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -11838,7 +11838,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -11911,13 +11911,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 100
   _recoil: 0
   _recoilDirectionOverride:
     useValue: 0
     value: {x: 0, y: 0}
-  _passiveHurt: 0
-  _teleportToLastCheckpoint: 1
+  _passiveHurt: 1
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114134409829845588
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -11982,7 +11982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -12028,7 +12028,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -12046,7 +12046,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -12106,13 +12106,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 100
   _recoil: 0
   _recoilDirectionOverride:
     useValue: 0
     value: {x: 0, y: 0}
-  _passiveHurt: 0
-  _teleportToLastCheckpoint: 1
+  _passiveHurt: 1
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114172348821792484
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -12124,7 +12124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -12359,7 +12359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -12423,7 +12423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -12535,7 +12535,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -12632,7 +12632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -12987,7 +12987,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13025,13 +13025,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 100
   _recoil: 0
   _recoilDirectionOverride:
     useValue: 0
     value: {x: 0, y: 0}
-  _passiveHurt: 0
-  _teleportToLastCheckpoint: 1
+  _passiveHurt: 1
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114367345122553538
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13056,13 +13056,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 100
   _recoil: 0
   _recoilDirectionOverride:
     useValue: 0
     value: {x: 0, y: 0}
-  _passiveHurt: 0
-  _teleportToLastCheckpoint: 1
+  _passiveHurt: 1
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114372580516445458
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13074,7 +13074,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13108,13 +13108,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 100
   _recoil: 0
   _recoilDirectionOverride:
     useValue: 0
     value: {x: 0, y: 0}
-  _passiveHurt: 0
-  _teleportToLastCheckpoint: 1
+  _passiveHurt: 1
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114377162679416724
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13212,7 +13212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13230,7 +13230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13314,7 +13314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -13393,7 +13393,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13411,7 +13411,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13442,7 +13442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13460,7 +13460,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13532,7 +13532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -13550,7 +13550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13650,7 +13650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -13668,7 +13668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13741,7 +13741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13858,7 +13858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13916,7 +13916,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -13934,7 +13934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -13981,7 +13981,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -14025,7 +14025,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -14056,7 +14056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -14129,7 +14129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -14181,7 +14181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -14212,7 +14212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -14431,7 +14431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -14612,7 +14612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -14701,7 +14701,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -14784,7 +14784,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -14831,7 +14831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -14949,7 +14949,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -15034,7 +15034,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -15184,13 +15184,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 100
   _recoil: 0
   _recoilDirectionOverride:
     useValue: 0
     value: {x: 0, y: 0}
-  _passiveHurt: 0
-  _teleportToLastCheckpoint: 1
+  _passiveHurt: 1
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114776338367865026
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15202,7 +15202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -15370,7 +15370,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -15587,7 +15587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -15619,7 +15619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -15745,7 +15745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -15777,7 +15777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 4
   _recoilDirectionOverride:
     useValue: 0
@@ -15846,13 +15846,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 100
   _recoil: 0
   _recoilDirectionOverride:
     useValue: 0
     value: {x: 0, y: 0}
-  _passiveHurt: 0
-  _teleportToLastCheckpoint: 1
+  _passiveHurt: 1
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114933022911929638
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15988,7 +15988,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -16083,7 +16083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 0
   _recoil: 16
   _recoilDirectionOverride:
     useValue: 0
@@ -16101,13 +16101,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e5602396e147046a8f243b029a8b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  _damage: 100
   _recoil: 0
   _recoilDirectionOverride:
     useValue: 0
     value: {x: 0, y: 0}
-  _passiveHurt: 0
-  _teleportToLastCheckpoint: 1
+  _passiveHurt: 1
+  _teleportToLastCheckpoint: 0
 --- !u!114 &114993613945014436
 MonoBehaviour:
   m_ObjectHideFlags: 1
