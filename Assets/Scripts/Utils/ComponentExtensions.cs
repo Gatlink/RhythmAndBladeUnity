@@ -25,4 +25,15 @@ public static class ComponentExtensions
     {
         return thisComponent.GetComponents( typeof( TInterface ) ).Cast<TInterface>().ToArray();
     }
+
+    public static bool IsAncestorOf( this Transform self, Transform other )
+    {
+        while ( other != null )
+        {
+            if ( other == self ) return true;
+            other = other.parent;
+        }
+
+        return false;
+    }
 }

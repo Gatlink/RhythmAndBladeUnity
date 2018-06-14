@@ -15,14 +15,11 @@ public class Mobile : MonoBehaviour, IMoving
 
     public float WallStickiness = 0.2f;
 
-    [ ReadOnly ]
-    public float Direction = 1;
+    [ReadOnly] public float Direction = 1;
 
-    [ ReadOnly, SerializeField ]
-    private Vector2 _currentVelocity;
+    [ReadOnly, SerializeField] private Vector2 _currentVelocity;
 
-    [ ReadOnly, SerializeField ]
-    private Vector2 _currentAcceleration;
+    [ReadOnly, SerializeField] private Vector2 _currentAcceleration;
 
     public bool Enabled
     {
@@ -169,7 +166,7 @@ public class Mobile : MonoBehaviour, IMoving
             length,
             _moveBlockingLayerMask );
 
-        if ( hit.collider != null )
+        if ( hit.collider != null && !transform.IsAncestorOf( hit.collider.transform ) )
         {
             DebugExtension.DebugPoint( hit.point, Color.yellow, 0.1f, 1 );
             BodyPosition = hit.centroid;
@@ -187,6 +184,8 @@ public class Mobile : MonoBehaviour, IMoving
     {
         if ( _collisionCheckCollider.OverlapCollider( _wallCollisionContactFilter2D, _wallColliders ) > 0 )
         {
+            if ( transform.IsAncestorOf( _wallColliders[ 0 ].transform ) ) return;
+            
             var distance2D = _collisionCheckCollider.Distance( _wallColliders[ 0 ] );
             DebugExtension.DebugPoint( distance2D.pointA, Color.red, 0.1f, 1 );
             if ( distance2D.distance > 0 )
@@ -379,8 +378,7 @@ public class Mobile : MonoBehaviour, IMoving
 
 #if UNITY_EDITOR
 
-    [ Header( "Gizmos" ) ]
-    public OptionalInt TrackPositions = new OptionalInt();
+    [Header( "Gizmos" )] public OptionalInt TrackPositions = new OptionalInt();
 
     private readonly Queue<Vector3> _previousPositions = new Queue<Vector3>( 100 );
 
