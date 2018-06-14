@@ -1,11 +1,12 @@
 ﻿using System;
+using Gamelogic.Extensions;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 
 #endif
 
-[ DefaultExecutionOrder( -101 ) ]
+[DefaultExecutionOrder( -101 )]
 public class MovingObject : MonoBehaviour, IMoving
 {
     public enum LoopType
@@ -40,6 +41,7 @@ public class MovingObject : MonoBehaviour, IMoving
             {
                 return ( transform.position - _lastPosition ) / Time.deltaTime;
             }
+
             return Displacement / LoopPeriod;
         }
         set { throw new NotSupportedException( "Cannot set current velocity" ); }
@@ -76,9 +78,15 @@ public class MovingObject : MonoBehaviour, IMoving
         transform.position = Vector2.Lerp( _initialPosition, _initialPosition + Displacement, time / LoopPeriod );
 
         // reset local time to 0 every two loops for ping pong
-        _localTime = Mathf.Repeat( _localTime, LoopPeriod * 2 );
+        _localTime = Mathf.Repeat( _localTime, LoopPeriod * 2 );        
     }
 
+    private void OnRenderObject()
+    {
+        var from = ( (Vector3) _initialPosition ).WithZ( transform.position.z );
+        SimpleDrawing.DrawLine( from, from + (Vector3) Displacement, Color.yellow );
+    }
+    
     private void LateUpdate()
     {
         _localTime += Time.deltaTime;
