@@ -194,7 +194,7 @@ public class Mobile : MonoBehaviour, IMoving
             filter.layerMask |= _dashableObstacleLayerMask;
         }
 
-        if ( _collisionCheckCollider.OverlapCollider( _wallCollisionContactFilter2D, _wallColliders ) > 0 )
+        if ( _collisionCheckCollider.OverlapCollider( filter, _wallColliders ) > 0 )
         {
             if ( transform.IsAncestorOf( _wallColliders[ 0 ].transform ) ) return;
 
