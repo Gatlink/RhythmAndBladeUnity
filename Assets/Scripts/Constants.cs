@@ -5,6 +5,7 @@
     public const string Destructible = "Destructible";
     public const string Harmfull = "Harmfull";
     public const string Obstacle = "Obstacle";
+    public const string DashableObstacle = "DashableObstacle";
     public const string LevelTrigger = "LevelTrigger";
     public const string CameraConstraint = "CameraConstraint";
     public const string PassThrough = "PassThrough";

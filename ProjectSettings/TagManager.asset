@@ -30,7 +30,7 @@ TagManager:
   - LevelTrigger
   - CameraConstraint
   - PassThrough
-  - 
+  - DashableObstacle
   - 
   - 
   - 

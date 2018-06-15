@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Gamelogic.Extensions;
 using UnityEngine;
 
@@ -137,6 +138,8 @@ public class Mobile : MonoBehaviour, IMoving
 
     private int _obstacleLayerMask;
 
+    private int _dashableObstacleLayerMask;
+
     private ContactFilter2D _wallCollisionContactFilter2D;
 
     private readonly Collider2D[] _wallColliders = new Collider2D[ 1 ];
@@ -147,12 +150,12 @@ public class Mobile : MonoBehaviour, IMoving
 
     #region MOVE METHODS
 
-    public void Move()
+    public void Move( bool isDash = false )
     {
-        Move( Vector2.zero );
+        Move( Vector2.zero, isDash );
     }
 
-    public void Move( Vector2 velocityBias )
+    public void Move( Vector2 velocityBias, bool isDash = false )
     {
 //        DebugExtension.DebugArrow( BodyPosition, velocityBias, Color.blue );
 //        DebugExtension.DebugArrow( BodyPosition, CurrentVelocity, Color.red );
@@ -164,7 +167,7 @@ public class Mobile : MonoBehaviour, IMoving
 
         var hit = Physics2D.CapsuleCast( BodyPosition, 0.6f * BodySize, CapsuleDirection2D.Vertical, 0, direction,
             length,
-            _moveBlockingLayerMask );
+            _moveBlockingLayerMask | ( isDash ? 0 : _dashableObstacleLayerMask ) );
 
         if ( hit.collider != null && !transform.IsAncestorOf( hit.collider.transform ) )
         {
@@ -177,15 +180,21 @@ public class Mobile : MonoBehaviour, IMoving
             transform.Translate( direction * length );
         }
 
-        CheckWallCollisions();
+        CheckWallCollisions( isDash );
     }
 
-    private void CheckWallCollisions()
+    private void CheckWallCollisions( bool isDash = false )
     {
+        var filter = _wallCollisionContactFilter2D;
+        if ( !isDash )
+        {
+            filter.layerMask |= _dashableObstacleLayerMask;
+        }
+
         if ( _collisionCheckCollider.OverlapCollider( _wallCollisionContactFilter2D, _wallColliders ) > 0 )
         {
             if ( transform.IsAncestorOf( _wallColliders[ 0 ].transform ) ) return;
-            
+
             var distance2D = _collisionCheckCollider.Distance( _wallColliders[ 0 ] );
             DebugExtension.DebugPoint( distance2D.pointA, Color.red, 0.1f, 1 );
             if ( distance2D.distance > 0 )
@@ -356,6 +365,7 @@ public class Mobile : MonoBehaviour, IMoving
         _groundLayerMask = 1 << LayerMask.NameToLayer( Layers.Ground );
         _wallLayerMask = 1 << LayerMask.NameToLayer( Layers.Wall );
         _obstacleLayerMask = 1 << LayerMask.NameToLayer( Layers.Obstacle );
+        _dashableObstacleLayerMask = 1 << LayerMask.NameToLayer( Layers.DashableObstacle );
         _passThroughLayerMask = 1 << LayerMask.NameToLayer( Layers.PassThrough );
 
         _moveBlockingLayerMask = _groundLayerMask |

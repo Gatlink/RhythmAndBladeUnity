@@ -53,7 +53,7 @@ namespace ActorStates.Player
         {
             ApplyHorizontalMovement();
 
-            Mobile.Move();
+            Mobile.Move( isDash: true );
 
             Vector2 wallNormal;
             if ( !CurrentlyGrounded && Mobile.CheckWallProximity( Mobile.Direction, out wallNormal ) )

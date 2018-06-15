@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4464805834657108}
   - component: {fileID: 70709921992539880}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: Blockingbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324,8 +324,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.02281189, y: 1.6180402}
-  m_Size: {x: 0.5228119, y: 1.9856751}
+  m_Offset: {x: -0.022813797, y: 1.8304397}
+  m_Size: {x: 0.59669113, y: 2.0903356}
   m_Direction: 0
 --- !u!70 &70777960128528760
 CapsuleCollider2D:
