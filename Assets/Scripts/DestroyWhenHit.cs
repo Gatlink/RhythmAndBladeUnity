@@ -27,6 +27,8 @@ public class DestroyWhenHit : MonoBehaviour, IDestructible
         _hitRemaining = Mathf.Max( 0, _hitRemaining - hitInfo.Damage );
         _hits.Add( hitInfo.Id );
         
+        SlowMotionFx.Freeze();
+
         if ( _hitRemaining <= 0 )
         {
             DestroyTarget();

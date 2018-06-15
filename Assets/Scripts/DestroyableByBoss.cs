@@ -21,6 +21,7 @@ public class DestroyableByBoss : MonoBehaviour
 		if ( _boss.CurrentState is DiveState && Physics2D.OverlapCollider( _collider, _contactFilter2D, _collidersBuffer ) > 0 )
 		{
 			// todo fx, etc...
+			SlowMotionFx.Freeze();
 			Destroy( gameObject );
 		}
 	}

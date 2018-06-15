@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 114869657539334838}
   - component: {fileID: 114318017041171482}
   - component: {fileID: 114766185991673436}
+  - component: {fileID: 114828881309613620}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: Untagged
@@ -56,7 +57,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1276453477348644}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.02, y: 4.97, z: -10}
+  m_LocalPosition: {x: -29.5, y: 7.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4904191579592070}
@@ -212,8 +213,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   __messageText: 
-  FadeDuration: 0.4
-  EffectAlpha: 0.5
+  EffectDuration: 0.4
+  MaxAlpha: 0.5
+--- !u!114 &114828881309613620
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1276453477348644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64820182173f847b101ad198006046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  __messageText: 
+  FrozenTimescale: 0.01
+  FreezeDuration: 0.1
 --- !u!114 &114869657539334838
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -229,4 +244,3 @@ MonoBehaviour:
   FadeTexture: {fileID: 0}
   FadeColor: {r: 0, g: 0, b: 0, a: 1}
   FadeGUIDepth: -1000
-  UseUnscaledTime: 1

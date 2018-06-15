@@ -159,6 +159,9 @@ public class Mobile : MonoBehaviour, IMoving
     {
 //        DebugExtension.DebugArrow( BodyPosition, velocityBias, Color.blue );
 //        DebugExtension.DebugArrow( BodyPosition, CurrentVelocity, Color.red );
+
+        if ( Time.deltaTime <= 0 ) return;
+
         var amount = ( CurrentVelocity + velocityBias ) * Time.deltaTime;
 
         var length = amount.magnitude;

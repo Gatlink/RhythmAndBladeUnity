@@ -21,6 +21,7 @@ public class ActorHealth : MonoBehaviour
     {
         CurrentHitCount = Mathf.Max( 0, CurrentHitCount - amount );
         OnHitEvent( this, source );
+        SlowMotionFx.Freeze();
     }
 
     private void Start()
