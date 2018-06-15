@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4464805834657108}
-  - component: {fileID: 61510941627512726}
+  - component: {fileID: 70709921992539880}
   m_Layer: 11
   m_Name: Blockingbox
   m_TagString: Untagged
@@ -272,31 +272,6 @@ CircleCollider2D:
   m_Offset: {x: 1.2, y: 1.63}
   serializedVersion: 2
   m_Radius: 1.03
---- !u!61 &61510941627512726
-BoxCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1358439425370666}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.063417435, y: 1.6630766}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.61948776, y: 3.2547035}
-  m_EdgeRadius: 0
 --- !u!61 &61841157726537454
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -336,6 +311,21 @@ CapsuleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 1.5}
   m_Size: {x: 1.9, y: 2.9}
+  m_Direction: 0
+--- !u!70 &70709921992539880
+CapsuleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1358439425370666}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.02281189, y: 1.6180402}
+  m_Size: {x: 0.5228119, y: 1.9856751}
   m_Direction: 0
 --- !u!70 &70777960128528760
 CapsuleCollider2D:
