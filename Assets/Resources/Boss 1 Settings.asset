@@ -139,14 +139,14 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     Function: 1
-  ChargeDuration: 0.75
+  ChargeDuration: 0.85
   ChargeTrajectory:
     Type: 0
     Curve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
-        time: 0.22
+        time: 0.3
         value: 0
         inSlope: 2.1562495
         outSlope: 2.1562495
