@@ -84,7 +84,16 @@ public class MovingObject : MonoBehaviour, IMoving
     private void OnRenderObject()
     {
         var from = ( (Vector3) _initialPosition ).WithZ( transform.position.z );
-        SimpleDrawing.DrawLine( from, from + (Vector3) Displacement, Color.yellow );
+        var to = from + (Vector3) Displacement;
+        const float radius = 0.15f;
+
+        var color = Color.green.WithAlpha( 0.5f );
+        
+        SimpleDrawing.DrawLine( from, to, color );
+        
+        SimpleDrawing.DrawDisk( from, radius, color );
+        SimpleDrawing.DrawDisk( to, radius, color );
+        SimpleDrawing.DrawDisk( transform.position, radius, color );
     }
     
     private void LateUpdate()
