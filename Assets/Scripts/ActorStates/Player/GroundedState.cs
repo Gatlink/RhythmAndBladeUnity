@@ -67,7 +67,7 @@ namespace ActorStates.Player
                 return new DeathState( Actor );
             }
 
-            if ( !mob.CheckGround() )
+            if ( !mob.CheckGround( ignorePassThrough: Actor.DesiredIgnorePassThrough ) )
             {
                 return new FallState( Actor );
             }

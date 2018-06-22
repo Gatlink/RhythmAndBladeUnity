@@ -238,10 +238,19 @@ public class Mobile : MonoBehaviour, IMoving
             layerMask |= _passThroughLayerMask;
         }
 
-        var frontHit = Physics2D.Raycast( BodyPosition + 0.25f * BodySize.x * Direction * Vector2.right, Vector2.down,
-            0.5f * BodySize.y + RailStickiness, layerMask );
-        var backHit = Physics2D.Raycast( BodyPosition - 0.25f * BodySize.x * Direction * Vector2.right, Vector2.down,
-            0.5f * BodySize.y + RailStickiness, layerMask );
+        var frontGroundOffset = 0.2f * BodySize.y;
+        var backGroundOffset = 0.2f * BodySize.y;
+        
+        var frontHit =
+            Physics2D.Raycast(
+                BodyPosition + 0.25f * BodySize.x * Direction * Vector2.right +
+                ( 0.5f * BodySize.y - frontGroundOffset ) * Vector2.down, Vector2.down, frontGroundOffset + RailStickiness,
+                layerMask );
+        var backHit =
+            Physics2D.Raycast(
+                BodyPosition - 0.25f * BodySize.x * Direction * Vector2.right +
+                ( 0.5f * BodySize.y - backGroundOffset ) * Vector2.down, Vector2.down, backGroundOffset + RailStickiness,
+                layerMask );
 
         if ( backHit.collider == null && frontHit.collider == null )
         {

@@ -47,7 +47,7 @@ namespace ActorStates.Player
                 return new WallSlideState( Actor, normal );
             }
 
-            if ( mob.CheckGround() )
+            if ( mob.CheckGround( ignorePassThrough: Actor.DesiredIgnorePassThrough ) )
             {
                 return new GroundedState( Actor );
             }

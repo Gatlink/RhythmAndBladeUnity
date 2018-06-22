@@ -15,6 +15,7 @@ namespace Controllers
             get { return enabled; }
         }
 
+        // define empty method to allow enable checkbox in editor
         private void Start()
         {            
         }
@@ -23,6 +24,7 @@ namespace Controllers
         {
             actor.DesiredMovement = 0;
             actor.DesiredJump = false;
+            actor.DesiredIgnorePassThrough = false;
             actor.DesiredAttack = false;
             actor.DesiredDash = false;
             actor.DesiredBeatMode = false;
@@ -52,7 +54,15 @@ namespace Controllers
             }
 
             actor.DesiredMovement = direction * amplitude;
-            actor.DesiredJump = Input.GetButtonDown( "Jump" );
+            
+            // either Jump or Jump Down
+            var downPressed = Input.GetAxisRaw( "Vertical" ) < -DeadZone;
+            var jumpPressed = Input.GetButton( "Jump" );
+            var jumpJustPressed = Input.GetButtonDown( "Jump" );
+            
+            actor.DesiredJump = !downPressed && jumpJustPressed;
+            actor.DesiredIgnorePassThrough = downPressed && jumpPressed;
+
             actor.DesiredDash = Input.GetButtonDown( "Dash" );
             actor.DesiredAttack = Input.GetButtonDown( "Attack" );
         }

@@ -15,6 +15,9 @@ public class PlayerActor : ActorBase<PlayerActor>
     [ ReadOnly ]
     public bool DesiredJump;
 
+    [ ReadOnly, SerializeField ] 
+    private bool _desiredIgnorePassThrough;
+    
     [ ReadOnly ]
     public bool DesiredAttack;
 
@@ -48,6 +51,28 @@ public class PlayerActor : ActorBase<PlayerActor>
     public Mobile Mobile { get; private set; }
 
     public ActorHealth Health { get; private set; }
+
+    private float _lastTimeDesiredIgnorePassThroughSetToTrue;
+    private const float DesiredIgnorePassThroughTimeThreshold = 0.3f;
+    public bool DesiredIgnorePassThrough
+    {
+        get { return _desiredIgnorePassThrough; }
+        set
+        {
+            if ( value )
+            {
+                _lastTimeDesiredIgnorePassThroughSetToTrue = Time.time;
+                _desiredIgnorePassThrough = true;
+            }
+            else
+            {
+                if ( Time.time - _lastTimeDesiredIgnorePassThroughSetToTrue >= DesiredIgnorePassThroughTimeThreshold )
+                {
+                    _desiredIgnorePassThrough = false;
+                }
+            }
+        }
+    }
 
     public bool CheckJump()
     {

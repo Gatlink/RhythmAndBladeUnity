@@ -9,6 +9,7 @@ namespace Controllers
         {
             actor.DesiredMovement = 0;
             actor.DesiredJump = false;
+            actor.DesiredIgnorePassThrough = false;
             actor.DesiredAttack = false;
             actor.DesiredDash = false;
             actor.DesiredBeatMode = false;
@@ -68,8 +69,14 @@ namespace Controllers
             }
             else
             {
-                actor.DesiredJump = State.Buttons.A == ButtonState.Pressed &&
-                                    PrevState.Buttons.A == ButtonState.Released;
+                // either Jump or Jump Down
+                var downPressed = State.ThumbSticks.Left.Y < -DeadZone;
+                var jumpPressed = State.Buttons.A == ButtonState.Pressed;
+                var jumpJustPressed = jumpPressed && PrevState.Buttons.A == ButtonState.Released;
+
+                actor.DesiredJump = !downPressed && jumpJustPressed;
+                actor.DesiredIgnorePassThrough = downPressed && jumpPressed;
+
                 actor.DesiredDash = State.Buttons.B == ButtonState.Pressed &&
                                     PrevState.Buttons.B == ButtonState.Released;
                 actor.DesiredAttack =
